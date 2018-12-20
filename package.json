@@ -41,7 +41,7 @@
   },
   "scripts": {
     "build": "babel src -s -D -d dist",
-    "server": "nodemon --exec yarn run babel-node -- src/main.js",
+    "dev": "nodemon --exec yarn run babel-node -- src/main.js",
     "start": "node dist/main.js"
   }
 }
