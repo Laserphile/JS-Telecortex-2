@@ -1,2 +1,7 @@
 .idea
 node_modules
+2018-11-13-raspbian-stretch-lite.img
+dist
+fusepy
+localpy/
+

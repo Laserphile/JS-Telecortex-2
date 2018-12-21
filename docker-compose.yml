@@ -1,0 +1,8 @@
+version: "3"
+services:
+  debian-stretch-node:
+    privileged: true
+    image: vanbujm/debian-stretch-node
+    entrypoint: ./test.sh
+    volumes:
+    - .:/usr/debNode

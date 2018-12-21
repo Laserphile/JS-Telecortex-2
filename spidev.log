@@ -1,0 +1,44 @@
+DEBUG:fuse.log-mixin:-> init / ()
+DEBUG:fuse.log-mixin:<- init None
+DEBUG:fuse.log-mixin:-> getattr /spidev0.0 (None,)
+DEBUG:fuse.log-mixin:<- getattr {'st_ctime': 1545384797.268918, 'st_mtime': 1545384797.268918, 'st_size': 40, 'st_atime': 1545384797.268918, 'st_mode': 33060}
+DEBUG:fuse.log-mixin:-> open /spidev0.0 (32770,)
+DEBUG:fuse.log-mixin:<- open 1
+DEBUG:fuse.log-mixin:-> ioctl /spidev0.0 (1073834753L, 94750616989842, 1L, 0L, 139938501025880)
+INFO:root:1073834753
+INFO:root:SPI_IOC_WR_MODE
+INFO:root:IOCTL
+DEBUG:fuse.log-mixin:<- ioctl 0
+DEBUG:fuse.log-mixin:-> ioctl /spidev0.0 (2147576577L, 94750616989842, 1L, 0L, 139938423114480)
+INFO:root:2147576577
+INFO:root:SPI_IOC_RD_MODE
+INFO:root:IOCTL
+DEBUG:fuse.log-mixin:<- ioctl 0
+DEBUG:fuse.log-mixin:-> ioctl /spidev0.0 (1073834755L, 94750616989816, 1L, 0L, 139938501025880)
+INFO:root:1073834755
+INFO:root:SPI_IOC_WR_BITS_PER_WORD
+INFO:root:IOCTL
+DEBUG:fuse.log-mixin:<- ioctl 0
+DEBUG:fuse.log-mixin:-> ioctl /spidev0.0 (2147576579L, 94750616989816, 1L, 0L, 139938423114480)
+INFO:root:2147576579
+INFO:root:SPI_IOC_RD_BITS_PER_WORD
+INFO:root:IOCTL
+DEBUG:fuse.log-mixin:<- ioctl 0
+DEBUG:fuse.log-mixin:-> ioctl /spidev0.0 (1074031364L, 94750616989820, 1L, 0L, 139938501025880)
+INFO:root:1074031364
+INFO:root:SPI_IOC_WR_MAX_SPEED_HZ
+INFO:root:IOCTL
+DEBUG:fuse.log-mixin:<- ioctl 0
+DEBUG:fuse.log-mixin:-> ioctl /spidev0.0 (2147773188L, 94750616989820, 1L, 0L, 139938423114480)
+INFO:root:2147773188
+INFO:root:SPI_IOC_RD_MAX_SPEED_HZ
+INFO:root:IOCTL
+DEBUG:fuse.log-mixin:<- ioctl 0
+DEBUG:fuse.log-mixin:-> ioctl /spidev0.0 (1077963520L, 140731714589088, 1L, 0L, 139938501025880)
+INFO:root:1077963520
+INFO:root:2 SPI_IOC_MESSAGE
+DEBUG:fuse.log-mixin:<- ioctl 2
+DEBUG:fuse.log-mixin:-> flush /spidev0.0 (1L,)
+DEBUG:fuse.log-mixin:<- flush 0
+DEBUG:fuse.log-mixin:-> release /spidev0.0 (1L,)
+DEBUG:fuse.log-mixin:<- release 0

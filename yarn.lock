@@ -3426,7 +3426,7 @@ spdx-license-ids@^3.0.0:
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.2.tgz#a59efc09784c2a5bada13cfeaf5c75dd214044d2"
   integrity sha512-qky9CVt0lVIECkEsYbNILVnPvycuEBkXoMFLRWsREkomQLevYhtRKC+R91a5TOAQ3bCMjikRwhyaRqj1VYatYg==
 
-spi-device@2.0.6:
+spi-device@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/spi-device/-/spi-device-2.0.6.tgz#9fbfb346a92d83dc79197c63d87cbb44780e148a"
   integrity sha512-ivjj1XHQ+oO98khLsvsk+55GJbGwmVmsQ0r4LdzL0VjjwUdwH2bHmD3t2pTHLx5FYtRx5Wa38Vd1vwDSqKD1+Q==
