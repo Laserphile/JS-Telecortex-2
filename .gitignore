@@ -5,3 +5,4 @@ dist
 fusepy
 localpy/
 
+spidev.log

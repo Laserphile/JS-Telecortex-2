@@ -1,5 +1,7 @@
 #!/bin/bash
 
+yarn add pi-spi && yarn
+
 virtualenv localpy
 
 source localpy/bin/activate
@@ -10,4 +12,4 @@ cd ./fusepy && python ./setup.py install && cd ..
 
 mkdir -p mntpoint
 
-python ./virtual_spi.py ./mntpoint && ./spidev_test -D ./mntpoint/spidev0.0
+python ./virtual_spi.py ./mntpoint && yarn build && yarn start

@@ -1,10 +1,12 @@
 // var Apa102spi = require('apa102-spi');
 const sprintf = require('sprintf-js').sprintf;
-const spi = require('spi-device');
+const SPI = require('pi-spi');
+
+const spi = SPI.initialize('./mntpoint/spidev0.0');
 
 const LEDS = 360;
 
-const spidev = spi.openSync(0, 0);
+// const spidev = spi.openSync(0, 0);
 
 // const LedDriver = new Apa102spi(LEDS, 100);
 
@@ -65,19 +67,33 @@ function static_rainbow() {
       // );
     }
     // LedDriver.sendLeds();
-    spidev.transfer(
-      [
-        {
-          sendBuffer: Buffer.from(data),
-          byteLength: data.length,
-          mode: spi.MODE0,
-          speedHz: 5000000
-        }
-      ],
-      (err, message) => {
-        if (err) throw err;
+    // spi.transfer(outbuffer, [incount,] cb)
+    const dataBuff = Buffer.from(data);
+    spi.transfer(dataBuff, dataBuff.length, function(e, d) {
+      if (e) console.error(e);
+      else console.log('Got "' + d.toString() + '" back.');
+
+      if (dataBuff.toString() === d.toString()) {
+        console.log('woo message sent');
+      } else {
+        // NOTE: this will likely happen unless MISO is jumpered to MOSI
+        console.warn('aaaaaah death');
+        process.exit(-2);
       }
-    );
+    });
+    // spidev.transfer(
+    //   [
+    //     {
+    //       sendBuffer: Buffer.from(data),
+    //       byteLength: data.length,
+    //       mode: spi.MODE0,
+    //       speedHz: 5000000
+    //     }
+    //   ],
+    //   (err, message) => {
+    //     if (err) throw err;
+    //   }
+    // );
     if (now() - last_print > 1) {
       rate = frames / (now() - start + 1);
       console.log(
