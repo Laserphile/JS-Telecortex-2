@@ -1,5 +1,19 @@
-## Install on Raspbian
+## Install on Raspbian from scratch
 ```bash
+# Fresh pi needs update
+sudo apt-get update && sudo apt-get upgrade
+# Install vim
+sudo apt-get install vim git
+# fix locale
+sudo vim /etc/locale.gen
+# uncomment the line corresponding to your locale, e.g. en_AU.UTF-8
+sudo locale-gen en_AU.UTF-8
+sudo update-locale en_AU.UTF-8
+# Enable SPI in /boot/config.txt
+vim /boot/config.txt
+# uncomment "dtparam=spi=on"
+
+
 # install node 11
 curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
 apt-get install -y nodejs
@@ -10,9 +24,14 @@ curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt-get update && sudo apt-get install yarn
 ```
-In the root directory of this repository:
+Clone this repo
+```
+mkdir -p Documents/GitHub
+git clone https://github.com/Laserphile/JS-Telecortex-2 Documents/GitHub/JS-Telecortex-2
+```
+Install JS dependencies
 ```bash
-# install JS dependencies
+cd ~/Documents/GitHub/JS-Telecortex-2
 yarn install
 ```
 
