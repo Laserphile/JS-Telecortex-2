@@ -312,5 +312,7 @@ if __name__ == '__main__':
         print('usage: %s <mountpoint>' % argv[0])
         exit(1)
 
-    logging.basicConfig(filename='spidev.log', level=logging.DEBUG)
+    # Write to log instead of outputing to console
+    # logging.basicConfig(filename='spidev.log', level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
     fuse = FUSE(VirtualSPI(), argv[1], foreground=False)
