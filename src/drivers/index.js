@@ -6,7 +6,9 @@ const formatMsg = ({ h, s, v }, { r, g, b }, rate, data) =>
   `h ${h.toFixed(2)} s ${s} v ${v} | r ${r} g ${g} b ${b} :  ${rate.toFixed(
     2
   )} : ${data.toString().slice(0, 32)}`;
-
+/**
+ * Given a spi object and the number of leds, return a callback which drives the SPI
+ */ 
 export const staticRainbowFactory = (spi, numLeds = 360) => {
   /**
    * Things which determine LED colours
@@ -17,9 +19,13 @@ export const staticRainbowFactory = (spi, numLeds = 360) => {
     v: 10
   };
   let rgb;
+  // Frame counter for FPS calculation
   let frames = 0;
+  // FPS rate calculated
   let rate = 0.0;
+  // time when script started for FPS calculation
   const start = now();
+  // Last time something was printed
   let last_print = now();
   // eslint-disable-next-line no-unused-vars
   const brightness = 1;
