@@ -5,22 +5,11 @@ const colorsys = require('colorsys');
 
 // const spi = SPI.initialize('./mntpoint/spidev0.0');
 const spi = SPI.initialize('/dev/spidev0.0');
-spi.clockSpeed(1e6);
+spi.clockSpeed(5e5);
 
 const LEDS = 360;
 
 // const spidev = spi.openSync(0, 0);
-
-function hsv2rgb(h, s, v) {
-  const i = Math.round(h * 6);
-  const f = h * 6 - i;
-  const p = v * (1 - s);
-  const q = v * (1 - f * s);
-  const t = v * (1 - s * (1 - f));
-  return [[v, t, p], [q, v, p], [p, v, t], [p, q, v], [t, p, v], [v, p, q]][
-    i % 6
-  ];
-}
 
 function now() {
   return Math.round(new Date().getTime() / 1000);
@@ -33,37 +22,39 @@ function now() {
 function rgb2sk9822(rgb, brightness = 0.5) {
   // first byte is a constant 0xE0 + 5 bit brightness value
   const first = 0xe0 + Math.round(brightness * 0x1f);
-  return [
-    first,
-    Math.round(rgb[2] * 0xff) % 0xff,
-    Math.round(rgb[1] * 0xff) % 0xff,
-    Math.round(rgb[0] * 0xff) % 0xff
-  ];
+  return [first, rgb['b'] % 0xff, rgb['g'] % 0xff, rgb['r'] % 0xff];
 }
 
 /**
  * Things which determine LED colours
  */
-let hue = 0.0,
-  sat = 1.0,
-  val = 1.0;
+let hue = 360,
+  sat = 100,
+  val = 10;
+// Temporarily store a colour value for colour calculations
 let rgb;
+// Temporarily store a single pixel for colour calculations
+let pixel;
 // eslint-disable-next-line no-unused-vars
-const brightness = 16;
+// Frame counter for FPS calculation
 let frames = 0;
+// time when script started for FPS calculation
 const start = now();
+// Last time something was printed
 let last_print = now();
+// FPS rate calculated
 let rate = 0.0;
 
 function static_rainbow() {
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    hue = hue + 0.01 - Math.floor(hue);
+    hue = (hue + 1) % 360;
     frames += 1;
-    rgb = hsv2rgb(hue, sat, val);
+    rgb = colorsys.hsvToRgb({ h: hue, s: sat, v: val });
+    pixel = rgb2sk9822(rgb);
     var data = [0, 0, 0, 0];
     for (const led of Array(LEDS).keys()) {
-      data = data.concat(rgb2sk9822(rgb));
+      data = data.concat(pixel);
     }
     const dataBuff = Buffer.from(data);
     spi.transfer(dataBuff, dataBuff.length, function(e, d) {
@@ -82,13 +73,13 @@ function static_rainbow() {
       rate = frames / (now() - start + 1);
       console.log(
         sprintf(
-          'h +%0.2f s +%0.2f v +%0.2f | r +%0.2f g +%0.2f b +%0.2f : +%0.2f : %s',
+          'h +%3d s +%3d v +%3d | r +%3d g +%3d b +%3d : +%0.2f : %s',
           hue,
           sat,
           val,
-          rgb[0],
-          rgb[1],
-          rgb[2],
+          rgb['r'],
+          rgb['g'],
+          rgb['b'],
           rate,
           data.toString().slice(0, 32)
         )
