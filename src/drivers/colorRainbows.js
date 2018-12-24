@@ -7,7 +7,7 @@ export const colorRainbows = context => {
   context.frames += 1;
   context.rgb = hsvToRgb(context.hsv);
 
-  context.data = Array.from({length: context.numLeds}).reduce(
+  context.data = Array.from({ length: context.numLeds }).reduce(
     accumulator => {
       accumulator = accumulator.concat(rgb2sk9822(context.rgb));
       return accumulator;
