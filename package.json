@@ -6,6 +6,7 @@
   "author": "Moonbase-Labs",
   "license": "MIT",
   "dependencies": {
+    "chalk": "2.4.1",
     "colorsys": "^1.0.22",
     "lodash": "4.17.11",
     "pi-spi": "^1.0.3",
