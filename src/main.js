@@ -35,10 +35,10 @@ const server = () => {
     return spec;
   });
 
-  const staticeRainbow = staticRainbowFactory(spidevs);
+  const staticRainbow = staticRainbowFactory(spidevs);
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    staticeRainbow();
+    staticRainbow();
   }
 };
 
