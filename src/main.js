@@ -2,7 +2,9 @@
 const sprintf = require('sprintf-js').sprintf;
 const SPI = require('pi-spi');
 
-const spi = SPI.initialize('./mntpoint/spidev0.0');
+// const spi = SPI.initialize('./mntpoint/spidev0.0');
+const spi = SPI.initialize('/dev/spidev0.0');
+spi.clockSpeed(1e6);
 
 const LEDS = 360;
 
@@ -55,9 +57,9 @@ function static_rainbow() {
     hue = hue + 0.01 - Math.floor(hue);
     frames += 1;
     rgb = hsv2rgb(hue, sat, val);
-    const data = [0, 0, 0, 0];
+    var data = [0, 0, 0, 0];
     for (const led of Array(LEDS).keys()) {
-      data.concat(rgb2sk9822(rgb));
+      data = data.concat(rgb2sk9822(rgb));
       // LedDriver.setLedColor(
       //     led,
       //     brightness,
@@ -98,14 +100,15 @@ function static_rainbow() {
       rate = frames / (now() - start + 1);
       console.log(
         sprintf(
-          'h +%0.2f s +%0.2f v +%0.2f | r +%0.2f g +%0.2f b +%0.2f : +%0.2f',
+          'h +%0.2f s +%0.2f v +%0.2f | r +%0.2f g +%0.2f b +%0.2f : +%0.2f : %s',
           hue,
           sat,
           val,
           rgb[0],
           rgb[1],
           rgb[2],
-          rate
+          rate,
+          data.toString().slice(0, 32)
         )
       );
       last_print = now();
