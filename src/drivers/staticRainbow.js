@@ -8,7 +8,7 @@ const formatMsg = ({ h, s, v }, { r, g, b }, rate, data) =>
   )} : ${data.toString().slice(0, 32)}`;
 /**
  * Given a spi object and the number of leds, return a callback which drives the SPI
- */ 
+ */
 export const staticRainbowFactory = (spi, numLeds = 360) => {
   /**
    * Things which determine LED colours
@@ -46,7 +46,7 @@ export const staticRainbowFactory = (spi, numLeds = 360) => {
 
     const dataBuff = Buffer.from(data);
 
-    spi.transfer(dataBuff, dataBuff.length, function(e, d) {
+    spi.transfer(dataBuff, dataBuff.length, (e, d) => {
       if (e) console.error(e);
       else console.log('Got "' + d.toString() + '" back.');
 

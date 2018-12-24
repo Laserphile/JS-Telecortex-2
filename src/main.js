@@ -1,6 +1,6 @@
 import SPI from 'pi-spi';
 
-import { staticRainbowFactory } from './drivers';
+import { staticRainbowFactory } from './drivers/staticRainbow';
 
 const server = () => {
   const spi = SPI.initialize('./mntpoint/spidev0.0');

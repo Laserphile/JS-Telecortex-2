@@ -9,10 +9,5 @@ export const now = () => {
 export const rgb2sk9822 = ({ r, g, b }, brightness = 0.5) => {
   // first byte is a constant 0xE0 + 5 bit brightness value
   const first = 0xe0 + Math.round(brightness * 0x1f);
-  return [
-    first,
-    b % 0xff,
-    g % 0xff,
-    r % 0xff
-  ];
+  return [first, b % 0xff, g % 0xff, r % 0xff];
 };
