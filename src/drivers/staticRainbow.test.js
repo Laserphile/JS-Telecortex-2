@@ -10,7 +10,7 @@ afterEach(() => {
 });
 
 it('transfers data', () => {
-  const staticRainbow = staticRainbowFactory(mockSpi);
+  const staticRainbow = staticRainbowFactory([{spi: mockSpi}]);
   staticRainbow();
   expect(mockSpi.transfer.mock.calls.length).toBe(1);
   expect(mockSpi.transfer.mock.calls[0][0] instanceof Buffer).toBeTruthy();
@@ -19,7 +19,7 @@ it('transfers data', () => {
 });
 
 it("doesn't send the same value", () => {
-  const staticRainbow = staticRainbowFactory(mockSpi, 1);
+  const staticRainbow = staticRainbowFactory([{ spi: mockSpi }], 1);
   staticRainbow();
   staticRainbow();
   expect(mockSpi.transfer.mock.calls.length).toBe(2);

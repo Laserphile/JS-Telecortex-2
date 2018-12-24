@@ -9,7 +9,7 @@ const formatMsg = ({ h, s, v }, { r, g, b }, rate, data) =>
 /**
  * Given a spi object and the number of leds, return a callback which drives the SPI
  */
-export const staticRainbowFactory = (spi, numLeds = 360) => {
+export const staticRainbowFactory = (spidevs, numLeds = 360) => {
   /**
    * Things which determine LED colours
    */
@@ -45,18 +45,19 @@ export const staticRainbowFactory = (spi, numLeds = 360) => {
     );
 
     const dataBuff = Buffer.from(data);
+    spidevs.forEach(device => {
+      device.spi.transfer(dataBuff, dataBuff.length, (e, d) => {
+        if (e) console.error(e);
+        else console.log('Got "' + d.toString() + '" back.');
 
-    spi.transfer(dataBuff, dataBuff.length, (e, d) => {
-      if (e) console.error(e);
-      else console.log('Got "' + d.toString() + '" back.');
-
-      if (dataBuff.toString() === d.toString()) {
-        console.log('woo message sent');
-      } else {
-        // NOTE: this will likely happen unless MISO is jumpered to MOSI
-        console.warn('aaaaaah death');
-        process.exit(-2);
-      }
+        if (dataBuff.toString() === d.toString()) {
+          console.log('woo message sent');
+        } else {
+          // NOTE: this will likely happen unless MISO is jumpered to MOSI
+          console.warn('aaaaaah death');
+          process.exit(-2);
+        }
+      });
     });
     if (now() - last_print > 1) {
       rate = frames / (now() - start + 1);
