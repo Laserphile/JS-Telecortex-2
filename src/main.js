@@ -1,6 +1,7 @@
 // var Apa102spi = require('apa102-spi');
 const sprintf = require('sprintf-js').sprintf;
 const SPI = require('pi-spi');
+const colorsys = require('colorsys');
 
 // const spi = SPI.initialize('./mntpoint/spidev0.0');
 const spi = SPI.initialize('/dev/spidev0.0');
@@ -9,8 +10,6 @@ spi.clockSpeed(1e6);
 const LEDS = 360;
 
 // const spidev = spi.openSync(0, 0);
-
-// const LedDriver = new Apa102spi(LEDS, 100);
 
 function hsv2rgb(h, s, v) {
   const i = Math.round(h * 6);
@@ -34,7 +33,12 @@ function now() {
 function rgb2sk9822(rgb, brightness = 0.5) {
   // first byte is a constant 0xE0 + 5 bit brightness value
   const first = 0xe0 + Math.round(brightness * 0x1f);
-  return [first, rgb[2], rgb[1], rgb[0]];
+  return [
+    first,
+    Math.round(rgb[2] * 0xff) % 0xff,
+    Math.round(rgb[1] * 0xff) % 0xff,
+    Math.round(rgb[0] * 0xff) % 0xff
+  ];
 }
 
 /**
@@ -60,16 +64,7 @@ function static_rainbow() {
     var data = [0, 0, 0, 0];
     for (const led of Array(LEDS).keys()) {
       data = data.concat(rgb2sk9822(rgb));
-      // LedDriver.setLedColor(
-      //     led,
-      //     brightness,
-      //     Math.round(rgb[0] * 255),
-      //     Math.round(rgb[1] * 255),
-      //     Math.round(rgb[2] * 255)
-      // );
     }
-    // LedDriver.sendLeds();
-    // spi.transfer(outbuffer, [incount,] cb)
     const dataBuff = Buffer.from(data);
     spi.transfer(dataBuff, dataBuff.length, function(e, d) {
       if (e) console.error(e);
@@ -83,19 +78,6 @@ function static_rainbow() {
         process.exit(-2);
       }
     });
-    // spidev.transfer(
-    //   [
-    //     {
-    //       sendBuffer: Buffer.from(data),
-    //       byteLength: data.length,
-    //       mode: spi.MODE0,
-    //       speedHz: 5000000
-    //     }
-    //   ],
-    //   (err, message) => {
-    //     if (err) throw err;
-    //   }
-    // );
     if (now() - last_print > 1) {
       rate = frames / (now() - start + 1);
       console.log(
@@ -117,6 +99,3 @@ function static_rainbow() {
 }
 
 static_rainbow();
-
-// LedDriver.setLedColor(0, 1, rgb[0], rgb[1], rgb[2]);
-// LedDriver.sendLeds();
