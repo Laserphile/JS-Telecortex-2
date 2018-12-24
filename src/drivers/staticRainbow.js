@@ -62,7 +62,7 @@ export const staticRainbowFactory = (spidevs, numLeds = 360) => {
     if (now() - last_print > 1) {
       rate = frames / (now() - start + 1);
       const msg = formatMsg(hsv, rgb, rate, data);
-      console.log(chalk.hsl(hsv.h * 360, hsv.s * 100, hsv.v * 100)(msg));
+      console.log(chalk.hsv(hsv.h, 50, 100)(msg));
       last_print = now();
     }
   };

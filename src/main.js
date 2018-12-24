@@ -1,4 +1,11 @@
-import SPI from 'pi-spi';
+let SPI;
+
+// noinspection ES6ModulesDependencies
+if (process.platform === 'linux') {
+  SPI = require('pi-spi');
+} else {
+  SPI = require('./util/testSpi').default;
+}
 
 import { staticRainbowFactory } from './drivers/staticRainbow';
 
