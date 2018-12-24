@@ -10,7 +10,7 @@ afterEach(() => {
 });
 
 it('transfers data', () => {
-  const staticRainbow = staticRainbowFactory([{spi: mockSpi}]);
+  const staticRainbow = staticRainbowFactory([{ spi: mockSpi }]);
   staticRainbow();
   expect(mockSpi.transfer.mock.calls.length).toBe(1);
   expect(mockSpi.transfer.mock.calls[0][0] instanceof Buffer).toBeTruthy();
