@@ -40,10 +40,10 @@ const server = () => {
   const driverConfig = {
     spidevs
   };
-  const staticeRainbow = driverFactory(driverConfig, [logger, colorRainbows]);
+  const staticRainbow = driverFactory(driverConfig, [logger, colorRainbows]);
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    staticeRainbow();
+    staticRainbow();
   }
 };
 
