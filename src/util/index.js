@@ -3,7 +3,7 @@ export const now = () => {
 };
 
 /**
- * Given an array of floats from 0 to 1 [r, g, b],
+ * Given an object of ints from 0 to 255, and a float brightness value from 0 to 1,
  * return the sk9822 data for this pixel
  */
 export const rgb2sk9822 = ({ r, g, b }, brightness = 0.5) => {
@@ -11,8 +11,8 @@ export const rgb2sk9822 = ({ r, g, b }, brightness = 0.5) => {
   const first = 0xe0 + Math.round(brightness * 0x1f);
   return [
     first,
-    Math.round(b * 0xff) % 0xff,
-    Math.round(g * 0xff) % 0xff,
-    Math.round(r * 0xff) % 0xff
+    b % 0xff,
+    g % 0xff,
+    r % 0xff
   ];
 };
