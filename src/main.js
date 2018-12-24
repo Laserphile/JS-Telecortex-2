@@ -1,5 +1,7 @@
-let SPI;
+import { colorRainbows } from './drivers/colorRainbows';
+import { logger } from './util';
 
+let SPI;
 // noinspection ES6ModulesDependencies
 if (process.platform === 'linux') {
   SPI = require('pi-spi');
@@ -7,7 +9,7 @@ if (process.platform === 'linux') {
   SPI = require('./util/testSpi').default;
 }
 
-import { staticRainbowFactory } from './drivers/staticRainbow';
+import { driverFactory } from './drivers/driverFactory';
 
 const server = () => {
   // const spi = SPI.initialize('./mntpoint/spidev0.0');
@@ -35,7 +37,10 @@ const server = () => {
     return spec;
   });
 
-  const staticRainbow = staticRainbowFactory(spidevs);
+  const driverConfig = {
+    spidevs
+  };
+  const staticRainbow = driverFactory(driverConfig, [logger, colorRainbows]);
   // eslint-disable-next-line no-constant-condition
   while (true) {
     staticRainbow();
