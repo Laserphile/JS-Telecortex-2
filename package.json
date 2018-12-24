@@ -6,10 +6,10 @@
   "author": "Moonbase-Labs",
   "license": "MIT",
   "dependencies": {
+    "colorsys": "^1.0.22",
     "lodash": "4.17.11",
     "pi-spi": "^1.0.3",
-    "sprintf-js": "1.1.2",
-    "colorsys" : "*"
+    "sprintf-js": "1.1.2"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
