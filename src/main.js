@@ -1,4 +1,5 @@
 import { colorRainbows } from './drivers/colorRainbows';
+import { opcDriverFactory } from './drivers/opcServer';
 import { logger } from './util';
 
 let SPI;
@@ -42,10 +43,11 @@ const server = () => {
   const driverConfig = {
     spidevs
   };
-  const staticRainbow = driverFactory(driverConfig, [logger, colorRainbows]);
+  // const driverLoop = driverFactory(driverConfig, [logger, colorRainbows]);
+  const driverLoop = opcDriverFactory(driverConfig, []);
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    staticRainbow();
+    driverLoop();
   }
 };
 
