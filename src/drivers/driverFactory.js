@@ -1,11 +1,17 @@
 import { now } from '../util';
 import { flow } from 'lodash/util';
 
+/**
+ * Given a context containing a list of spi device specifications and raw LED data,
+ * Send data to all LEDs
+ * @param {object} context The context under which the driver operates
+ */
 const driver = context => {
   const { spidevs, data } = context;
-  if(data === undefined) throw Error('No data was supplied');
+  if (data === undefined) throw Error('No data was supplied');
   const dataBuff = Buffer.from(data);
   spidevs.forEach(device => {
+    // TODO: figure out what the spi.trasfer callback should be used for
     device.spi.transfer(dataBuff, dataBuff.length, (e, d) => {
       if (e) console.error(e);
       else console.log('Got "' + d.toString() + '" back.');
@@ -23,7 +29,12 @@ const driver = context => {
 };
 
 /**
- * Given a spi object and the number of leds, return a callback which drives the SPI
+ * Driver callback factory
+ * @param { object } driverConfig is used to create a context for the
+ *    middleware and driver functions.
+ * @param { array } middleware is a list of functions to call before the driver
+ *    function is called
+ * @returns { function } callback, called repeatedly to drive the SPI.
  */
 export const driverFactory = (driverConfig, middleware = []) => {
   const { numLeds } = driverConfig;

@@ -14,6 +14,8 @@ import { driverFactory } from './drivers/driverFactory';
 const server = () => {
   // const spi = SPI.initialize('./mntpoint/spidev0.0');
   // const spi = SPI.initialize('/dev/spidev0.0');
+
+  // TODO: number of LEDS on each device?
   const spidevs = [
     {
       bus: 0,
