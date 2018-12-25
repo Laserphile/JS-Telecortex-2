@@ -19,8 +19,16 @@ export const formatMsg = ({ h, s, v }, { r, g, b }, rate, data) =>
     2
   )} : ${data.toString().slice(0, 32)}`;
 
+// TODO: I think this should be renamed colourLogger since it only does colours
 export const logger = context => {
-  const { start, lastPrint, frames, hsv, rgb, data } = context;
+  const {
+    start,
+    lastPrint,
+    frames,
+    hsv = { h: 0, s: 0, v: 0 },
+    rgb = { r: 0, g: 0, b: 0 },
+    data = []
+  } = context;
   const theLastPrint = lastPrint || now();
   if (now() - theLastPrint > 1) {
     context.rate = frames / (now() - start + 1);
