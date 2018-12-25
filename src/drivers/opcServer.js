@@ -1,6 +1,7 @@
 import { now } from '../util';
 import { flow } from 'lodash/util';
 import { createSocket } from 'dgram';
+import { parse } from 'binary';
 
 /**
  * Open Pixel Control server implementation of the driverFactory.driver interface.
