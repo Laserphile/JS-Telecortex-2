@@ -1,6 +1,7 @@
 import { now } from '../util';
 import { flow } from 'lodash/util';
 import { createSocket } from 'dgram';
+import { createServer } from 'net';
 import { parse } from 'binary';
 
 // TODO: rename this opcUDPServer, since there might be a opcTCPServer
@@ -11,11 +12,35 @@ import { parse } from 'binary';
  * Configure UDP server callbacks to handle OPC commands.
  * @param {object} context The context under which the driver operates
  */
+const opcTCPServerSetup = context => {
+  const { spidevs, opc_port, max_panels } = context;
+  console.log(`About to create OPC TCP server on port ${opc_port}`);
+
+  context.server = createServer(socket => {
+    console.log('server create callback');
+    // Handle incoming messages from clients.
+    socket.on('data', data => {
+      console.log(`server got: ${data} from ${socket.remoteAddress}:${socket.remotePort}`);
+    });
+  });
+  context.server.listen(opc_port, () => {
+    console.log('server listen callback');
+  });
+};
+
+/**
+ * Open Pixel Control server implementation of the driverFactory.driver interface.
+ * Given a context containing a list of spi device specifications,
+ * Configure UDP server callbacks to handle OPC commands.
+ * @param {object} context The context under which the driver operates
+ */
 const opcUDPServerSetup = context => {
   const { spidevs, opc_port, max_panels } = context;
-  console.log(`About to create server on port ${opc_port}`);
+  console.log(`About to create OPC UDP server on port ${opc_port}`);
 
-  context.server = createSocket('udp4');
+  context.server = createSocket('udp4', () => {
+    console.log('socket create callback');
+  });
 
   context.server.on('error', err => {
     console.log(`server error:\n${err.stack}`);
@@ -45,11 +70,17 @@ const opcUDPServerSetup = context => {
     console.log(`server listening ${address.address}:${address.port}`);
   });
 
-  context.server.bind({ port: opc_port }, () => {
-    console.log('server bind callback');
+  context.server.bind(opc_port, '127.0.0.1', () => {
+    console.log('socket bind callback');
   });
 
   console.log(`After bind ${context.server}`);
+
+  // context.server.close(() => {
+  //   console.log('socket close callback');
+  // });
+
+  // console.log(`After close ${context.server}`);
   return context;
 };
 
@@ -82,7 +113,8 @@ export const opcDriverFactory = (driverConfig, middleware = []) => {
     brightness: 1
   };
   // Setup only needs to be called once.
-  opcUDPServerSetup(context);
+  // opcUDPServerSetup(context);
+  opcTCPServerSetup(context);
   return () => {
     return flow(...middleware)(context);
   };
