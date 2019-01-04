@@ -1,6 +1,5 @@
-import { colorRainbows } from './drivers/colorRainbows';
-import { opcTCPServerSetup, opcUDPServerSetup } from './drivers/opcServer';
-import { now, logger } from './util';
+import { now } from './util';
+import { opcTCPServer } from './opc/tcp-server';
 
 let SPI;
 // noinspection ES6ModulesDependencies
@@ -9,8 +8,6 @@ if (process.platform === 'linux') {
 } else {
   SPI = require('./util/testSpi').default;
 }
-
-import { driverFactory } from './drivers/driverFactory';
 
 const server = () => {
   // const spi = SPI.initialize('./mntpoint/spidev0.0');
@@ -57,8 +54,8 @@ const server = () => {
     // eslint-disable-next-line no-unused-vars
     brightness: 1
   };
-  opcTCPServerSetup(driverConfig);
-  // opcUDPServerSetup(driverConfig);
+  opcTCPServer(driverConfig);
+  // opcUDPServer(driverConfig);
 };
 
 server();
