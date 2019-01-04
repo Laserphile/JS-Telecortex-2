@@ -47,6 +47,7 @@
   "scripts": {
     "build": "babel src -s -D -d dist",
     "dev": "nodemon --exec yarn run babel-node -- src/main.js",
+    "dev-client": "nodemon --exec yarn run babel-node -- src/client.js",
     "start": "node dist/main.js",
     "test": "jest --watch"
   }
