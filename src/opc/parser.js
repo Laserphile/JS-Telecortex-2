@@ -20,6 +20,6 @@ export const parseOPCMessage = (context, msg) => {
   }
   // TODO: perhaps put message on a queue
   if (spidevs) {
-    console.log('spidevs');
+    console.log(`spidevs: ${JSON.stringify(spidevs)}`);
   }
 };
