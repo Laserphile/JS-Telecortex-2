@@ -1,6 +1,6 @@
 import { colorRainbows } from './drivers/colorRainbows';
-import { opcDriverFactory } from './drivers/opcServer';
-import { logger } from './util';
+import { opcTCPServerSetup, opcUDPServerSetup } from './drivers/opcServer';
+import { now, logger } from './util';
 
 let SPI;
 // noinspection ES6ModulesDependencies
@@ -41,14 +41,24 @@ const server = () => {
   });
 
   const driverConfig = {
-    spidevs
+    spidevs,
+    // port used to listen for OPC commands
+    opc_port: 42069,
+    // Largest number of panels that this controller can address
+    max_panels: 4,
+    // Frame counter for FPS calculation
+    frames: 0,
+    // FPS rate calculated
+    rate: 0.0,
+    // time when script started for FPS calculation
+    start: now(),
+    // Last time something was printed
+    lastPrint: now(),
+    // eslint-disable-next-line no-unused-vars
+    brightness: 1
   };
-  // const driverLoop = driverFactory(driverConfig, [logger, colorRainbows]);
-  const driverLoop = opcDriverFactory(driverConfig, []);
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    driverLoop();
-  }
+  opcTCPServerSetup(driverConfig);
+  // opcUDPServerSetup(driverConfig);
 };
 
 server();

@@ -1,5 +1,3 @@
-import { now } from '../util';
-import { flow } from 'lodash/util';
 import { createSocket } from 'dgram';
 import { createServer } from 'net';
 import { parse } from 'binary';
@@ -12,7 +10,7 @@ import { parse } from 'binary';
  * Configure UDP server callbacks to handle OPC commands.
  * @param {object} context The context under which the driver operates
  */
-const opcTCPServerSetup = context => {
+export const opcTCPServerSetup = context => {
   const { spidevs, opc_port, max_panels } = context;
   console.log(`About to create OPC TCP server on port ${opc_port}`);
 
@@ -26,6 +24,8 @@ const opcTCPServerSetup = context => {
   context.server.listen(opc_port, () => {
     console.log('server listen callback');
   });
+
+  console.log(`After create server on ${opc_port}`);
 };
 
 /**
@@ -34,7 +34,7 @@ const opcTCPServerSetup = context => {
  * Configure UDP server callbacks to handle OPC commands.
  * @param {object} context The context under which the driver operates
  */
-const opcUDPServerSetup = context => {
+export const opcUDPServerSetup = context => {
   const { spidevs, opc_port, max_panels } = context;
   console.log(`About to create OPC UDP server on port ${opc_port}`);
 
@@ -83,41 +83,3 @@ const opcUDPServerSetup = context => {
   // console.log(`After close ${context.server}`);
   return context;
 };
-
-/**
- * Open Pixel Control server implementation of the driverFactory interface.
- * @param { object } driverConfig is used to create a context for the
- *    middleware and driver functions.
- * @param { array } middleware is a list of functions to call before the driver
- *    function is called
- * @returns { function } callback, called repeatedly to drive the SPI.
- */
-
-export const opcDriverFactory = (driverConfig, middleware = []) => {
-  const { opc_port, max_panels } = driverConfig;
-  const context = {
-    ...driverConfig,
-    // port used to listen for OPC commands
-    opc_port: opc_port || 42069,
-    // Largest number of panels that this controller can address
-    max_panels: max_panels || 4,
-    // Frame counter for FPS calculation
-    frames: 0,
-    // FPS rate calculated
-    rate: 0.0,
-    // time when script started for FPS calculation
-    start: now(),
-    // Last time something was printed
-    lastPrint: now(),
-    // eslint-disable-next-line no-unused-vars
-    brightness: 1
-  };
-  // Setup only needs to be called once.
-  // opcUDPServerSetup(context);
-  opcTCPServerSetup(context);
-  return () => {
-    return flow(...middleware)(context);
-  };
-};
-
-export default opcDriverFactory;
