@@ -14,8 +14,17 @@ export const opcTCPServer = context => {
   context.server = createServer(socket => {
     // Handle incoming messages from clients.
     socket.on('data', data => {
-      console.log(chalk`{cyan 🛰  got: ${data.toString('hex')} from ${socket.remoteAddress}:${socket.remotePort}}`);
+      console.log(
+        chalk`{cyan 🛰  got: ${data.toString('hex')} from ${socket.remoteAddress}:${
+          socket.remotePort
+        }}`
+      );
       parseOPCMessage(context, data);
+    });
+
+    socket.on('error', err => {
+      // handle errors here
+      console.error(err);
     });
   });
 

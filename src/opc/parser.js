@@ -21,5 +21,8 @@ export const parseOPCMessage = (context, msg) => {
   // TODO: perhaps put message on a queue
   if (spidevs) {
     console.log(`spidevs: ${JSON.stringify(spidevs)}`);
+    if (header.channel > spidevs.length) {
+      console.log(chalk`{red invalid channel ${header.channel} > ${max_panels}}`);
+    }
   }
 };
