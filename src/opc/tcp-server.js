@@ -25,6 +25,7 @@ export const opcTCPServer = context => {
     socket.on('error', err => {
       // handle errors here
       console.error(err);
+      parseOPCMessage(context, data);
     });
   });
 
