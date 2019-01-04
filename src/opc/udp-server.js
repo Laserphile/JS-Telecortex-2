@@ -1,5 +1,5 @@
 import { createSocket } from 'dgram';
-import { parse } from 'binary';
+import { parseOPCMessage } from './parser';
 
 /**
  * Open Pixel Control server implementation of the driverFactory.driver interface.
@@ -8,7 +8,7 @@ import { parse } from 'binary';
  * @param {object} context The context under which the driver operates
  */
 export const opcUDPServer = context => {
-  const { spidevs, opc_port, max_panels } = context;
+  const { opc_port } = context;
   console.log(`About to create OPC UDP server on port ${opc_port}`);
 
   context.server = createSocket('udp4', () => {
@@ -22,20 +22,7 @@ export const opcUDPServer = context => {
 
   context.server.on('message', (msg, rinfo) => {
     console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
-    // TODO: parse OPC message and send data to spidevs
-    const header = parse(msg)
-      .word8u('channel')
-      .word8u('command')
-      .word16bu('length')
-      .vars();
-    console.log(`header: ${header}`);
-    if (header.channel > max_panels) {
-      console.log(`invalid channel ${header.channel} > ${max_panels}`);
-    }
-    // TODO: perhaps put message on a queue
-    if (spidevs) {
-      console.log('spidevs');
-    }
+    parseOPCMessage(context, msg);
   });
 
   context.server.on('listening', () => {
