@@ -41,8 +41,6 @@ const server = () => {
     spidevs,
     // port used to listen for OPC commands
     opc_port: 42069,
-    // Largest number of panels that this controller can address
-    max_panels: 4,
     // Frame counter for FPS calculation
     frames: 0,
     // FPS rate calculated

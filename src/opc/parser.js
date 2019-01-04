@@ -12,19 +12,13 @@ const parseOPCHeader = msg => {
  */
 export const handleOPCMessage = (context, msg) => {
   // TODO
-  const { spidevs, max_panels } = context;
+  const { spidevs } = context;
   const header = parseOPCHeader(msg);
   console.log(chalk`{bgMagenta.black  header: } {cyan ${JSON.stringify(header)}}`);
-  if (header.channel > max_panels) {
-    console.log(chalk`{red invalid channel ${header.channel} > ${max_panels}}`);
-  }
   // TODO: perhaps put message on a queue
   console.log(`spidevs: ${JSON.stringify(spidevs)}`);
   if (header.channel > spidevs.length) {
-    console.log(chalk`{red invalid channel ${header.channel} > ${max_panels}}`);
+    console.error(chalk`{red invalid channel ${header.channel} > ${spidevs.length}}`);
     return;
   }
-
-
-
 };
