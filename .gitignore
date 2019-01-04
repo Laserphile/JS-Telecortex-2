@@ -6,3 +6,5 @@ fusepy
 localpy/
 
 spidev.log
+
+*.log
