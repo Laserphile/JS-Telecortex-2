@@ -1,6 +1,6 @@
 import { createServer } from 'net';
 import chalk from 'chalk';
-import { parseOPCMessage } from './parser';
+import { handleOPCMessage } from './parser';
 
 /**
  * Open Pixel Control server implementation of the driverFactory.driver interface.
@@ -19,7 +19,7 @@ export const opcTCPServer = context => {
           socket.remotePort
         }}`
       );
-      parseOPCMessage(context, data);
+      handleOPCMessage(context, data);
     });
 
     socket.on('error', err => {

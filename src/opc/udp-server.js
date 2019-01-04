@@ -1,5 +1,5 @@
 import { createSocket } from 'dgram';
-import { parseOPCMessage } from './parser';
+import { handleOPCMessage } from './parser';
 
 /**
  * Open Pixel Control server implementation of the driverFactory.driver interface.
@@ -22,7 +22,7 @@ export const opcUDPServer = context => {
 
   context.server.on('message', (msg, rinfo) => {
     console.log(`server got: ${msg} from ${rinfo.address}:${rinfo.port}`);
-    parseOPCMessage(context, msg);
+    handleOPCMessage(context, msg);
   });
 
   context.server.on('listening', () => {

@@ -10,7 +10,7 @@ const parseOPCHeader = msg => {
 /**
  * parse OPC message and send data to spidevs
  */
-export const parseOPCMessage = (context, msg) => {
+export const handleOPCMessage = (context, msg) => {
   // TODO
   const { spidevs, max_panels } = context;
   const header = parseOPCHeader(msg);
@@ -19,10 +19,12 @@ export const parseOPCMessage = (context, msg) => {
     console.log(chalk`{red invalid channel ${header.channel} > ${max_panels}}`);
   }
   // TODO: perhaps put message on a queue
-  if (spidevs) {
-    console.log(`spidevs: ${JSON.stringify(spidevs)}`);
-    if (header.channel > spidevs.length) {
-      console.log(chalk`{red invalid channel ${header.channel} > ${max_panels}}`);
-    }
+  console.log(`spidevs: ${JSON.stringify(spidevs)}`);
+  if (header.channel > spidevs.length) {
+    console.log(chalk`{red invalid channel ${header.channel} > ${max_panels}}`);
+    return;
   }
+
+
+
 };
