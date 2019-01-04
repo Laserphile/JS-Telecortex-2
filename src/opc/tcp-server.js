@@ -1,6 +1,6 @@
 import { createServer } from 'net';
+import chalk from 'chalk';
 import { parseOPCMessage } from './parser';
-
 
 /**
  * Open Pixel Control server implementation of the driverFactory.driver interface.
@@ -10,19 +10,16 @@ import { parseOPCMessage } from './parser';
  */
 export const opcTCPServer = context => {
   const { spidevs, opc_port, max_panels } = context;
-  console.log(`About to create OPC TCP server on port ${opc_port}`);
 
   context.server = createServer(socket => {
-    console.log('server create callback');
     // Handle incoming messages from clients.
     socket.on('data', data => {
-      console.log(`server got: ${data} from ${socket.remoteAddress}:${socket.remotePort}`);
+      console.log(chalk`{cyan 🛰  got: ${data.toString('hex')} from ${socket.remoteAddress}:${socket.remotePort}}`);
       parseOPCMessage(context, data);
     });
   });
-  context.server.listen(opc_port, () => {
-    console.log('server listen callback');
-  });
 
-  console.log(`After create server on ${opc_port}`);
+  context.server.listen(opc_port, () => {
+    console.log(chalk`{cyan 🛰  Server listening on port: {white ${opc_port}}}`);
+  });
 };
