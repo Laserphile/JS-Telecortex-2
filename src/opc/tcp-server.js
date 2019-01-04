@@ -1,4 +1,6 @@
 import { createServer } from 'net';
+import { parseOPCMessage } from './parser';
+
 
 /**
  * Open Pixel Control server implementation of the driverFactory.driver interface.
@@ -15,6 +17,7 @@ export const opcTCPServer = context => {
     // Handle incoming messages from clients.
     socket.on('data', data => {
       console.log(`server got: ${data} from ${socket.remoteAddress}:${socket.remotePort}`);
+      parseOPCMessage(context, data);
     });
   });
   context.server.listen(opc_port, () => {
