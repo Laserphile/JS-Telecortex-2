@@ -14,7 +14,7 @@ before_install:
 install:
   - yarn
 script:
-  - yarn run jest
+  - yarn run test-ci
 cache:
   yarn: true
 notifications:
