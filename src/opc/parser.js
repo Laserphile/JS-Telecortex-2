@@ -12,6 +12,8 @@ const OPC_BODY_FIELDS = ['r', 'g', 'b'];
  * @return an object containing the channel, command and length
  */
 export const parseOPCHeader = msg => {
+  if (msg === undefined) throw 'msg is undefined';
+  if (msg.length < OPC_HEADER_LEN) throw 'msg too short to have header';
   return parse(msg)
     .word8u('channel')
     .word8u('command')
