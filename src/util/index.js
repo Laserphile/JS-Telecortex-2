@@ -26,6 +26,8 @@ export const formatMsg = ({ h, s, v }, { r, g, b }, rate, data) =>
     2
   )} : ${data.toString().slice(0, 32)}`;
 
+export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
+
 // TODO: I think this should be renamed colourLogger since it only does colours
 export const logger = context => {
   const {
@@ -40,7 +42,7 @@ export const logger = context => {
   if (now() - theLastPrint > 1) {
     context.rate = frames / (now() - start + 1);
     const msg = formatMsg(hsv, rgb, context.rate, data);
-    console.log(chalk.hsv(hsv.h, 50, 100)(msg));
+    console.log(colourMessage(hsv.h, msg));
     context.lastPrint = now();
   }
   return context;
