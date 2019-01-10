@@ -29,8 +29,11 @@ const parseOPCBody = msg => {
       length: Math.floor(body.length / OPC_BODY_FIELDS.length)
     },
     (_, index) =>
-      OPC_BODY_FIELDS.reduce((acc, cur, idx, src) =>
-        Object.assign(acc || {}, { [cur]: body[index * src.length + idx] })
+      OPC_BODY_FIELDS.reduce(
+        (accumulator, key, offset, source) => (
+          (accumulator[key] = body[index * source.length + offset]), accumulator
+        ),
+        {}
       )
   );
 };
