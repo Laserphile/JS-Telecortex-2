@@ -4,7 +4,7 @@
 
 ## Coverage
 
-![codecoverage-svg-sunburst]( https://codecov.io/gh/derwentx/Xero-Map-Generator/branch/master/graphs/sunburst.svg)
+![codecoverage-svg-sunburst]( https://codecov.io/gh/Laserphile/JS-Telecortex-2/branch/master/graphs/sunburst.svg)
 
 ## Install on Raspbian from scratch
 ```bash
