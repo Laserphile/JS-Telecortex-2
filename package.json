@@ -51,6 +51,6 @@
     "dev-client": "nodemon --exec yarn run babel-node -- src/client.js",
     "start": "node dist/main.js",
     "test": "jest --watch",
-    "test-ci": "jest --ci"
+    "test-ci": "jest --ci --coverage"
   }
 }

@@ -13,8 +13,10 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
 install:
   - yarn
+  - npm install -g codecov
 script:
   - yarn run test-ci
+  - codecov
 cache:
   yarn: true
 notifications:
