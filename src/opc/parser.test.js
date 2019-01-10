@@ -1,4 +1,4 @@
-import { parseOPCHeader } from './parser';
+import { parseOPCHeader, parseOPCBody } from './parser';
 
 describe('parseOPCHeader', () => {
   it('handles blank message', () => {
@@ -34,5 +34,29 @@ describe('parseOPCHeader', () => {
       command: 0,
       length: 256
     });
+  });
+});
+
+describe('parseOPCBody', () => {
+  it('handles blank message', () => {
+    expect(() => parseOPCBody()).toThrow(Error);
+  });
+  it('handles short message', () => {
+    expect(() => parseOPCBody(Buffer.from([0x00, 0x00]))).toThrow(Error);
+  });
+  it('works with all null bytes', () => {
+    expect(parseOPCBody(Buffer.from([0x00, 0x00, 0x00, 0x00]))).toEqual([]);
+  });
+  it('works with a typical body', () => {
+    expect(parseOPCBody(Buffer.from([
+        0x01, 0x00, 0x00, 0x09,
+        0xff, 0x00, 0x00,
+        0x00, 0xff, 0x00,
+        0x00, 0x00, 0xff
+    ]))).toEqual([
+      {r:255, g:0, b:0},
+      {r:0, g:255, b:0},
+      {r:0, g:0, b:255}
+    ]);
   });
 });

@@ -27,6 +27,7 @@ export const parseOPCHeader = msg => {
  */
 export const parseOPCBody = msg => {
   // skip over the message header
+  if (msg.length < OPC_HEADER_LEN) throw Error('msg too short to have body');
   const body = msg.slice(OPC_HEADER_LEN);
   return Array.from(
     {
