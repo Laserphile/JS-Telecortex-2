@@ -28,4 +28,11 @@ describe('parseOPCHeader', () => {
       length: 513
     });
   });
+  it('works with a big header (utf-8 fuckery)', () => {
+    expect(parseOPCHeader(Buffer.from('\xff\x00\x01\x00'))).toEqual({
+      channel: 255,
+      command: 0,
+      length: 256
+    });
+  });
 });
