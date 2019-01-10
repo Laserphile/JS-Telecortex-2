@@ -1,3 +1,11 @@
+[![Build Status](https://travis-ci.org/Laserphile/JS-Telecortex-2.svg?branch=master)](https://travis-ci.org/Laserphile/JS-Telecortex-2)
+[![Maintainability](https://api.codeclimate.com/v1/badges/89eede666d93740400d9/maintainability)](https://codeclimate.com/github/Laserphile/JS-Telecortex-2/maintainability)
+[![codecov](https://codecov.io/gh/Laserphile/JS-Telecortex-2/branch/master/graph/badge.svg)](https://codecov.io/gh/Laserphile/JS-Telecortex-2)
+
+## Coverage
+
+![codecoverage-svg-sunburst]( https://codecov.io/gh/derwentx/Xero-Map-Generator/branch/master/graphs/sunburst.svg)
+
 ## Install on Raspbian from scratch
 ```bash
 # Fresh pi needs update
