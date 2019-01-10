@@ -1,6 +1,6 @@
 import { parse } from 'binary';
-// import { chunk } from 'lodash';
 import chalk from 'chalk';
+import sprintf from 'sprintf-js';
 
 const OPC_HEADER_LEN = 4;
 const OPC_BODY_FIELDS = ['r', 'g', 'b'];
@@ -36,6 +36,19 @@ const parseOPCBody = msg => {
 };
 
 /**
+ * Convert a colours specification to string
+ * @param {Array of colorsys RGB objects} colours
+ */
+const coloursToString = colours => {
+  const colourFormat = `%0${Math.log10(colours.length)}d | {R:%03d G:%03d B:%03d}`;
+  return colours.reduce(
+    (accumulator, colour, count) =>
+      accumulator.concat(sprintf.sprintf(colourFormat, count, colour.r, colour.g, colour.b)),
+    ''
+  );
+};
+
+/**
  * parse OPC message and send data to spidevs
  */
 export const handleOPCMessage = (context, msg) => {
@@ -50,5 +63,5 @@ export const handleOPCMessage = (context, msg) => {
     return;
   }
   const colours = parseOPCBody(msg);
-  console.log(chalk`{bgMagenta.black  body: } ${colours.map(colour => Object.entries(colour))}`);
+  console.log(chalk`{bgMagenta.black  body: } ${coloursToString(colours)}`);
 };
