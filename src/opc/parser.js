@@ -12,8 +12,8 @@ const OPC_BODY_FIELDS = ['r', 'g', 'b'];
  * @return an object containing the channel, command and length
  */
 export const parseOPCHeader = msg => {
-  if (msg === undefined) throw 'msg is undefined';
-  if (msg.length < OPC_HEADER_LEN) throw 'msg too short to have header';
+  if (msg === undefined) throw Error('msg is undefined');
+  if (msg.length < OPC_HEADER_LEN) throw Error('msg too short to have header');
   return parse(msg)
     .word8u('channel')
     .word8u('command')
@@ -44,7 +44,7 @@ export const parseOPCBody = msg => {
 
 /**
  * Convert a colours specification to string
- * // TODO: move to util
+ * // TODO: move to ../util/index.js
  * @param {Array of colorsys RGB objects} colours
  */
 const coloursToString = colours => {
@@ -61,6 +61,7 @@ const coloursToString = colours => {
 
 /**
  * parse OPC message and send data to spidevs
+ * // TODO move to ./index.js
  */
 export const handleOPCMessage = (context, msg) => {
   // TODO
