@@ -1,7 +1,9 @@
 import { parse } from 'binary';
+// import { chunk } from 'lodash';
 import chalk from 'chalk';
 
 const OPC_HEADER_LEN = 4;
+const OPC_BODY_FIELDS = ['r', 'g', 'b'];
 
 /**
  * parse header from OPC message.
@@ -16,20 +18,21 @@ const parseOPCHeader = msg => {
 
 /**
  * parse body from OPC message.
+ * body message format: R0G0B0R1G1B1
  * @return an array of colorsys RGB objects
  */
 const parseOPCBody = msg => {
   // skip over the message header
   const body = msg.slice(OPC_HEADER_LEN);
-  const result = Array();
-  while (body.length > 2) {
-    result.push({
-      r: body.shift(),
-      g: body.shift(),
-      b: body.shift()
-    });
-  }
-  return result;
+  return Array.from(
+    {
+      length: Math.floor(body.length / OPC_BODY_FIELDS.length)
+    },
+    (_, index) =>
+      OPC_BODY_FIELDS.reduce((acc, cur, idx, src) =>
+        Object.assign(acc || {}, { [cur]: body[index * src.length + idx] })
+      )
+  );
 };
 
 /**
@@ -47,5 +50,5 @@ export const handleOPCMessage = (context, msg) => {
     return;
   }
   const colours = parseOPCBody(msg);
-  console.log(`{bgMagenta.black  body: } ${colours}`);
+  console.log(chalk`{bgMagenta.black  body: } ${colours.map(colour => Object.entries(colour))}`);
 };
