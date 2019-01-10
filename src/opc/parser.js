@@ -11,7 +11,7 @@ const OPC_BODY_FIELDS = ['r', 'g', 'b'];
  * parse header from OPC message.
  * @return an object containing the channel, command and length
  */
-const parseOPCHeader = msg => {
+export const parseOPCHeader = msg => {
   return parse(msg)
     .word8u('channel')
     .word8u('command')
@@ -23,7 +23,7 @@ const parseOPCHeader = msg => {
  * body message format: R0G0B0R1G1B1
  * @return an array of colorsys RGB objects
  */
-const parseOPCBody = msg => {
+export const parseOPCBody = msg => {
   // skip over the message header
   const body = msg.slice(OPC_HEADER_LEN);
   return Array.from(
@@ -42,6 +42,7 @@ const parseOPCBody = msg => {
 
 /**
  * Convert a colours specification to string
+ * // TODO: move to util
  * @param {Array of colorsys RGB objects} colours
  */
 const coloursToString = colours => {
