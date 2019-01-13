@@ -1,4 +1,4 @@
-import { rgb2sk9822 } from './index';
+import { rgb2sk9822 } from './sk9822';
 
 describe('rgb2sk9822', () => {
   it('works', () => {
@@ -10,3 +10,4 @@ describe('rgb2sk9822', () => {
     expect(rgb2sk9822(red, 1)).not.toEqual(rgb2sk9822(red, 0));
   });
 });
+

@@ -1,7 +1,4 @@
 import { parse } from 'binary';
-import sprintf from 'sprintf-js';
-import { rgbToHsv } from 'colorsys';
-import { colourMessage } from '../util';
 
 const OPC_HEADER_LEN = 4;
 const OPC_BODY_FIELDS = ['r', 'g', 'b'];

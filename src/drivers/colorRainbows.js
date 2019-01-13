@@ -1,5 +1,5 @@
 import { hsvToRgb } from 'colorsys';
-import { rgb2sk9822 } from '../util';
+import { rgb2sk9822 } from '../util/sk9822';
 
 export const colorRainbows = context => {
   const { h } = context.hsv;
