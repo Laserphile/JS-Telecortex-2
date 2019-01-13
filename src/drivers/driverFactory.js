@@ -24,7 +24,7 @@ const ledDriver = context => {
 export const opcClientDriver = context => {
   const { channelColours } = context;
   Object.keys(channelColours).forEach(channel => {
-    const dataBuff = composeOPCMessage(channel, channelColours[channel]);
+    const dataBuff = Buffer.from(composeOPCMessage(channel, channelColours[channel]));
     context.client.write(dataBuff);
   });
   return context;

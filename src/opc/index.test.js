@@ -1,5 +1,6 @@
 import { handleOPCMessage, handleAllOPCMessages } from './index';
 import 'jest';
+import { composeOPCHeader } from './compose';
 
 const transferFn = jest.fn();
 
@@ -19,11 +20,14 @@ afterEach(() => {
   mockContext.spidevs[0].spi.transfer.mockClear();
 });
 
+const redPixel = [0xff, 0x00, 0x00];
+const incompleteRedPixel = redPixel.slice(0, redPixel.length - 1);
+
 describe('handleOPCMessage', () => {
   [
     {
       testName: 'handles invalid channel',
-      inArray: [0x01, 0x00, 0x00, 0x03, 0xff, 0x00, 0x00],
+      inArray: composeOPCHeader(1, 3).concat(redPixel),
       validate: (data, response) => {
         expect(transferFn.mock.calls.length).toBe(0);
         expect(response).toBe(data.length);
@@ -31,7 +35,7 @@ describe('handleOPCMessage', () => {
     },
     {
       testName: 'works',
-      inArray: [0x00, 0x00, 0x00, 0x03, 0xff, 0x00, 0x00],
+      inArray: composeOPCHeader(0, 3).concat(redPixel),
       validate: (data, response) => {
         expect(transferFn.mock.calls.length).toBe(1);
         expect(transferFn.mock.calls[0]).toMatchSnapshot();
@@ -50,7 +54,7 @@ describe('handleAllOPCMessages', () => {
   [
     {
       testName: 'handles partial messages',
-      inArray: [0x00, 0x00, 0x00, 0x03, 0xff, 0x00],
+      inArray: composeOPCHeader(0, 3).concat(incompleteRedPixel),
       validate: (data, response) => {
         expect(transferFn.mock.calls.length).toBe(0);
         expect(response).toBe(data);
@@ -58,7 +62,7 @@ describe('handleAllOPCMessages', () => {
     },
     {
       testName: 'handles invalid messages',
-      inArray: [0xff, 0x00, 0x00, 0x03, 0xff, 0x00],
+      inArray: composeOPCHeader(0xff, 3).concat(incompleteRedPixel),
       validate: (_, response) => {
         expect(transferFn.mock.calls.length).toBe(0);
         expect(response).toBe(undefined);
@@ -66,7 +70,12 @@ describe('handleAllOPCMessages', () => {
     },
     {
       testName: 'handles multiple messages',
-      inArray: [0x00, 0x00, 0x00, 0x03, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xff, 0x00, 0x00],
+      inArray: Array.of(
+        ...composeOPCHeader(0, 3),
+        ...redPixel,
+        ...composeOPCHeader(0, 3),
+        ...redPixel
+      ),
       validate: (_, response) => {
         expect(transferFn.mock.calls.length).toBe(2);
         expect(transferFn.mock.calls).toMatchSnapshot();
