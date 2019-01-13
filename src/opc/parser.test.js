@@ -40,8 +40,13 @@ describe('parseOPCBody', () => {
   it('handles blank message', () => {
     expect(() => parseOPCBody()).toThrow(Error);
   });
-  it('handles short message', () => {
+  it('handles short incomplete message', () => {
     expect(() => parseOPCBody(Buffer.from([0x00, 0x00]))).toThrow(PartialOPCMsgError);
+  });
+  it('handles medium incomplete message', () => {
+    expect(() => parseOPCBody(Buffer.from([0x00, 0x00, 0x00, 0xff, 0x00]), 255)).toThrow(
+      PartialOPCMsgError
+    );
   });
   it('works with all null bytes', () => {
     expect(parseOPCBody(Buffer.from([0x00, 0x00, 0x00, 0x00]))).toEqual([]);
