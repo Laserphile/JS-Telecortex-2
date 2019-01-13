@@ -1,5 +1,9 @@
 import { now } from './util';
 import { opcTCPServer } from './opc/tcp-server';
+// Imports for rainbow animations
+// import { driverFactory } from './drivers/driverFactory';
+// import { colorRainbows } from './drivers/colorRainbows';
+// import { logger } from './util';
 
 let SPI;
 // noinspection ES6ModulesDependencies
@@ -44,9 +48,6 @@ const DRV_CONF_DEFAULTS = {
 };
 
 const server = () => {
-  // const spi = SPI.initialize('./mntpoint/spidev0.0');
-  // const spi = SPI.initialize('/dev/spidev0.0');
-
   // TODO: number of LEDS on each device?
   const spidevs = RPI_SPIDEVS.map(spec => {
     spec.spi = SPI.initialize(`/dev/spidev${spec.bus}.${spec.device}`);
@@ -60,6 +61,12 @@ const server = () => {
   };
   opcTCPServer(driverConfig);
   // opcUDPServer(driverConfig);
+
+  // const staticRainbowLoop = driverFactory(driverConfig, [logger, colorRainbows]);
+  // // eslint-disable-next-line no-constant-condition
+  // while (true) {
+  //   staticRainbowLoop();
+  // }
 };
 
 server();
