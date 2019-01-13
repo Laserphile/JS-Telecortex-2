@@ -30,4 +30,4 @@ export const colours2sk9822 = (colours, brightness) => {
     (accumulator, colour) => (accumulator.push(...rgb2sk9822(colour, brightness)), accumulator),
     Array.from(resetFrame)
   );
-}
+};

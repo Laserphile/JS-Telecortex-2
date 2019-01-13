@@ -10,4 +10,3 @@ describe('rgb2sk9822', () => {
     expect(rgb2sk9822(red, 1)).not.toEqual(rgb2sk9822(red, 0));
   });
 });
-
