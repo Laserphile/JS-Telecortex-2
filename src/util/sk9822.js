@@ -1,5 +1,5 @@
-// maximum 8bit unsigned integer
-const uint8Max = 0xff;
+// 8bit unsigned integer must be less than this value
+const uint8Max = 0x100;
 // Constant prefix in first byte of sk9822 frame
 const prefix = 0xe0;
 // Mask for brightness bitfield in first byte of sk9822 frame
