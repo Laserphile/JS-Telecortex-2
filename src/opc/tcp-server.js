@@ -9,7 +9,7 @@ import { handleOPCMessage } from './parser';
  * @param {object} context The context under which the driver operates
  */
 export const opcTCPServer = context => {
-  const { spidevs, opc_port, max_panels } = context;
+  const { opc_port } = context;
 
   context.server = createServer(socket => {
     // Handle incoming messages from clients.

@@ -1,5 +1,4 @@
 import { parse } from 'binary';
-import chalk from 'chalk';
 import sprintf from 'sprintf-js';
 import { rgbToHsv } from 'colorsys';
 import { colourMessage } from '../util';
@@ -41,40 +40,4 @@ export const parseOPCBody = msg => {
         {}
       )
   );
-};
-
-/**
- * Convert a colours specification to string
- * // TODO: move to ../util/index.js
- * @param {Array of colorsys RGB objects} colours
- */
-const coloursToString = colours => {
-  const colourFormat = `%0${Math.log10(colours.length)}d | {R:%03d G:%03d B:%03d}\n`;
-  return colours.reduce((accumulator, colour, count) => {
-    return accumulator.concat(
-      colourMessage(
-        rgbToHsv(colour).h,
-        sprintf.sprintf(colourFormat, count, colour.r, colour.g, colour.b)
-      )
-    );
-  }, '');
-};
-
-/**
- * parse OPC message and send data to spidevs
- * // TODO move to ./index.js
- */
-export const handleOPCMessage = (context, msg) => {
-  // TODO
-  const { spidevs } = context;
-  const header = parseOPCHeader(msg);
-  console.log(chalk`{bgMagenta.black  header: } {cyan ${JSON.stringify(header)}}`);
-  // TODO: perhaps put message on a queue
-  console.log(`spidevs: ${JSON.stringify(spidevs)}`);
-  if (header.channel > spidevs.length) {
-    console.error(chalk`{red invalid channel ${header.channel} > ${spidevs.length}}`);
-    return;
-  }
-  const colours = parseOPCBody(msg);
-  console.log(chalk`{bgMagenta.black  body: }\n${coloursToString(colours)}`);
 };
