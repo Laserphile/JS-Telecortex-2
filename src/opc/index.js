@@ -40,19 +40,16 @@ export const handleOPCMessage = (context, msg) => {
  * @return the final partial opcMessage || empty buffer
  */
 export const handleAllOPCMessages = (context, data) => {
-  let bytesRead = 0;
+  let bytesRead;
   while (data.length > 0) {
     try {
       bytesRead = handleOPCMessage(context, data);
     } catch (err) {
-      if (err instanceof PartialOPCMsgError) {
-        return data;
-      } else {
-        console.error(err);
-      }
+      if (err instanceof PartialOPCMsgError) return data;
+      console.error(err);
       return undefined;
     }
     data = data.slice(bytesRead);
-    console.log(chalk`{cyan 🛰  read: ${bytesRead}, remaining: ${data.length} bytes}`);
+    // console.log(chalk`{cyan 🛰  read: ${bytesRead}, remaining: ${data.length} bytes}`);
   }
 };
