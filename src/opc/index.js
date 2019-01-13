@@ -1,6 +1,6 @@
 import { parseOPCHeader, parseOPCBody } from './parser';
 import chalk from 'chalk';
-import { coloursToString } from '../util';
+import { coloursToString, consoleErrorHandler } from '../util';
 import { colours2sk9822 } from '../util/sk9822';
 
 /**
@@ -21,7 +21,5 @@ export const handleOPCMessage = (context, msg) => {
   console.log(chalk`{bgMagenta.black  body: }\n${coloursToString(colours)}`);
   // TODO: perhaps put message on an async queue
   const dataBuff = Buffer.from(colours2sk9822(colours, brightness));
-  spidevs[header.channel].spi.transfer(dataBuff, dataBuff.length, e => {
-    if (e) console.error(e);
-  });
+  spidevs[header.channel].spi.transfer(dataBuff, dataBuff.length, consoleErrorHandler);
 };

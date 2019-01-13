@@ -49,3 +49,7 @@ export const logger = context => {
   }
   return context;
 };
+
+export const consoleErrorHandler = e => {
+  if (e) console.error(e);
+};
