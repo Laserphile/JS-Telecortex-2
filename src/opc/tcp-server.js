@@ -1,6 +1,6 @@
 import { createServer } from 'net';
 import chalk from 'chalk';
-import { handleOPCMessage } from '.';
+import { handleOPCMessage, PartialOPCMsgError } from '.';
 
 /**
  * Open Pixel Control server implementation of the driverFactory.driver interface.
@@ -19,7 +19,28 @@ export const opcTCPServer = context => {
           socket.remotePort
         }}`
       );
-      handleOPCMessage(context, data);
+      if (context.partialOPCMsg) {
+        console.log(
+          chalk`{cyan 🛰  continuing to parse partial first: ${context.partialOPCMsg.toString('hex')}}`
+        );
+        data = Buffer.concat([context.partialOPCMsg, data]);
+        console.log(chalk`{cyan 🛰  data is now: ${data.toString('hex')}}`);
+      }
+      while (data.length > 0) {
+        let bytesRead = 0;
+        try {
+          bytesRead = handleOPCMessage(context, data);
+        } catch (err) {
+          if (err instanceof PartialOPCMsgError) {
+            context.partialOPCMsg = data;
+          } else {
+            console.error(err);
+          }
+          return;
+        }
+        data = data.slice(bytesRead);
+        console.log(chalk`{cyan 🛰  read: ${bytesRead}, remaining: ${data.length} bytes}`);
+      }
     });
 
     socket.on('error', err => {
