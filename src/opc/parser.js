@@ -1,6 +1,5 @@
 import { parse } from 'binary';
 import { PartialOPCMsgError } from '.';
-import chalk from 'chalk';
 
 export const OPC_HEADER_LEN = 4;
 const OPC_BODY_FIELDS = ['r', 'g', 'b'];
