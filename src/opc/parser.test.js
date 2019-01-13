@@ -1,11 +1,12 @@
 import { parseOPCHeader, parseOPCBody } from './parser';
+import { PartialOPCMsgError } from '.';
 
 describe('parseOPCHeader', () => {
   it('handles blank message', () => {
     expect(() => parseOPCHeader()).toThrow(Error);
   });
   it('handles short message', () => {
-    expect(() => parseOPCHeader(Buffer.from([0x00, 0x00]))).toThrow(Error);
+    expect(() => parseOPCHeader(Buffer.from([0x00, 0x00]))).toThrow(PartialOPCMsgError);
   });
   [
     {
@@ -40,7 +41,7 @@ describe('parseOPCBody', () => {
     expect(() => parseOPCBody()).toThrow(Error);
   });
   it('handles short message', () => {
-    expect(() => parseOPCBody(Buffer.from([0x00, 0x00]))).toThrow(Error);
+    expect(() => parseOPCBody(Buffer.from([0x00, 0x00]))).toThrow(PartialOPCMsgError);
   });
   it('works with all null bytes', () => {
     expect(parseOPCBody(Buffer.from([0x00, 0x00, 0x00, 0x00]))).toEqual([]);
