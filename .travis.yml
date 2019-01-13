@@ -1,23 +1,26 @@
-install: true
+install:
+- yarn
+- npm install -g codecov
 language: node_js
 node_js:
-  - "11"
+- '11'
 addons:
   apt:
     packages:
-      - "gcc"
-      - "g++"
-      - "make"
+    - gcc
+    - g++
+    - make
 before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
-  - export PATH="$HOME/.yarn/bin:$PATH"
-install:
-  - yarn
-  - npm install -g codecov
+- curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
+- export PATH="$HOME/.yarn/bin:$PATH"
 script:
-  - yarn run test-ci
-  - codecov
+- yarn run test-ci
+- codecov
 cache:
   yarn: true
 notifications:
-  slack: moonbase-labs:Vc6WhXPLuXrPTDhAtg6SPkrd
+  slack:
+    rooms:
+      secure: Lb6fomr8Nj+pFAtMmPPik7Yr7TUzQ1lcdenhwky1tDc+5tImUoUskYSjzIC+E2FAQxSPHR65Zmf5L8p//HJtyc0rUE07ltW6wJtfYVj2+5dlhgYi+c2PdtyHRfEx7FJyeVak1AZFv3vbNn3OZtu1cT2HXUzgH0u7lOM8mZRW3hGu3rHTzpcUn7lGpZGC3EJNE5aqD3ZPX2PaaZc4IjERY5O+fUo5pTPnp8tLbPQ0+ATivKvdS+Wgqav5UdEaiqRwlTe7yR1kzzqrQ3SNAHACmm0u4XePi/myKl8vZGzMtLsfWl9b0SdfBv+uUxZhG4RPEwKcDnexBQ+gDju2zGmckmZGvCLTy1gshxfITfm7bZ2ugX9NEgiQqp3JSFR/8To35l+I4HEIxBuKA3fAUPgijo9cewwy04RDx3D8p1sEfGrZ6d05w/ERVJy/2srNg9/zHQRYwitq54K5LuOABM618XtesdbNe34TEFvCUt4lMDx3XCzkDXIdyMYvqmXtJqBuYzri5QIGTDjtpecYTYDvaeve2n6Sx6DgfUWfc9sQV/gRwdMXBfAHSv8Xe48Lz77znUahFMJXzV06kr3u8vhYuVOWSNuQT7QOxny3acXtQlEPYqoNIKJbvFvp7IuMxyoaPKS9xyYGqKa5/1tjSj5gTKAoSv1rlLEPa2J02+Eybkg=
+    on_success: change
+    on_failure: change
