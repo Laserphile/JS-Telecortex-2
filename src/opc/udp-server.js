@@ -1,5 +1,5 @@
 import { createSocket } from 'dgram';
-import { handleOPCMessage } from './parser';
+import { handleOPCMessage } from '.';
 
 /**
  * Open Pixel Control server implementation of the driverFactory.driver interface.
