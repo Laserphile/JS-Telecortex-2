@@ -34,6 +34,10 @@ export const opcTCPServer = context => {
       // handle errors here
       console.error(err);
     });
+
+    socket.on('close', () => {
+      partialOPCMsg = undefined;
+    });
   });
 
   context.server.listen(opc_port, () => {
