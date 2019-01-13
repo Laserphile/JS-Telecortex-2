@@ -12,8 +12,8 @@ export const handleOPCMessage = (context, msg) => {
   const header = parseOPCHeader(msg);
   console.log(chalk`{bgMagenta.black  header: } {cyan ${JSON.stringify(header)}}`);
   console.log(`spidevs: ${JSON.stringify(spidevs)}`);
-  if (header.channel > spidevs.length) {
-    // TODO: throw error instead of just console.log
+  if (header.channel >= spidevs.length) {
+    // TODO: throw error instead of just console.log?
     console.error(chalk`{red invalid channel ${header.channel} > ${spidevs.length}}`);
     return;
   }
