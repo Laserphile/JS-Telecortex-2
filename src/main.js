@@ -1,9 +1,5 @@
 import { now } from './util';
 import { opcTCPServer } from './opc/tcp-server';
-// Imports for rainbow animations
-// import { driverFactory } from './drivers/driverFactory';
-// import { colorRainbows } from './drivers/colorRainbows';
-// import { logger } from './util';
 
 let SPI;
 // noinspection ES6ModulesDependencies
@@ -13,7 +9,7 @@ if (process.platform === 'linux') {
   SPI = require('./util/testSpi').default;
 }
 
-const RPI_SPIDEVS = [
+export const RPI_SPIDEVS = [
   {
     bus: 0,
     device: 0
@@ -32,7 +28,7 @@ const RPI_SPIDEVS = [
   }
 ];
 
-const DRV_CONF_DEFAULTS = {
+export const DRV_CONF_DEFAULTS = {
   // port used to listen for OPC commands
   opc_port: 42069,
   // Frame counter for FPS calculation
@@ -61,12 +57,6 @@ const server = () => {
   };
   opcTCPServer(driverConfig);
   // opcUDPServer(driverConfig);
-
-  // const staticRainbowLoop = driverFactory(driverConfig, [logger, colorRainbows]);
-  // // eslint-disable-next-line no-constant-condition
-  // while (true) {
-  //   staticRainbowLoop();
-  // }
 };
 
 server();
