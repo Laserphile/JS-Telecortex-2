@@ -1,8 +1,7 @@
 import { parse } from 'binary';
-import { PartialOPCMsgError } from '.';
+import { PartialOPCMsgError, OPC_BODY_FIELDS } from '.';
 
 export const OPC_HEADER_LEN = 4;
-const OPC_BODY_FIELDS = ['r', 'g', 'b'];
 
 /**
  * parse header from OPC message.

@@ -3,6 +3,8 @@ import chalk from 'chalk';
 import { coloursToString, consoleErrorHandler } from '../util';
 import { colours2sk9822 } from '../util/sk9822';
 
+export const OPC_BODY_FIELDS = ['r', 'g', 'b'];
+
 /**
  * Thrown when an incomplete OPC Message is detected
  */
