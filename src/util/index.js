@@ -54,3 +54,7 @@ export const colourRateLogger = context => {
 export const consoleErrorHandler = e => {
   if (e) console.error(e);
 };
+
+export const asyncSleep = ms => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};

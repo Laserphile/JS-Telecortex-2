@@ -41,9 +41,15 @@ client.connect(
       opcClientDriver
     );
 
+    const waitAndCall = async (fn, waitTime) => {
+      await asyncSleep(waitTime);
+      fn();
+    };
+
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      staticRainbowLoop();
+      // staticRainbowLoop();
+      waitAndCall(staticRainbowLoop, 10);
     }
   }
 );
