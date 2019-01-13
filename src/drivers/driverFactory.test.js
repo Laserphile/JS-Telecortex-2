@@ -19,11 +19,12 @@ afterEach(() => {
 });
 
 it('transfers data', () => {
-  const staticRainbow = driverFactory({ spidevs, data: [1, 2, 3, 4] });
+  const channelColours = { 0: [{ r: 1, g: 2, b: 3 }] };
+  const staticRainbow = driverFactory({ spidevs, channelColours });
   staticRainbow();
   expect(mockSpi.transfer.mock.calls.length).toBe(1);
   expect(mockSpi.transfer.mock.calls[0][0] instanceof Buffer).toBeTruthy();
-  expect(mockSpi.transfer.mock.calls[0][1]).toBe(4);
+  expect(mockSpi.transfer.mock.calls[0][1]).toBe(8);
   expect(typeof mockSpi.transfer.mock.calls[0][2]).toBe('function');
 });
 

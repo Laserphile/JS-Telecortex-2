@@ -1,29 +1,31 @@
-import { now } from '../util';
 import { flow } from 'lodash/util';
+import { consoleErrorHandler } from '../util';
+import { colours2sk9822 } from '../util/sk9822';
+import { composeOPCMessage } from '../opc/compose';
 
 /**
- * Given a context containing a list of spi device specifications and raw LED data,
+ * Given a context containing a list of spi device specifications and LED data,
  * Send data to all LEDs
- * @param {object} context The context under which the driver operates
+ * @param {object} context The context under which the ledDriver operates
  */
-const driver = context => {
-  const { spidevs, data } = context;
-  if (data === undefined) throw Error('No data was supplied');
-  const dataBuff = Buffer.from(data);
-  spidevs.forEach(device => {
-    // TODO: figure out what the spi.trasfer callback should be used for
-    device.spi.transfer(dataBuff, dataBuff.length, (e, d) => {
-      if (e) console.error(e);
-      else console.log('Got "' + d.toString() + '" back.');
+const ledDriver = context => {
+  const { spidevs, channelColours, brightness } = context;
+  Object.keys(channelColours).forEach(channel => {
+    const dataBuff = Buffer.from(colours2sk9822(channelColours[channel], brightness));
+    spidevs[channel].spi.transfer(dataBuff, dataBuff.length, consoleErrorHandler);
+  });
+  return context;
+};
 
-      if (dataBuff.toString() === d.toString()) {
-        console.log('woo message sent');
-      } else {
-        // NOTE: this will likely happen unless MISO is jumpered to MOSI
-        console.warn('aaaaaah death');
-        process.exit(-2);
-      }
-    });
+/**
+ * Given a context containing a mapping of channel numbers to colours, send data over OPC
+ * @param {object} context
+ */
+export const opcClientDriver = context => {
+  const { channelColours } = context;
+  Object.keys(channelColours).forEach(channel => {
+    const dataBuff = composeOPCMessage(channel, channelColours[channel]);
+    context.client.write(dataBuff);
   });
   return context;
 };
@@ -36,7 +38,7 @@ const driver = context => {
  *    function is called
  * @returns { function } callback, called repeatedly to drive the SPI.
  */
-export const driverFactory = (driverConfig, middleware = []) => {
+export const driverFactory = (driverConfig, middleware = [], driver = ledDriver) => {
   const { numLeds } = driverConfig;
   const context = {
     ...driverConfig,
@@ -48,17 +50,7 @@ export const driverFactory = (driverConfig, middleware = []) => {
       h: 360,
       s: 100,
       v: 10
-    },
-    // Frame counter for FPS calculation
-    frames: 0,
-    // FPS rate calculated
-    rate: 0.0,
-    // time when script started for FPS calculation
-    start: now(),
-    // Last time something was printed
-    lastPrint: now(),
-    // eslint-disable-next-line no-unused-vars
-    brightness: 1
+    }
   };
 
   return () => {
