@@ -15,37 +15,35 @@ const mockContext = {
   ]
 };
 
-/**
- * Decorator which resets mockCalls after a callback
- */
-const withTransferMockClear = callback => {
-  return () => {
-    callback();
-    transferFn.mockClear();
-  };
-};
+afterEach(() => {
+  mockContext.spidevs[0].spi.transfer.mockClear();
+});
 
 describe('handleOPCMessage', () => {
-  it(
-    'handles invalid channel',
-    withTransferMockClear(() => {
-      const data = Buffer.from([0x01, 0x00, 0x00, 0x03, 0xff, 0x00, 0x00]);
-      const bytesRead = handleOPCMessage(mockContext, data);
-      expect(transferFn.mock.calls.length).toBe(0);
-      expect(bytesRead).toBe(data.length);
-      // TODO: test console.error
-    })
-  );
-  it(
-    'works',
-    withTransferMockClear(() => {
-      const data = Buffer.from([0x00, 0x00, 0x00, 0x03, 0xff, 0x00, 0x00]);
-      const bytesRead = handleOPCMessage(mockContext, data);
-      expect(transferFn.mock.calls.length).toBe(1);
-      expect(transferFn.mock.calls[0]).toMatchSnapshot();
-      expect(bytesRead).toBe(data.length);
-    })
-  );
+  [
+    {
+      testName: 'handles invalid channel',
+      inArray: [0x01, 0x00, 0x00, 0x03, 0xff, 0x00, 0x00],
+      validate: (data, response) => {
+        expect(transferFn.mock.calls.length).toBe(0);
+        expect(response).toBe(data.length);
+      }
+    },
+    {
+      testName: 'works',
+      inArray: [0x00, 0x00, 0x00, 0x03, 0xff, 0x00, 0x00],
+      validate: (data, response) => {
+        expect(transferFn.mock.calls.length).toBe(1);
+        expect(transferFn.mock.calls[0]).toMatchSnapshot();
+        expect(response).toBe(data.length);
+      }
+    }
+  ].forEach(({ testName, inArray, validate }) => {
+    it(testName, () => {
+      const data = Buffer.from(inArray);
+      validate(data, handleOPCMessage(mockContext, data));
+    });
+  });
 });
 
 describe('handleAllOPCMessages', () => {
@@ -61,7 +59,7 @@ describe('handleAllOPCMessages', () => {
     {
       testName: 'handles invalid messages',
       inArray: [0xff, 0x00, 0x00, 0x03, 0xff, 0x00],
-      validate: (data, response) => {
+      validate: (_, response) => {
         expect(transferFn.mock.calls.length).toBe(0);
         expect(response).toBe(undefined);
       }
@@ -69,19 +67,16 @@ describe('handleAllOPCMessages', () => {
     {
       testName: 'handles multiple messages',
       inArray: [0x00, 0x00, 0x00, 0x03, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xff, 0x00, 0x00],
-      validate: (data, response) => {
+      validate: (_, response) => {
         expect(transferFn.mock.calls.length).toBe(2);
         expect(transferFn.mock.calls).toMatchSnapshot();
         expect(response).toBe(undefined);
       }
     }
   ].forEach(({ testName, inArray, validate }) => {
-    it(
-      testName,
-      withTransferMockClear(() => {
-        const data = Buffer.from(inArray);
-        validate(data, handleAllOPCMessages(mockContext, data));
-      })
-    );
+    it(testName, () => {
+      const data = Buffer.from(inArray);
+      validate(data, handleAllOPCMessages(mockContext, data));
+    });
   });
 });
