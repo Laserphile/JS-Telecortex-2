@@ -13,20 +13,21 @@ export const opcTCPServer = context => {
 
   context.server = createServer(socket => {
     // Handle incoming messages from clients.
+    let partialOPCMsg = undefined;
     socket.on('data', data => {
       console.log(
         chalk`{cyan 🛰  got: ${data.toString('hex')} from ${socket.remoteAddress}:${
           socket.remotePort
         }}`
       );
-      if (context.partialOPCMsg) {
+      if (partialOPCMsg) {
         // console.log(
-        //   chalk`{cyan 🛰  continuing to parse partial first: ${context.partialOPCMsg.toString('hex')}}`
+        //   chalk`{cyan 🛰  continuing to parse partial first: ${partialOPCMsg.toString('hex')}}`
         // );
-        data = Buffer.concat([context.partialOPCMsg, data]);
+        data = Buffer.concat([partialOPCMsg, data]);
         // console.log(chalk`{cyan 🛰  data is now: ${data.toString('hex')}}`);
       }
-      context.partialOPCMsg = handleAllOPCMessages(context, data);
+      partialOPCMsg = handleAllOPCMessages(context, data);
     });
 
     socket.on('error', err => {
