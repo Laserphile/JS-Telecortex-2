@@ -4,7 +4,17 @@ import { coloursToString, consoleErrorHandler } from '../util';
 import { colours2sk9822 } from '../util/sk9822';
 
 /**
- * parse OPC message and send data to spidevs
+ * Thrown when an incomplete OPC Message is detected
+ */
+export class PartialOPCMsgError extends Error {
+  constructor() {
+    super(...arguments);
+  }
+}
+
+/**
+ * parse a single OPC message and send data to spidevs
+ * @return number of bytes read
  */
 export const handleOPCMessage = (context, msg) => {
   // TODO
@@ -26,10 +36,23 @@ export const handleOPCMessage = (context, msg) => {
 };
 
 /**
- * Thrown when an incomplete OPC Message is detected
+ * Handle all OPC messages
+ * @return the final partial opcMessage || empty buffer
  */
-export class PartialOPCMsgError extends Error {
-  constructor() {
-    super(...arguments);
+export const handleAllOPCMessages = (context, data) => {
+  let bytesRead = 0;
+  while (data.length > 0) {
+    try {
+      bytesRead = handleOPCMessage(context, data);
+    } catch (err) {
+      if (err instanceof PartialOPCMsgError) {
+        return data;
+      } else {
+        console.error(err);
+      }
+      return undefined;
+    }
+    data = data.slice(bytesRead);
+    console.log(chalk`{cyan 🛰  read: ${bytesRead}, remaining: ${data.length} bytes}`);
   }
-}
+};
