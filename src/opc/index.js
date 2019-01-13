@@ -22,7 +22,7 @@ export const handleOPCMessage = (context, msg) => {
   // TODO
   const { spidevs, brightness } = context;
   const header = parseOPCHeader(msg);
-  console.log(chalk`{bgMagenta.black  header: } {cyan ${JSON.stringify(header)}}`);
+  // console.log(chalk`{bgMagenta.black  header: } {cyan ${JSON.stringify(header)}}`);
   // console.log(`spidevs: ${JSON.stringify(spidevs)}`);
   if (header.channel >= spidevs.length) {
     // TODO: throw error instead of just console.log?
@@ -30,7 +30,7 @@ export const handleOPCMessage = (context, msg) => {
     return OPC_HEADER_LEN + header.length;
   }
   const colours = parseOPCBody(msg, header.length);
-  console.log(chalk`{bgMagenta.black  body: } (${colours.length}) \n${coloursToString(colours)}`);
+  // console.log(chalk`{bgMagenta.black  body: } (${colours.length}) \n${coloursToString(colours)}`);
   // TODO: perhaps put message on an async queue
   const dataBuff = Buffer.from(colours2sk9822(colours, brightness));
   spidevs[header.channel].spi.transfer(dataBuff, dataBuff.length, consoleErrorHandler);

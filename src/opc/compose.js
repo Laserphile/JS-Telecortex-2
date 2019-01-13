@@ -9,7 +9,6 @@ export const composeOPCMessage = (channel, colours) => {
   return Buffer.from(
     colours.reduce((opcArray, colour) => {
       const pixelBytes = OPC_BODY_FIELDS.map(key => colour[key]);
-      console.log(pixelBytes);
       opcArray.push(...pixelBytes);
       return opcArray;
     }, composeOPCHeader(channel, colours.length * 3))
