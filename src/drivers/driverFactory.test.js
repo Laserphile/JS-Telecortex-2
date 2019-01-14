@@ -1,6 +1,6 @@
 import { driverFactory } from './driverFactory';
 import { difference } from 'lodash/array';
-import { colorRainbows } from './middleware';
+import { singleRainbow } from './middleware';
 
 const mockSpi = {
   transfer: jest.fn()
@@ -29,7 +29,7 @@ it('transfers data', () => {
 });
 
 it("doesn't send the same value when driving rainbows", () => {
-  const staticRainbow = driverFactory({ spidevs }, [colorRainbows]);
+  const staticRainbow = driverFactory({ spidevs }, [singleRainbow]);
   staticRainbow();
   staticRainbow();
   expect(mockSpi.transfer.mock.calls.length).toBe(2);

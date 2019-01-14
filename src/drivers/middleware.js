@@ -4,7 +4,7 @@ import { hsvToRgb } from 'colorsys';
  * Send a single colour to all channels which changes over time
  * @param {object} context
  */
-export const colorRainbows = context => {
+export const singleRainbow = context => {
   const { hsv = { h: 360, s: 100, v: 10 }, numLeds = 360 } = context;
   const { h } = hsv;
   hsv.h = (h + 1) % 360;
