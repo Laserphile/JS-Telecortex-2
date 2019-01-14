@@ -3,8 +3,12 @@ import chalk from 'chalk';
 import { sprintf } from 'sprintf-js';
 import { rgbToHsv } from 'colorsys';
 
+export const msNow = () => {
+  return Math.round(new Date().getTime());
+};
+
 export const now = () => {
-  return Math.round(new Date().getTime() / 1000);
+  return Math.round(msNow() / 1000);
 };
 
 export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
