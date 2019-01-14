@@ -1,3 +1,4 @@
+import { promisify } from 'util';
 import chalk from 'chalk';
 import { sprintf } from 'sprintf-js';
 import { rgbToHsv } from 'colorsys';
@@ -55,6 +56,4 @@ export const consoleErrorHandler = e => {
   if (e) console.error(e);
 };
 
-export const asyncSleep = ms => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
+export const asyncSleep = promisify(setTimeout);
