@@ -45,9 +45,9 @@ const staticRainbowLoop = driverFactory(
 const scheduleFrameRecursive = () => {
   const startTimeMs = msNow();
   staticRainbowLoop();
-  const delay = Math.max(0, 1.0 / frameRateCap - (msNow() - startTimeMs) / 1000.0);
+  const delay = Math.max(0, 1000.0 / frameRateCap - (msNow() - startTimeMs));
   // console.log(`scheduling for ${delay * 1000} ms`);
-  setTimeout(scheduleFrameRecursive, delay * 1000);
+  setTimeout(scheduleFrameRecursive, delay);
 };
 
 client.connect(
