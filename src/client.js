@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { driverFactory, opcClientDriver } from './drivers/driverFactory';
 import { colorRainbows } from './drivers/colorRainbows';
 import { colourRateLogger, msNow } from './util';
-import { RPI_SPIDEVS, DRV_CONF_DEFAULTS } from './main';
+import { RPI_SPIDEVS, DRV_CONF_DEFAULTS } from '.';
 import net from 'net';
 
 const { opc_port } = DRV_CONF_DEFAULTS;
