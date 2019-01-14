@@ -21,14 +21,10 @@ client.on('error', function(err) {
   console.error(chalk`{cyan 📡 Client error} {white ${err}}`);
 });
 
-/**
- * Maximum number of frames per second
- */
-const frameRateCap = 10;
-
 const driverConfig = {
   ...DRV_CONF_DEFAULTS,
   spidevs: RPI_SPIDEVS,
+  frameRateCap: 20,
   client
 };
 
@@ -45,7 +41,7 @@ const staticRainbowLoop = driverFactory(
 const scheduleFrameRecursive = () => {
   const startTimeMs = msNow();
   staticRainbowLoop();
-  const delay = Math.max(0, 1000.0 / frameRateCap - (msNow() - startTimeMs));
+  const delay = Math.max(0, 1000.0 / driverConfig.frameRateCap - (msNow() - startTimeMs));
   // console.log(`scheduling for ${delay * 1000} ms`);
   setTimeout(scheduleFrameRecursive, delay);
 };
