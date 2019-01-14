@@ -20,15 +20,16 @@ export const opcTCPServer = context => {
       //     socket.remotePort
       //   }}`
       // );
-      console.log(chalk`{cyan 🛰  got: ${data.length} bytes}`);
+      // console.log(chalk`{cyan 🛰  got: ${data.length} bytes}`);
       if (partialOPCMsg) {
         // console.log(
         //   chalk`{cyan 🛰  continuing to parse partial first: ${partialOPCMsg.toString('hex')}}`
         // );
         data = Buffer.concat([partialOPCMsg, data]);
-        // console.log(chalk`{cyan 🛰  data is now: ${data.toString('hex')}}`);
+        // console.log(chalk`{cyan 🛰  } data is now: ${data.toString('hex')}`);
       }
       partialOPCMsg = handleAllOPCMessages(context, data);
+      // console.log(chalk`{cyan 🛰  finished processing data}`);
     });
 
     socket.on('error', err => {
@@ -42,6 +43,6 @@ export const opcTCPServer = context => {
   });
 
   context.server.listen(opc_port, () => {
-    console.log(chalk`{cyan 🛰  Server listening on port: {white ${opc_port}}}`);
+    console.log(chalk`{cyan 🛰  Server} listening on port: {white ${opc_port}}`);
   });
 };

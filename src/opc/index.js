@@ -1,6 +1,6 @@
 import { parseOPCHeader, parseOPCBody, OPC_HEADER_LEN } from './parser';
 import chalk from 'chalk';
-import { coloursToString, consoleErrorHandler } from '../util';
+import { colourRateLogger, consoleErrorHandler } from '../util';
 import { colours2sk9822 } from '../util/sk9822';
 
 export const OPC_BODY_FIELDS = ['r', 'g', 'b'];
@@ -13,6 +13,11 @@ export class PartialOPCMsgError extends Error {
     super(...arguments);
   }
 }
+
+/**
+ * Limit number of colours to display in a body dump
+ */
+// const colourLimit = 3;
 
 /**
  * parse a single OPC message and send data to spidevs
@@ -30,7 +35,17 @@ export const handleOPCMessage = (context, msg) => {
     return OPC_HEADER_LEN + header.length;
   }
   const colours = parseOPCBody(msg, header.length);
-  // console.log(chalk`{bgMagenta.black  body: } (${colours.length}) \n${coloursToString(colours)}`);
+  // console.log(
+  //   [
+  //     chalk`{bgMagenta.black  body: } (${colours.length})`,
+  //     coloursToString(colours.slice(0, colourLimit ? colourLimit : colours.length)),
+  //     colours.length > colourLimit ? '...' : ''
+  //   ].join('\n')
+  // );
+  context.channelColours = { [header.channel]: colours };
+  if (header.channel == 0) {
+    colourRateLogger(context);
+  }
   // TODO: perhaps put message on an async queue
   const dataBuff = Buffer.from(colours2sk9822(colours, brightness));
   spidevs[header.channel].spi.transfer(dataBuff, dataBuff.length, consoleErrorHandler);
