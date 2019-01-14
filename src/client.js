@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { driverFactory, opcClientDriver } from './drivers/driverFactory';
-import { colorRainbows, coloursToChannels, coloursToAllChannels } from './drivers/colorRainbows';
+import { colorRainbows, coloursToChannels, coloursToAllChannels } from './drivers/middleware';
 import { colourRateLogger, msNow } from './util';
 import { RPI_SPIDEVS, DRV_CONF_DEFAULTS } from '.';
 import net from 'net';

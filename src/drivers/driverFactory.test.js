@@ -1,6 +1,6 @@
 import { driverFactory } from './driverFactory';
 import { difference } from 'lodash/array';
-import { colorRainbows } from './colorRainbows';
+import { colorRainbows } from './middleware';
 
 const mockSpi = {
   transfer: jest.fn()
