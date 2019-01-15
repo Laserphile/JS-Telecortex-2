@@ -13,7 +13,7 @@ const server = () => {
   // TODO: number of LEDS on each device?
   const spidevs = RPI_SPIDEVS.map(spec => {
     spec.spi = SPI.initialize(`/dev/spidev${spec.bus}.${spec.device}`);
-    spec.spi.clockSpeed(5e5);
+    spec.spi.clockSpeed(10e6);
     return spec;
   });
 

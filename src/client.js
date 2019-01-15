@@ -24,7 +24,7 @@ client.on('error', function(err) {
 const driverConfig = {
   ...DRV_CONF_DEFAULTS,
   spidevs: RPI_SPIDEVS,
-  frameRateCap: 20,
+  frameRateCap: 60,
   client
 };
 
