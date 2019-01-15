@@ -1,6 +1,6 @@
-import { driverFactory } from './driverFactory';
-import { difference } from 'lodash/array';
+import { driverFactory, opcClientDriver } from './driverFactory';
 import { singleRainbow, coloursToAllChannels, coloursToChannels } from './middleware';
+import { difference } from 'lodash/array';
 
 const mockSpi0 = { transfer: jest.fn() };
 const mockSpi1 = { transfer: jest.fn() };
@@ -45,8 +45,9 @@ afterEach(() => {
   mockSpi3.transfer.mockClear();
 });
 
+const channelColours = { 0: [{ r: 1, g: 2, b: 3 }] };
+
 it('transfers data', () => {
-  const channelColours = { 0: [{ r: 1, g: 2, b: 3 }] };
   const staticRainbow = driverFactory({ spidevs: singleSpidevs, channelColours });
   staticRainbow();
   expect(mockSpi0.transfer.mock.calls.length).toBe(1);
@@ -81,4 +82,17 @@ it('sends colours to the right channels', () => {
   expect(
     difference(mockSpi1.transfer.mock.calls[0][0], mockSpi3.transfer.mock.calls[0][1])
   ).not.toEqual([]);
+});
+
+describe('opcClientDriver', () => {
+  const mockClient = { write: jest.fn() };
+  it('writes data to OPC Server socket', () => {
+    const rainbowFlowLoop = driverFactory(
+      { client: mockClient, channelColours },
+      [singleRainbow, coloursToChannels([2])],
+      opcClientDriver
+    );
+    rainbowFlowLoop();
+    expect(mockClient.write.mock.calls.length).toBe(1);
+  });
 });
