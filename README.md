@@ -34,9 +34,6 @@ sudo vim /etc/locale.gen
 # uncomment the line corresponding to your locale, e.g. en_AU.UTF-8
 sudo locale-gen en_AU.UTF-8
 sudo update-locale en_AU.UTF-8
-# Enable SPI in /boot/config.txt
-vim /boot/config.txt
-# uncomment "dtparam=spi=on"
 
 
 # install node 11
@@ -58,6 +55,24 @@ Install JS dependencies
 ```bash
 cd ~/Documents/GitHub/JS-Telecortex-2
 yarn install
+```
+
+## Enable all 4 SPI ports on raspberry pi
+
+As root, add the lines
+```
+dtparam=spi=on
+dtoverlay=spi1-2cs
+```
+to `/boot/config.txt` and reboot.
+For more options (e.g. 5 SPI devices) and pinouts see `/boot/overlays/README`.
+
+To test, `ls /dev | grep spidev` should show
+```
+spidev0.0
+spidev0.1
+spidev1.0
+spidev1.1
 ```
 
 ## Install on OSX
