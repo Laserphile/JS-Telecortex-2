@@ -39,19 +39,7 @@ export const opcClientDriver = context => {
  * @returns { function } callback, called repeatedly to drive the SPI.
  */
 export const driverFactory = (driverConfig, middleware = [], driver = ledDriver) => {
-  const { numLeds } = driverConfig;
-  const context = {
-    ...driverConfig,
-    numLeds: numLeds || 360,
-    /**
-     * Things which determine LED colours
-     */
-    hsv: {
-      h: 360,
-      s: 100,
-      v: 10
-    }
-  };
+  const context = { ...driverConfig };
 
   return () => {
     return flow(
