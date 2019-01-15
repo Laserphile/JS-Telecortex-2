@@ -154,7 +154,63 @@ RES4 = spi_ioc_message(4)
 RES5 = spi_ioc_message(5)
 RES6 = spi_ioc_message(6)
 
-class VirtualSPI(LoggingMixIn, Operations):
+class VirtualSPIStatic(object):
+    @staticmethod
+    def getattr(path, fh_=None):
+        #        if path not in self.files:
+        #            raise FuseOSError(ENOENT)
+        vspi = fuse_get_context()
+        if path == '/':
+            st_ = dict(st_mode=(S_IFDIR | 0o755), st_nlink=2)
+        elif path == '/spidev0.0':
+            #size = len('%s\n' % vspi)
+            size = 40
+            st_ = dict(st_mode=(S_IFREG | 0o444), st_size=size)
+        else:
+            raise FuseOSError(ENOENT)
+        st_['st_ctime'] = st_['st_mtime'] = st_['st_atime'] = time()
+        return st_
+        #return self.files[path]
+
+    @staticmethod
+    def read(path, size, offset, fh_):
+      return "Its an SPI device, dont read, use ioctl\n".encode('utf-8')
+      # return self.data[path][offset:offset + size]
+
+    @staticmethod
+    def readdir(path, fh_):
+      #return ['.', '..'] + [x[1:] for x in self.files if x != '/']
+      return ['.', '..', 'spidev0.0']
+
+    @staticmethod
+    def statfs(path):
+        return dict(f_bsize=512, f_blocks=4096, f_bavail=2048)
+
+    @staticmethod
+    def ioctl(path, cmd, *_):
+        logging.info(cmd)
+        if cmd == SPI_IOC_WR_MODE:
+            logging.info("SPI_IOC_WR_MODE")
+        if cmd == SPI_IOC_RD_MODE:
+            logging.info("SPI_IOC_RD_MODE")
+        if cmd == SPI_IOC_WR_BITS_PER_WORD:
+            logging.info("SPI_IOC_WR_BITS_PER_WORD")
+        if cmd == SPI_IOC_RD_BITS_PER_WORD:
+            logging.info("SPI_IOC_RD_BITS_PER_WORD")
+        if cmd == SPI_IOC_WR_MAX_SPEED_HZ:
+            logging.info("SPI_IOC_WR_MAX_SPEED_HZ")
+        if cmd == SPI_IOC_RD_MAX_SPEED_HZ:
+            logging.info("SPI_IOC_RD_MAX_SPEED_HZ")
+        if cmd == RES1:
+            logging.info("1 spi_ioc_message")
+            return 1
+        if cmd == RES2:
+            logging.info("2 spi_ioc_message")
+            return 2
+        logging.info("IOCTL")
+        return 0
+
+class VirtualSPI(LoggingMixIn, Operations, VirtualSPIStatic):
     'Example memory filesystem. Supports only one level of files.'
 
     def __init__(self):
@@ -182,22 +238,6 @@ class VirtualSPI(LoggingMixIn, Operations):
         self.fd_ += 1
         return self.fd_
 
-    def getattr(self, path, fh_=None):
-#        if path not in self.files:
-#            raise FuseOSError(ENOENT)
-        vspi = fuse_get_context()
-        if path == '/':
-            st_ = dict(st_mode=(S_IFDIR | 0o755), st_nlink=2)
-        elif path == '/spidev0.0':
-            #size = len('%s\n' % vspi)
-            size = 40
-            st_ = dict(st_mode=(S_IFREG | 0o444), st_size=size)
-        else:
-            raise FuseOSError(ENOENT)
-        st_['st_ctime'] = st_['st_mtime'] = st_['st_atime'] = time()
-        return st_
-        #return self.files[path]
-
     def getxattr(self, path, name, position=0):
         attrs = self.files[path].get('attrs', {})
 
@@ -221,14 +261,6 @@ class VirtualSPI(LoggingMixIn, Operations):
         self.fd_ += 1
         return self.fd_
 
-    def read(self, path, size, offset, fh_):
-      return "Its an SPI device, dont read, use ioctl\n".encode('utf-8')
-      # return self.data[path][offset:offset + size]
-
-    def readdir(self, path, fh_):
-      #return ['.', '..'] + [x[1:] for x in self.files if x != '/']
-      return ['.', '..', 'spidev0.0']
-
     def readlink(self, path):
         return self.data[path]
 
@@ -247,13 +279,9 @@ class VirtualSPI(LoggingMixIn, Operations):
         self.files.pop(path)
         self.files['/']['st_nlink'] -= 1
 
-    def setxattr(self, path, name, value, options, position=0):
-        # Ignore options
+    def setxattr(self, path, name, value, *_):
         attrs = self.files[path].setdefault('attrs', {})
         attrs[name] = value
-
-    def statfs(self, path):
-        return dict(f_bsize=512, f_blocks=4096, f_bavail=2048)
 
     def symlink(self, target, source):
         self.files[target] = dict(st_mode=(S_IFLNK | 0o777), st_nlink=1,
@@ -274,35 +302,10 @@ class VirtualSPI(LoggingMixIn, Operations):
         self.files[path]['st_atime'] = atime
         self.files[path]['st_mtime'] = mtime
 
-
-
     def write(self, path, data, offset, fh_):
         self.data[path] = self.data[path][:offset] + data
         self.files[path]['st_size'] = len(self.data[path])
         return len(data)
-
-    def ioctl(self, path, cmd, arg, fh_, flags, data):
-        logging.info(cmd)
-        if cmd == SPI_IOC_WR_MODE:
-            logging.info("SPI_IOC_WR_MODE")
-        if cmd == SPI_IOC_RD_MODE:
-            logging.info("SPI_IOC_RD_MODE")
-        if cmd == SPI_IOC_WR_BITS_PER_WORD:
-            logging.info("SPI_IOC_WR_BITS_PER_WORD")
-        if cmd == SPI_IOC_RD_BITS_PER_WORD:
-            logging.info("SPI_IOC_RD_BITS_PER_WORD")
-        if cmd == SPI_IOC_WR_MAX_SPEED_HZ:
-            logging.info("SPI_IOC_WR_MAX_SPEED_HZ")
-        if cmd == SPI_IOC_RD_MAX_SPEED_HZ:
-            logging.info("SPI_IOC_RD_MAX_SPEED_HZ")
-        if cmd == RES1:
-            logging.info("1 spi_ioc_message")
-            return 1
-        if cmd == RES2:
-            logging.info("2 spi_ioc_message")
-            return 2
-        logging.info("IOCTL")
-        return 0
 
 def main():
   if len(argv) != 2:
