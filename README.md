@@ -80,3 +80,17 @@ spidev1.1
 brew install yarn
 yarn --ignore-optional install
 ```
+
+# Usage
+
+## Run server in development mode (refreshing on change)
+
+```
+yarn dev
+```
+
+## Run client in development mode (refreshing on change)
+
+```
+yarn dev-client
+```
