@@ -1,7 +1,8 @@
 import { hsvToRgb } from 'colorsys';
+import { colourToString } from '../util'
 
 /**
- * Send a single colour to all channels which changes over time
+ * Send a single colour to all pixels which changes over time
  * @param {object} context
  */
 export const singleRainbow = context => {
@@ -11,6 +12,21 @@ export const singleRainbow = context => {
   context.hsv = hsv;
   const rgb = hsvToRgb(hsv);
   context.colours = Array.from({ length: numLeds }, () => rgb);
+  return context;
+};
+
+/**
+ * Send a flowing rainbow
+ * @param {object} context
+ */
+export const rainbowFlow = context => {
+  const { hsv = { h: 360, s: 100, v: 10 }, numLeds = 360 } = context;
+  const { h } = hsv;
+  hsv.h = (h + 3) % 360;
+  context.hsv = hsv;
+  context.colours = Array.from({ length: numLeds }, (_, pixel) => {
+    return hsvToRgb({ ...hsv, h: (hsv.h + pixel * 3) % 360 });
+  });
   return context;
 };
 

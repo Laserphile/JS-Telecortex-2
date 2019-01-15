@@ -1,6 +1,11 @@
 import chalk from 'chalk';
 import { driverFactory, opcClientDriver } from './drivers/driverFactory';
-import { singleRainbow, coloursToChannels, coloursToAllChannels } from './drivers/middleware';
+import {
+  // singleRainbow,
+  rainbowFlow,
+  // coloursToChannels,
+  coloursToAllChannels
+} from './drivers/middleware';
 import { colourRateLogger, msNow } from './util';
 import { RPI_SPIDEVS, DRV_CONF_DEFAULTS } from '.';
 import net from 'net';
@@ -24,17 +29,18 @@ client.on('error', function(err) {
 const driverConfig = {
   ...DRV_CONF_DEFAULTS,
   spidevs: RPI_SPIDEVS,
-  frameRateCap: 60,
+  frameRateCap: 30,
   client
 };
 
 const staticRainbowLoop = driverFactory(
   driverConfig,
   [
-    colourRateLogger,
-    singleRainbow,
+    // singleRainbow,
+    rainbowFlow,
     // coloursToChannels([2])
-    coloursToAllChannels
+    coloursToAllChannels,
+    colourRateLogger
   ],
   opcClientDriver
 );
