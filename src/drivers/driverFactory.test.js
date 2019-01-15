@@ -1,10 +1,5 @@
 import { driverFactory, opcClientDriver } from './driverFactory';
-import {
-  singleRainbow,
-  rainbowFlow,
-  coloursToAllChannels,
-  coloursToChannels
-} from './middleware';
+import { singleRainbow, rainbowFlow, coloursToAllChannels, coloursToChannels } from './middleware';
 import { difference } from 'lodash/array';
 
 const mockSpi0 = { transfer: jest.fn() };
