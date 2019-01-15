@@ -1,5 +1,10 @@
 import { driverFactory, opcClientDriver } from './driverFactory';
-import { singleRainbow, coloursToAllChannels, coloursToChannels } from './middleware';
+import {
+  singleRainbow,
+  rainbowFlow,
+  coloursToAllChannels,
+  coloursToChannels
+} from './middleware';
 import { difference } from 'lodash/array';
 
 const mockSpi0 = { transfer: jest.fn() };
@@ -89,10 +94,11 @@ describe('opcClientDriver', () => {
   it('writes data to OPC Server socket', () => {
     const rainbowFlowLoop = driverFactory(
       { client: mockClient, channelColours },
-      [singleRainbow, coloursToChannels([2])],
+      [rainbowFlow, coloursToChannels([2])],
       opcClientDriver
     );
     rainbowFlowLoop();
     expect(mockClient.write.mock.calls.length).toBe(1);
+    expect(mockClient.write.mock.calls.length).toMatchSnapshot();
   });
 });
