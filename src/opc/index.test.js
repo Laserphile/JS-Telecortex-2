@@ -53,22 +53,6 @@ describe('handleOPCMessage', () => {
 describe('handleAllOPCMessages', () => {
   [
     {
-      testName: 'handles partial messages',
-      inArray: composeOPCHeader(0, 3).concat(incompleteRedPixel),
-      validate: (data, response) => {
-        expect(transferFn.mock.calls.length).toBe(0);
-        expect(response).toBe(data);
-      }
-    },
-    {
-      testName: 'handles invalid messages',
-      inArray: composeOPCHeader(0xff, 3).concat(incompleteRedPixel),
-      validate: (_, response) => {
-        expect(transferFn.mock.calls.length).toBe(0);
-        expect(response).toBe(undefined);
-      }
-    },
-    {
       testName: 'handles multiple messages',
       inArray: Array.of(
         ...composeOPCHeader(0, 3),
@@ -76,16 +60,33 @@ describe('handleAllOPCMessages', () => {
         ...composeOPCHeader(0, 3),
         ...redPixel
       ),
+      callLength: 2,
       validate: (_, response) => {
-        expect(transferFn.mock.calls.length).toBe(2);
         expect(transferFn.mock.calls).toMatchSnapshot();
         expect(response).toBe(undefined);
       }
+    },
+    {
+      testName: 'handles partial messages',
+      inArray: composeOPCHeader(0, 3).concat(incompleteRedPixel),
+      callLength: 0,
+      validate: (data, response) => {
+        expect(response).toBe(data);
+      }
+    },
+    {
+      testName: 'handles invalid channel',
+      inArray: composeOPCHeader(0xff, 3).concat(redPixel),
+      callLength: 0,
+      validate: (_, response) => {
+        expect(response).toBe(undefined);
+      }
     }
-  ].forEach(({ testName, inArray, validate }) => {
+  ].forEach(({ testName, inArray, callLength, validate }) => {
     it(testName, () => {
       const data = Buffer.from(inArray);
       validate(data, handleAllOPCMessages(mockContext, data));
+      expect(transferFn.mock.calls.length).toBe(callLength);
     });
   });
 });
