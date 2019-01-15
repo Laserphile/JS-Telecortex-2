@@ -1,6 +1,7 @@
 import { parseOPCHeader, parseOPCBody, OPC_HEADER_LEN } from './parser';
 import chalk from 'chalk';
-import { colourRateLogger, consoleErrorHandler } from '../util';
+import { consoleErrorHandler } from '../util';
+import { colourRateLogger } from '../util/graphics';
 import { colours2sk9822 } from '../util/sk9822';
 
 export const OPC_BODY_FIELDS = ['r', 'g', 'b'];

@@ -1,5 +1,4 @@
 import { hsvToRgb } from 'colorsys';
-import { colourToString } from '../util'
 
 /**
  * Send a single colour to all pixels which changes over time
