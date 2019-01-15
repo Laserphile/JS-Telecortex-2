@@ -7,7 +7,7 @@ import {
   coloursToAllChannels
 } from './drivers/middleware';
 import { msNow } from './util';
-import { colourRateLogger } from './graphics';
+import { colourRateLogger } from './util/graphics';
 import { RPI_SPIDEVS, DRV_CONF_DEFAULTS } from '.';
 import net from 'net';
 
