@@ -39,7 +39,7 @@ export const colourRateLogger = context => {
   context.frames += 1;
   if (now() - lastPrint > 1) {
     context.rate = frames / (now() - start + 1);
-    const someColour = channelColours[Object.keys(channelColours)[0]][0];
+    const someColour = Object.values(channelColours)[0][0];
     console.log(
       colourMessage(
         rgbToHsv(someColour).h,
