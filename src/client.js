@@ -24,6 +24,21 @@ const serverConfigs = {
   }
 };
 
+/**
+ * Recursively schedules a function so that it is called at most rateCap times per second
+ * @param {function} thing
+ * @param {number} rateCap
+ */
+const scheduleThingRecursive = (thing, rateCap) => {
+  const maxTimeMs = 1000.0 / rateCap;
+  return () => {
+    const startTimeMs = msNow();
+    thing();
+    const deltaTimeMs = msNow() - startTimeMs;
+    setTimeout(scheduleThingRecursive(thing, rateCap), Math.max(0, maxTimeMs - deltaTimeMs));
+  };
+};
+
 async function startClient(serverConfigs) {
   const clients = await Promise.all(
     Object.entries(serverConfigs).map(([serverID, serverConfig]) => {
@@ -59,12 +74,14 @@ async function startClient(serverConfigs) {
       });
     })
   );
+  // const
+
   clients.forEach(serverConfig => {
     const { client, channels } = serverConfig;
     const context = {
       ...DRV_CONF_DEFAULTS,
       channels,
-      frameRateCap: 30,
+      frameRateCap: 40,
       client
     };
 
@@ -79,19 +96,7 @@ async function startClient(serverConfigs) {
       opcClientDriver
     );
 
-    /**
-     * Recursively schedules the frame function so that it is
-     * called at most frameRateCap times per second
-     */
-    const scheduleFrameRecursive = () => {
-      const startTimeMs = msNow();
-      staticRainbowLoop();
-      const delay = Math.max(0, 1000.0 / context.frameRateCap - (msNow() - startTimeMs));
-      // console.log(`scheduling for ${delay * 1000} ms`);
-      setTimeout(scheduleFrameRecursive, delay);
-    };
-
-    setTimeout(scheduleFrameRecursive, 1000);
+    setTimeout(scheduleThingRecursive(staticRainbowLoop, context.frameRateCap), 1000);
   });
 }
 
