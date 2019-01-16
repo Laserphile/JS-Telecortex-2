@@ -9,10 +9,10 @@ import { composeOPCMessage } from '../opc/compose';
  * @param {object} context The context under which the ledDriver operates
  */
 const ledDriver = context => {
-  const { spidevs, channelColours, brightness } = context;
+  const { channels, channelColours, brightness } = context;
   Object.keys(channelColours).forEach(channel => {
     const dataBuff = Buffer.from(colours2sk9822(channelColours[channel], brightness));
-    spidevs[channel].spi.transfer(dataBuff, dataBuff.length, consoleErrorHandler);
+    channels[channel].spi.transfer(dataBuff, dataBuff.length, consoleErrorHandler);
   });
   return context;
 };

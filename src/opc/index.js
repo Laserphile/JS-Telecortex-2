@@ -21,18 +21,18 @@ export class PartialOPCMsgError extends Error {
 // const colourLimit = 3;
 
 /**
- * parse a single OPC message and send data to spidevs
+ * parse a single OPC message and send data to channels
  * @return number of bytes read
  */
 export const handleOPCMessage = (context, msg) => {
   // TODO
-  const { spidevs, brightness } = context;
+  const { channels, brightness } = context;
   const header = parseOPCHeader(msg);
   // console.log(chalk`{bgMagenta.black  header: } {cyan ${JSON.stringify(header)}}`);
-  // console.log(`spidevs: ${JSON.stringify(spidevs)}`);
-  if (header.channel >= spidevs.length) {
+  // console.log(`channels: ${JSON.stringify(channels)}`);
+  if (Object.keys(channels).indexOf(String(header.channel)) < 0) {
     // TODO: throw error instead of just console.log?
-    console.error(chalk`{red invalid channel ${header.channel} >= ${spidevs.length}}`);
+    console.error(chalk`{red invalid channel ${header.channel} not in ${Object.keys(channels)}}`);
     return OPC_HEADER_LEN + header.length;
   }
   const colours = parseOPCBody(msg, header.length);
@@ -49,7 +49,7 @@ export const handleOPCMessage = (context, msg) => {
   }
   // TODO: perhaps put message on an async queue
   const dataBuff = Buffer.from(colours2sk9822(colours, brightness));
-  spidevs[header.channel].spi.transfer(dataBuff, dataBuff.length, consoleErrorHandler);
+  channels[header.channel].spi.transfer(dataBuff, dataBuff.length, consoleErrorHandler);
   return OPC_HEADER_LEN + header.length;
 };
 

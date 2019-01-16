@@ -7,36 +7,36 @@ const mockSpi1 = { transfer: jest.fn() };
 const mockSpi2 = { transfer: jest.fn() };
 const mockSpi3 = { transfer: jest.fn() };
 
-const singleSpidevs = [
-  {
+const singleChannels = {
+  0: {
     bus: 0,
     device: 0,
     spi: mockSpi0
   }
-];
+};
 
-const multiSpidevs = [
-  {
+const multiChannels = {
+  0: {
     bus: 0,
     device: 0,
     spi: mockSpi0
   },
-  {
+  1: {
     bus: 0,
     device: 1,
     spi: mockSpi1
   },
-  {
+  2: {
     bus: 1,
     device: 0,
     spi: mockSpi2
   },
-  {
-    bus: 1,
+  3: {
+    bus: 0,
     device: 1,
     spi: mockSpi3
   }
-];
+};
 
 afterEach(() => {
   mockSpi0.transfer.mockClear();
@@ -48,7 +48,10 @@ afterEach(() => {
 const channelColours = { 0: [{ r: 1, g: 2, b: 3 }] };
 
 it('transfers data', () => {
-  const staticRainbow = driverFactory({ spidevs: singleSpidevs, channelColours });
+  const staticRainbow = driverFactory({
+    channels: multiChannels,
+    channelColours
+  });
   staticRainbow();
   expect(mockSpi0.transfer.mock.calls.length).toBe(1);
   expect(mockSpi0.transfer.mock.calls[0][0] instanceof Buffer).toBeTruthy();
@@ -57,7 +60,7 @@ it('transfers data', () => {
 });
 
 it("doesn't send the same value when driving rainbows", () => {
-  const staticRainbow = driverFactory({ spidevs: singleSpidevs }, [
+  const staticRainbow = driverFactory({ spidevs: singleChannels, channels: multiChannels }, [
     singleRainbow,
     coloursToAllChannels
   ]);
@@ -70,9 +73,9 @@ it("doesn't send the same value when driving rainbows", () => {
 });
 
 it('sends colours to the right channels', () => {
-  const staticRainbow = driverFactory({ spidevs: multiSpidevs }, [
+  const staticRainbow = driverFactory({ channels: multiChannels }, [
     singleRainbow,
-    coloursToChannels([1, 3])
+    coloursToChannels({ 1: {}, 3: {} })
   ]);
   staticRainbow();
   expect(mockSpi0.transfer.mock.calls.length).toBe(0);
@@ -88,7 +91,11 @@ describe('opcClientDriver', () => {
   const mockClient = { write: jest.fn() };
   it('writes data to OPC Server socket', () => {
     const rainbowFlowLoop = driverFactory(
-      { client: mockClient, channelColours },
+      {
+        client: mockClient,
+        channelColours,
+        channels: multiChannels
+      },
       [rainbowFlow, coloursToChannels([2])],
       opcClientDriver
     );

@@ -1,23 +1,24 @@
 import { now } from './util';
 
-export const RPI_SPIDEVS = [
-  {
+export const RPI_SPIDEVS = {
+  0: {
     bus: 0,
     device: 0
   },
-  {
+  1: {
     bus: 0,
     device: 1
   },
-  {
+  2: {
     bus: 1,
     device: 0
   },
-  {
+  3: {
     bus: 1,
     device: 1
   }
-];
+};
+
 export const DRV_CONF_DEFAULTS = {
   // port used to listen for OPC commands
   opc_port: 42069,

@@ -5,19 +5,19 @@ import { composeOPCHeader } from './compose';
 const transferFn = jest.fn();
 
 const mockContext = {
-  spidevs: [
-    {
+  channels: {
+    0: {
       spi: {
         transfer: transferFn
       },
       bus: 0,
       device: 0
     }
-  ]
+  }
 };
 
 afterEach(() => {
-  mockContext.spidevs[0].spi.transfer.mockClear();
+  mockContext.channels[0].spi.transfer.mockClear();
 });
 
 const redPixel = [0xff, 0x00, 0x00];

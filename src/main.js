@@ -11,15 +11,16 @@ if (process.platform === 'linux') {
 
 const server = () => {
   // TODO: number of LEDS on each device?
-  const spidevs = RPI_SPIDEVS.map(spec => {
+  const channels = Object.entries(RPI_SPIDEVS).reduce((accumulator, [channel, spec]) => {
     spec.spi = SPI.initialize(`/dev/spidev${spec.bus}.${spec.device}`);
     spec.spi.clockSpeed(10e6);
-    return spec;
-  });
+    accumulator[channel] = spec;
+    return accumulator;
+  }, {});
 
   const driverConfig = {
     ...DRV_CONF_DEFAULTS,
-    spidevs
+    channels
   };
   opcTCPServer(driverConfig);
   // opcUDPServer(driverConfig);
