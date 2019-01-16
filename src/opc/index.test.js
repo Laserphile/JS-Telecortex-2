@@ -1,7 +1,7 @@
 import { handleOPCMessage, handleAllOPCMessages } from './index';
 import 'jest';
 import { composeOPCHeader } from './compose';
-import { mockSpi0, singleChannels } from '../drivers/driverFactory.test'
+import { mockSpi0, singleChannels } from '../drivers/driverFactory.test';
 
 const mockContext = {
   channels: singleChannels

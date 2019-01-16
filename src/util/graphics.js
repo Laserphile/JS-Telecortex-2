@@ -35,7 +35,7 @@ export const coloursToString = colours => {
  * @param {object} context
  */
 export const colourRateLogger = context => {
-  const { start, lastPrint = now(), frames, channelColours } = context;
+  const { start = 0, lastPrint = now(), frames = 0, channelColours } = context;
   context.frames += 1;
   if (now() - lastPrint > 1) {
     context.rate = frames / (now() - start + 1);
