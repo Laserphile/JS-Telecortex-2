@@ -1,24 +1,11 @@
 import { handleOPCMessage, handleAllOPCMessages } from './index';
 import 'jest';
 import { composeOPCHeader } from './compose';
-
-const transferFn = jest.fn();
+import { mockSpi0, singleChannels } from '../drivers/driverFactory.test'
 
 const mockContext = {
-  channels: {
-    0: {
-      spi: {
-        transfer: transferFn
-      },
-      bus: 0,
-      device: 0
-    }
-  }
+  channels: singleChannels
 };
-
-afterEach(() => {
-  mockContext.channels[0].spi.transfer.mockClear();
-});
 
 const redPixel = [0xff, 0x00, 0x00];
 const incompleteRedPixel = redPixel.slice(0, redPixel.length - 1);
@@ -29,7 +16,7 @@ describe('handleOPCMessage', () => {
       testName: 'handles invalid channel',
       inArray: composeOPCHeader(1, 3).concat(redPixel),
       validate: (data, response) => {
-        expect(transferFn.mock.calls.length).toBe(0);
+        expect(mockSpi0.transfer.mock.calls.length).toBe(0);
         expect(response).toBe(data.length);
       }
     },
@@ -37,8 +24,8 @@ describe('handleOPCMessage', () => {
       testName: 'works',
       inArray: composeOPCHeader(0, 3).concat(redPixel),
       validate: (data, response) => {
-        expect(transferFn.mock.calls.length).toBe(1);
-        expect(transferFn.mock.calls[0]).toMatchSnapshot();
+        expect(mockSpi0.transfer.mock.calls.length).toBe(1);
+        expect(mockSpi0.transfer.mock.calls[0]).toMatchSnapshot();
         expect(response).toBe(data.length);
       }
     }
@@ -62,7 +49,7 @@ describe('handleAllOPCMessages', () => {
       ),
       callLength: 2,
       validate: (_, response) => {
-        expect(transferFn.mock.calls).toMatchSnapshot();
+        expect(mockSpi0.transfer.mock.calls).toMatchSnapshot();
         expect(response).toBe(undefined);
       }
     },
@@ -86,7 +73,7 @@ describe('handleAllOPCMessages', () => {
     it(testName, () => {
       const data = Buffer.from(inArray);
       validate(data, handleAllOPCMessages(mockContext, data));
-      expect(transferFn.mock.calls.length).toBe(callLength);
+      expect(mockSpi0.transfer.mock.calls.length).toBe(callLength);
     });
   });
 });

@@ -2,12 +2,12 @@ import { driverFactory, opcClientDriver } from './driverFactory';
 import { singleRainbow, rainbowFlow, coloursToAllChannels, coloursToChannels } from './middleware';
 import { difference } from 'lodash/array';
 
-const mockSpi0 = { transfer: jest.fn() };
-const mockSpi1 = { transfer: jest.fn() };
-const mockSpi2 = { transfer: jest.fn() };
-const mockSpi3 = { transfer: jest.fn() };
+export const mockSpi0 = { transfer: jest.fn() };
+export const mockSpi1 = { transfer: jest.fn() };
+export const mockSpi2 = { transfer: jest.fn() };
+export const mockSpi3 = { transfer: jest.fn() };
 
-const singleChannels = {
+export const singleChannels = {
   0: {
     bus: 0,
     device: 0,
@@ -15,7 +15,7 @@ const singleChannels = {
   }
 };
 
-const multiChannels = {
+export const multiChannels = {
   0: {
     bus: 0,
     device: 0,

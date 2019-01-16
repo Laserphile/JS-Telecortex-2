@@ -58,3 +58,5 @@ Array [
   [Function],
 ]
 `;
+
+exports[`opcClientDriver writes data to OPC Server socket 1`] = `1`;
