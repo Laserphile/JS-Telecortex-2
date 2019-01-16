@@ -24,6 +24,17 @@ const serverConfigs = {
   }
 };
 
+const clientsConfig = {
+  frameRateCap: 40
+};
+
+const middleware = [
+  // singleRainbow,
+  rainbowFlow,
+  coloursToAllChannels,
+  colourRateLogger
+];
+
 /**
  * Recursively schedules a function so that it is called at most rateCap times per second
  * @param {function} thing
@@ -39,7 +50,7 @@ const scheduleThingRecursive = (thing, rateCap) => {
   };
 };
 
-async function startClient(serverConfigs) {
+async function startClients(serverConfigs) {
   const clients = await Promise.all(
     Object.entries(serverConfigs).map(([serverID, serverConfig]) => {
       return new Promise((resolve, reject) => {
@@ -74,30 +85,15 @@ async function startClient(serverConfigs) {
       });
     })
   );
-  // const
+
+  // const promisers =
 
   clients.forEach(serverConfig => {
     const { client, channels } = serverConfig;
-    const context = {
-      ...DRV_CONF_DEFAULTS,
-      channels,
-      frameRateCap: 40,
-      client
-    };
-
-    const staticRainbowLoop = driverFactory(
-      context,
-      [
-        // singleRainbow,
-        rainbowFlow,
-        coloursToAllChannels,
-        colourRateLogger
-      ],
-      opcClientDriver
-    );
-
-    setTimeout(scheduleThingRecursive(staticRainbowLoop, context.frameRateCap), 1000);
+    const context = { ...DRV_CONF_DEFAULTS, channels, client };
+    const staticRainbowLoop = driverFactory(context, middleware, opcClientDriver);
+    setTimeout(scheduleThingRecursive(staticRainbowLoop, clientsConfig.frameRateCap), 1000);
   });
 }
 
-startClient(serverConfigs);
+startClients(serverConfigs);
