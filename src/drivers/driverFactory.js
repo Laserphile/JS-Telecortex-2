@@ -12,6 +12,7 @@ const ledDriver = context => {
   const { channels, channelColours, brightness } = context;
   Object.keys(channelColours).forEach(channel => {
     const dataBuff = Buffer.from(colours2sk9822(channelColours[channel], brightness));
+    // TODO: make async version with spi.transfer wrapped in Promise (and pass the resolve cb into the transfer cb)
     channels[channel].spi.transfer(dataBuff, dataBuff.length, consoleErrorHandler);
   });
   return context;
@@ -25,6 +26,7 @@ export const opcClientDriver = context => {
   const { channelColours } = context;
   Object.keys(channelColours).forEach(channel => {
     const dataBuff = Buffer.from(composeOPCMessage(channel, channelColours[channel]));
+    // TODO: make async version with socket.write wrapped in Promise (and pass the resolve cb into the write cb)
     context.client.write(dataBuff);
   });
   return context;
