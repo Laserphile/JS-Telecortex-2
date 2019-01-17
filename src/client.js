@@ -98,11 +98,9 @@ const startClients = async serverConfigs => {
    * Modified by client frame callbacks
    */
   const clientContexts = Object.entries(serverConfigs).reduce(
-    (accumulator, [serverID, { client, channels }]) => {
-      accumulator[serverID] = { ...FRESH_CONTEXT, serverID, channels, client };
-      console.log(`\n\naccumulator[${serverID}] = `);
-      return accumulator;
-    },
+    (accumulator, [serverID, { client, channels }]) => (
+      (accumulator[serverID] = { ...FRESH_CONTEXT, serverID, channels, client }), accumulator
+    ),
     {}
   );
 
