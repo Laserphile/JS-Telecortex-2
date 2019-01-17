@@ -19,9 +19,16 @@ export const RPI_SPIDEVS = {
   }
 };
 
-export const DRV_CONF_DEFAULTS = {
+export const SERVER_CONF = {
   // port used to listen for OPC commands
   opc_port: 42069,
+  // SPI Clock Speed
+  spiClockSpeed: 10e6,
+  // SPI Data Mode
+  spiMode: 0
+};
+
+export const FRESH_CONTEXT = {
   // Frame counter for FPS calculation
   frames: 0,
   // FPS rate calculated
@@ -30,6 +37,6 @@ export const DRV_CONF_DEFAULTS = {
   start: now(),
   // Last time something was printed
   lastPrint: now(),
-  // eslint-disable-next-line no-unused-vars
+  // Brightness of all strips on the server
   brightness: 0.5
 };

@@ -8,7 +8,7 @@ import {
 } from './drivers/middleware';
 import { msNow } from './util';
 import { colourRateLogger } from './util/graphics';
-import { RPI_SPIDEVS, DRV_CONF_DEFAULTS } from '.';
+import { RPI_SPIDEVS, FRESH_CONTEXT, SERVER_CONF } from '.';
 import net from 'net';
 import async from 'async';
 
@@ -20,7 +20,7 @@ import async from 'async';
 const serverConfigs = {
   1: {
     host: 'raspberrypi.local',
-    opc_port: 42069,
+    opc_port: SERVER_CONF.opc_port,
     channels: RPI_SPIDEVS
   }
   // 2: {
@@ -56,6 +56,9 @@ const scheduleThingRecursive = (thing, rateCap) => {
   };
 };
 
+/**
+ * Given a mapping of serverIDs to serverConfig , create sockets and initiate client
+ */
 const startClients = async serverConfigs => {
   await async.map(Object.entries(serverConfigs), ([serverID, { host, opc_port }]) => {
     const client = new net.Socket();
@@ -91,11 +94,12 @@ const startClients = async serverConfigs => {
   });
 
   /**
-   * The operating context for each client frame callback
+   * The operating context for each client frame callback.
+   * Modified by client frame callbacks
    */
   const clientContexts = Object.entries(serverConfigs).reduce(
     (accumulator, [serverID, { client, channels }]) => {
-      accumulator[serverID] = { ...DRV_CONF_DEFAULTS, serverID, channels, client };
+      accumulator[serverID] = { ...FRESH_CONTEXT, serverID, channels, client };
       console.log(`\n\naccumulator[${serverID}] = `);
       return accumulator;
     },
