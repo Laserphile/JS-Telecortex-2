@@ -11,6 +11,17 @@ addons:
     - g++
     - make
 before_install:
+- export INSTALL_WD=$(pwd)
+- mkdir opencv
+- cd opencv
+- curl -o opencv.tar.gz -L https://github.com/opencv/opencv/archive/3.4.5.tar.gz
+- tar -zxf opencv.tar.gz --strip-components=1
+- mkdir build
+- cd build
+- cmake ..
+- make
+- make install
+- cd $INSTALL_WD
 - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
 - export PATH="$HOME/.yarn/bin:$PATH"
 script:
