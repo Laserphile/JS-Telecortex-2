@@ -15,6 +15,7 @@ export const MAX_ANGLE = 360.0;
 export const MAIN_WINDOW = 'Telecortex';
 const DOT_RADIUS = 3;
 const TARGET_FRAMERATE = 20;
+export const defaultHSV = { h: 360, s: 100, v: 10 };
 
 /**
  * Convert a single colorsys object to string

@@ -1,11 +1,12 @@
 import { hsvToRgb } from 'colorsys';
+import { defaultHSV } from '../util/graphics';
 
 /**
  * Send a single colour to all pixels which changes over time
  * @param {object} context
  */
 export const singleRainbow = context => {
-  const { hsv = { h: 360, s: 100, v: 10 }, numLeds = 360 } = context;
+  const { hsv = defaultHSV, numLeds = 360 } = context;
   const { h } = hsv;
   hsv.h = (h + 1) % 360;
   context.hsv = hsv;
@@ -19,7 +20,7 @@ export const singleRainbow = context => {
  * @param {object} context
  */
 export const rainbowFlow = context => {
-  const { hsv = { h: 360, s: 100, v: 10 }, numLeds = 360 } = context;
+  const { hsv = defaultHSV, numLeds = 360 } = context;
   const { h } = hsv;
   hsv.h = (h + 3) % 360;
   context.hsv = hsv;
