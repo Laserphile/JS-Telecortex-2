@@ -53,7 +53,7 @@
     "dev-client": "nodemon --exec yarn run babel-node -- src/client.js",
     "dev-opencv": "nodemon --exec yarn run babel-node -- src/opencv.js",
     "start": "node dist/main.js",
-    "test": "jest --watch",
+    "test": "jest --watch --coverage",
     "test-ci": "jest --ci --coverage"
   }
 }
