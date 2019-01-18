@@ -12,6 +12,7 @@
     "colorsys": "^1.0.22",
     "dgram": "^1.0.1",
     "lodash": "4.17.11",
+    "opencv4nodejs": "^4.14.0",
     "pi-spi": "^1.0.3",
     "sprintf-js": "^1.1.2"
   },
@@ -50,6 +51,7 @@
     "build": "babel src -s -D -d dist",
     "dev": "nodemon --exec yarn run babel-node -- src/main.js",
     "dev-client": "nodemon --exec yarn run babel-node -- src/client.js",
+    "dev-opencv": "nodemon --exec yarn run babel-node -- src/opencv.js",
     "start": "node dist/main.js",
     "test": "jest --watch",
     "test-ci": "jest --ci --coverage"

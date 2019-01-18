@@ -11,7 +11,7 @@ if (process.platform === 'linux') {
 
 const server = () => {
   const { spiClockSpeed, spiMode, opc_port } = SERVER_CONF;
-  // TODO: number of LEDS on each device?
+  // TODO: flick status led
   const channels = Object.entries(RPI_SPIDEVS).reduce((accumulator, [channel, spec]) => {
     spec.spi = SPI.initialize(`/dev/spidev${spec.bus}.${spec.device}`);
     spec.spi.clockSpeed(spiClockSpeed);

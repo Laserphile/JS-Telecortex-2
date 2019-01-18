@@ -113,6 +113,7 @@ const startClients = async serverConfigs => {
 
   // Awaits a complete frame to be generated and sent to all servers
   const clientsFrameCallback = async () => {
+    // TODO: fill canvas, interpolate pixels off canvas and pass into context
     await async.each(Object.values(clientContexts), context => {
       asyncClientFrameCallback(context);
     });
