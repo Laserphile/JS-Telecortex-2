@@ -1,4 +1,4 @@
-import { driverFactory, opcClientDriver } from './driverFactory';
+import { driverFactory, opcClientDriver, ledDriver } from './driverFactory';
 import { singleRainbow, rainbowFlow, coloursToAllChannels, coloursToChannels } from './middleware';
 import { difference } from 'lodash/array';
 
@@ -47,44 +47,94 @@ afterEach(() => {
 
 const channelColours = { 0: [{ r: 1, g: 2, b: 3 }] };
 
-it('transfers data', () => {
-  const staticRainbow = driverFactory({
-    channels: multiChannels,
-    channelColours
+describe('ledDriver', () => {
+  it('transfers data', () => {
+    const staticRainbow = driverFactory(
+      {
+        channels: multiChannels,
+        channelColours
+      },
+      [],
+      ledDriver
+    );
+    staticRainbow();
+    expect(mockSpi0.transfer.mock.calls.length).toBe(1);
+    expect(mockSpi0.transfer.mock.calls[0][0] instanceof Buffer).toBeTruthy();
+    expect(mockSpi0.transfer.mock.calls[0][1]).toBe(8);
+    expect(typeof mockSpi0.transfer.mock.calls[0][2]).toBe('function');
   });
-  staticRainbow();
-  expect(mockSpi0.transfer.mock.calls.length).toBe(1);
-  expect(mockSpi0.transfer.mock.calls[0][0] instanceof Buffer).toBeTruthy();
-  expect(mockSpi0.transfer.mock.calls[0][1]).toBe(8);
-  expect(typeof mockSpi0.transfer.mock.calls[0][2]).toBe('function');
-});
 
-it("doesn't send the same value when driving rainbows", () => {
-  const staticRainbow = driverFactory({ spidevs: singleChannels, channels: multiChannels }, [
-    singleRainbow,
-    coloursToAllChannels
-  ]);
-  staticRainbow();
-  staticRainbow();
-  expect(mockSpi0.transfer.mock.calls.length).toBe(2);
-  expect(
-    difference(mockSpi0.transfer.mock.calls[0][0], mockSpi0.transfer.mock.calls[0][1])
-  ).not.toEqual([]);
-});
+  it("doesn't send the same value when driving rainbows", () => {
+    const staticRainbow = driverFactory(
+      {
+        spidevs: singleChannels,
+        channels: multiChannels
+      },
+      [singleRainbow, coloursToAllChannels],
+      ledDriver
+    );
+    staticRainbow();
+    staticRainbow();
+    expect(mockSpi0.transfer.mock.calls.length).toBe(2);
+    expect(
+      difference(mockSpi0.transfer.mock.calls[0][0], mockSpi0.transfer.mock.calls[0][1])
+    ).not.toEqual([]);
+  });
 
-it('sends colours to the right channels', () => {
-  const staticRainbow = driverFactory({ channels: multiChannels }, [
-    singleRainbow,
-    coloursToChannels({ 1: {}, 3: {} })
-  ]);
-  staticRainbow();
-  expect(mockSpi0.transfer.mock.calls.length).toBe(0);
-  expect(mockSpi1.transfer.mock.calls.length).toBe(1);
-  expect(mockSpi2.transfer.mock.calls.length).toBe(0);
-  expect(mockSpi3.transfer.mock.calls.length).toBe(1);
-  expect(
-    difference(mockSpi1.transfer.mock.calls[0][0], mockSpi3.transfer.mock.calls[0][1])
-  ).not.toEqual([]);
+  it('sends colours to the right channels', () => {
+    const staticRainbow = driverFactory(
+      {
+        channels: multiChannels
+      },
+      [
+        singleRainbow,
+        coloursToChannels({
+          1: {},
+          3: {}
+        })
+      ],
+      ledDriver
+    );
+    staticRainbow();
+    expect(mockSpi0.transfer.mock.calls.length).toBe(0);
+    expect(mockSpi1.transfer.mock.calls.length).toBe(1);
+    expect(mockSpi2.transfer.mock.calls.length).toBe(0);
+    expect(mockSpi3.transfer.mock.calls.length).toBe(1);
+    expect(
+      difference(mockSpi1.transfer.mock.calls[0][0], mockSpi3.transfer.mock.calls[0][1])
+    ).not.toEqual([]);
+  });
+
+  it('logs spi transfer errors', () => {
+    console.error = jest.fn();
+    const singleErroringChannel = JSON.parse(JSON.stringify(singleChannels));
+    singleErroringChannel[0].spi.transfer = (_, __, callback) => {
+      const err = new Error('test');
+      callback(err);
+    };
+    const staticRainbow = driverFactory(
+      { channels: singleErroringChannel },
+      [singleRainbow, coloursToAllChannels],
+      ledDriver
+    );
+    staticRainbow();
+    expect(console.error.mock.calls.length).toBe(1);
+  });
+
+  it('ignores spi loopback', () => {
+    console.error = jest.fn();
+    const singleLoopingChannel = JSON.parse(JSON.stringify(singleChannels));
+    singleLoopingChannel[0].spi.transfer = (data, length, callback) => {
+      callback(undefined, data.slice(0, length));
+    };
+    const staticRainbow = driverFactory(
+      { channels: singleLoopingChannel },
+      [singleRainbow, coloursToAllChannels],
+      ledDriver
+    );
+    staticRainbow();
+    expect(console.error.mock.calls.length).toBe(0);
+  });
 });
 
 describe('opcClientDriver', () => {
