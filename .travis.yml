@@ -4,9 +4,7 @@ install:
 - docker pull justadudewhohacks/opencv-nodejs
 script:
 - |
-  docker run justadudewhohacks/opencv-nodejs \
-    -v $(pwd):/app \
-    /bin/sh -c "\
+  docker run justadudewhohacks/opencv-nodejs -v $(pwd):/app /bin/sh -c "\
       cd /app; \
       apt-get update && apt-get install -y curl gcc g++ make; \
       curl -sL https://deb.nodesource.com/setup_11.x | bash - ; \
