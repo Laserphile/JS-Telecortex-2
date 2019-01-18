@@ -4,18 +4,18 @@ install:
 - docker pull justadudewhohacks/opencv-nodejs
 script:
 - |
-  docker run -v $(pwd):/app justadudewhohacks/opencv-nodejs /bin/sh -c "\
+  docker run -v $(pwd):/app justadudewhohacks/opencv-nodejs /bin/bash -c "\
       cd /app; \
-      apt-get update && apt-get install -y curl gcc g++ make; \
+      apt-get update && apt-get install -y curl gcc g++ make git; \
       curl -sL https://deb.nodesource.com/setup_11.x | bash - ; \
       apt-get install -y nodejs; \
+      npm install -g codecov; \
       curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3; \
       export PATH=\"$HOME/.yarn/bin:$PATH\"; \
       export NODE_PATH=/usr/lib/node_modules; \
       export OPENCV4NODEJS_DISABLE_AUTOBUILD=1; \
-      yarn; \
-      npm install -g codecov; \
-      yarn run test-ci; \
+      ~/.yarn/bin/yarn; \
+      ~/.yarn/bin/yarn run test-ci; \
       codecov"
 notifications:
   slack:
