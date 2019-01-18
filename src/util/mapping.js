@@ -22,18 +22,10 @@ export const normalizePixMap = pixMap => {
 
   let [pixMinX, pixMaxX, pixMinY, pixMaxY] = [Infinity, -Infinity, Infinity, -Infinity];
   pixMap.forEach(([x, y]) => {
-    if (x < pixMinX) {
-      pixMinX = x;
-    }
-    if (x > pixMaxX) {
-      pixMaxX = x;
-    }
-    if (y < pixMinY) {
-      pixMinY = y;
-    }
-    if (y > pixMaxY) {
-      pixMaxY = y;
-    }
+    if (x < pixMinX) pixMinX = x;
+    if (x > pixMaxX) pixMaxX = x;
+    if (y < pixMinY) pixMinY = y;
+    if (y > pixMaxY) pixMaxY = y;
   });
 
   const [pixBreadthX, pixBreadthY] = [pixMaxX - pixMinX, pixMaxY - pixMinY];
