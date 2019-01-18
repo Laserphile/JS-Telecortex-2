@@ -1,7 +1,5 @@
 import { clamp } from 'lodash';
-
-const opencvChannelFields = ['b', 'g', 'r'];
-
+import { cvPixelToRgb } from './graphics';
 /**
  * Get the colour of a pixel from its coordinates within an image.
  * @param {Matrix} image
@@ -18,13 +16,7 @@ export const interpolatePixel = (image, coordinates, interpType = 'nearest') => 
     throw new Error(`unsupported interpolation type: ${interpType}`);
   }
   if (interpType == 'nearest') {
-    return image
-      .atRaw(Math.round(coordinates[0]), Math.round(coordinates[1]))
-      .reduce(
-        (accumulator, channelValue, channelIndex) => (
-          (accumulator[opencvChannelFields[channelIndex]] = channelValue), accumulator
-        ), {}
-      );
+    return cvPixelToRgb(image.atRaw(Math.round(coordinates[0]), Math.round(coordinates[1])));
   }
 };
 
