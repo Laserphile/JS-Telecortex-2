@@ -10,3 +10,5 @@ spidev.log
 *.log
 
 \.python-version
+
+coverage/
