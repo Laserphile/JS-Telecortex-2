@@ -7,10 +7,18 @@ import {
   coloursToAllChannels
 } from './drivers/middleware';
 import { msNow } from './util';
-import { colourRateLogger } from './util/graphics';
+import {
+  colourRateLogger,
+  getSquareCanvas,
+  setupMainWindow,
+  showPreview,
+  fillRainbows,
+  MAX_ANGLE
+} from './util/graphics';
 import { RPI_SPIDEVS, FRESH_CONTEXT, SERVER_CONF } from '.';
 import net from 'net';
 import async from 'async';
+// const cv = require('opencv4nodejs');
 
 // TODO: read this from a JSON file
 
@@ -111,9 +119,17 @@ const startClients = async serverConfigs => {
     ...[...middleware, opcClientDriver].reverse().map(async.asyncify)
   );
 
+  let angle = 0;
+  const img = getSquareCanvas();
+  fillRainbows(img, angle);
+  setupMainWindow(img);
+
   // Awaits a complete frame to be generated and sent to all servers
   const clientsFrameCallback = async () => {
     // TODO: fill canvas, interpolate pixels off canvas and pass into context
+    angle = (angle + 1) % MAX_ANGLE;
+    fillRainbows(img, angle);
+    showPreview(img);
     await async.each(Object.values(clientContexts), context => {
       asyncClientFrameCallback(context);
     });
