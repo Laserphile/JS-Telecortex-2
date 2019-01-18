@@ -15,9 +15,11 @@ import {
   fillRainbows,
   MAX_ANGLE
 } from './util/graphics';
+import { MAPS_DOME_SIMPLIFIED } from './util/mapping';
 import { RPI_SPIDEVS, FRESH_CONTEXT, SERVER_CONF } from '.';
 import net from 'net';
 import async from 'async';
+import { interpolatePixelMap } from './util/interpolation';
 // const cv = require('opencv4nodejs');
 
 // TODO: read this from a JSON file
@@ -42,7 +44,7 @@ const clientsConfig = {
 
 const middleware = [
   // singleRainbow,
-  rainbowFlow,
+  // rainbowFlow,
   coloursToAllChannels
 ];
 
@@ -119,22 +121,30 @@ const startClients = async serverConfigs => {
     ...[...middleware, opcClientDriver].reverse().map(async.asyncify)
   );
 
-  let angle = 0;
+  let frameNumber = 0;
   const img = getSquareCanvas();
-  fillRainbows(img, angle);
+  fillRainbows(img, frameNumber);
   setupMainWindow(img);
+  const pixelLists = {};
 
   // Awaits a complete frame to be generated and sent to all servers
   const clientsFrameCallback = async () => {
     // TODO: fill canvas, interpolate pixels off canvas and pass into context
-    angle = (angle + 1) % MAX_ANGLE;
-    fillRainbows(img, angle);
-    showPreview(img);
+    frameNumber = frameNumber + 1;
+    fillRainbows(img, frameNumber);
+    pixelLists.smol = interpolatePixelMap(img, MAPS_DOME_SIMPLIFIED.smol.slice(100));
+    // pixelLists.big = interpolatePixelMap(img, MAPS_DOME_SIMPLIFIED.big);
+    Object.values(clientContexts).map(context => {
+      context.colours = pixelLists.smol;
+    });
+
     await async.each(Object.values(clientContexts), context => {
       asyncClientFrameCallback(context);
     });
     // only call colourRateLogger on the first context
     colourRateLogger(Object.values(clientContexts)[0]);
+
+    showPreview(img, MAPS_DOME_SIMPLIFIED);
   };
 
   setTimeout(scheduleThingRecursive(clientsFrameCallback, clientsConfig.frameRateCap), 1000);
