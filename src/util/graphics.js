@@ -9,7 +9,7 @@ const cv = require('opencv4nodejs');
 export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
 const colourFormat = '{R:%03d G:%03d B:%03d}';
 const opencvChannelFields = ['b', 'g', 'r'];
-export const IMG_SIZE = 64;
+export const IMG_SIZE = 128;
 export const MAX_HUE = 360.0;
 export const MAX_ANGLE = 360.0;
 export const MAIN_WINDOW = 'Telecortex';
