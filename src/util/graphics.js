@@ -1,13 +1,12 @@
 import chalk from 'chalk';
 import { sprintf } from 'sprintf-js';
-import { rgbToHsv, hslToRgb } from 'colorsys';
+import { rgbToHsv, hslToRgb, rgbToHex } from 'colorsys';
 import { now } from './index';
 import { times } from 'lodash';
 import { denormalizeCoordinate } from './interpolation';
 const cv = require('opencv4nodejs');
 
 export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
-const colourFormat = '{R:%03d G:%03d B:%03d}';
 const opencvChannelFields = ['b', 'g', 'r'];
 export const IMG_SIZE = 128;
 export const MAX_HUE = 360.0;
@@ -22,7 +21,7 @@ export const defaultHSV = { h: 360, s: 100, v: 10 };
  * @param {colorsys RGB object} colour
  */
 export const colourToString = colour => {
-  return sprintf(colourFormat, colour.r, colour.g, colour.b);
+  return rgbToHex(colour);
 };
 
 /**
@@ -30,14 +29,8 @@ export const colourToString = colour => {
  * @param {Array of colorsys RGB objects} colours
  */
 export const coloursToString = colours => {
-  const prefixFormat = `%0${Math.ceil(Math.log10(colours.length))}d | `;
-  return colours.reduce((accumulator, colour, count) => {
-    return accumulator.concat(
-      colourMessage(
-        rgbToHsv(colour).h,
-        sprintf(prefixFormat, count) + colourToString(colour) + '\n'
-      )
-    );
+  return colours.reduce((accumulator, colour) => {
+    return accumulator.concat(colourMessage(rgbToHsv(colour).h, colourToString(colour)));
   }, '');
 };
 
@@ -50,12 +43,9 @@ export const colourRateLogger = context => {
   context.frames += 1;
   if (now() - lastPrint > 1) {
     context.rate = frames / (now() - start + 1);
-    const someColour = Object.values(channelColours)[0][0];
     console.log(
-      colourMessage(
-        rgbToHsv(someColour).h,
-        `${colourToString(someColour)} :  ${context.rate.toFixed(2)}`
-      )
+      coloursToString(Object.values(channelColours)[0].slice(0, 10)) +
+        ` : ${context.rate.toFixed(2)}`
     );
     context.lastPrint = now();
   }
