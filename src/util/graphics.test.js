@@ -5,17 +5,36 @@ import {
   cvPixelToRgb,
   fillRainbows,
   getSquareCanvas,
-  // setupMainWindow,
-  MAX_ANGLE
+  setupMainWindow,
+  MAX_ANGLE,
+  showPreview,
+  fillColour,
+  cvGreyPixel,
+  cvBlackPixel,
+  cvWhitePixel
 } from './graphics';
 import { now } from '.';
-// const cv = require('opencv4nodejs');
+const cv = require('opencv4nodejs');
 
 const someColours = [
   { r: 0xff, g: 0x00, b: 0x00 },
   { r: 0x00, g: 0xff, b: 0x00 },
   { r: 0x00, g: 0x00, b: 0xff }
 ];
+
+const size = 64;
+const img = getSquareCanvas(size);
+
+var waitKeyRetval = 0xff;
+cv.waitKey = jest.fn(() => waitKeyRetval);
+cv.destroyAllWindows = jest.fn();
+cv.imshow = jest.fn();
+
+beforeEach(() => {
+  cv.waitKey.mockClear();
+  cv.destroyAllWindows.mockClear();
+  cv.imshow.mockClear();
+});
 
 describe('coloursToString', () => {
   it('works', () => {
@@ -56,19 +75,56 @@ describe('cvPixelToRgb', () => {
 
 describe('fillRainbows', () => {
   it('works', () => {
-    const size = 64;
-    const img = getSquareCanvas(size);
-    // expect(img.atRaw(size / 2, size / 2)).toEqual([0, 0, 0]);
+    fillColour(img, cvBlackPixel);
+    expect(img.at(size / 2, size / 2)).toEqual(cvBlackPixel);
     fillRainbows(img);
     expect(img.atRaw(size / 2, size / 2)).toEqual([255, 231, 0]);
   });
   it('works with nonzero angle', () => {
-    const size = 64;
-    const img = getSquareCanvas(size);
-    // expect(img.atRaw(size / 2, size / 2)).toEqual([0, 0, 0]);
+    fillColour(img, cvBlackPixel);
+    expect(img.at(size / 2, size / 2)).toEqual(cvBlackPixel);
     fillRainbows(img, MAX_ANGLE / 6);
     expect(img.atRaw(size / 2, size / 2)).toEqual([255, 0, 24]);
     // setupMainWindow(img);
     // cv.waitKey();
+  });
+});
+
+describe('showPreview', () => {
+  const someMaps = {
+    smol: [[0.5, 0.5]]
+  };
+  const tinyImg = getSquareCanvas(9);
+  fillColour(tinyImg, cvGreyPixel);
+
+  it('draws a map', () => {
+    expect(tinyImg.at(4, 4)).toEqual(cvGreyPixel);
+    expect(tinyImg.at(7, 4)).toEqual(cvGreyPixel);
+    expect(tinyImg.at(8, 4)).toEqual(cvGreyPixel);
+    // console.error(tinyImg.getDataAsArray());
+    showPreview(tinyImg, someMaps);
+    // console.error(tinyImg.getDataAsArray());
+    expect(tinyImg.at(4, 4)).toEqual(cvGreyPixel);
+    expect(tinyImg.at(7, 4)).toEqual(cvBlackPixel);
+    expect(tinyImg.at(8, 4)).toEqual(cvWhitePixel);
+    expect(cv.waitKey.mock.calls.length).toBe(1);
+    expect(cv.destroyAllWindows.mock.calls.length).toBe(0);
+  });
+
+  it('exits on escape key', () => {
+    showPreview(tinyImg, someMaps);
+    expect(cv.waitKey.mock.calls.length).toBe(1);
+    expect(cv.destroyAllWindows.mock.calls.length).toBe(0);
+    waitKeyRetval = 27;
+    showPreview(tinyImg, someMaps);
+    expect(cv.waitKey.mock.calls.length).toBe(2);
+    expect(cv.destroyAllWindows.mock.calls.length).toBe(1);
+  });
+});
+
+describe('setupMainWindow', () => {
+  it('shows image', () => {
+    setupMainWindow(img);
+    expect(cv.imshow.mock.calls.length).toBe(1);
   });
 });
