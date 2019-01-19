@@ -13,10 +13,11 @@ import {
   setupMainWindow,
   showPreview,
   fillRainbows,
+  directRainbows,
   MAX_ANGLE
 } from './util/graphics';
 import { MAPS_DOME_SIMPLIFIED } from './util/mapping';
-import { RPI_SPIDEVS, FRESH_CONTEXT, SERVER_CONF } from '.';
+import { RPI_SPIDEVS, FRESH_CONTEXT, CLIENT_CONF, opc_port } from '.';
 import net from 'net';
 import async from 'async';
 import { interpolatePixelMap } from './util/interpolation';
@@ -29,17 +30,27 @@ import { interpolatePixelMap } from './util/interpolation';
  */
 const serverConfigs = {
   1: {
+    // host: 'localhost',
     host: 'raspberrypi.local',
-    opc_port: SERVER_CONF.opc_port,
-    channels: RPI_SPIDEVS
+    opc_port,
+    channels: {
+      0: 'big',
+      1: 'smol',
+      2: 'smol',
+      3: 'smol'
+    }
   }
   // 2: {
   //   host: 'localhost'
   // }
 };
 
-const clientsConfig = {
-  frameRateCap: 40
+/**
+ * Context shared across all clients
+ */
+const superContext = {
+  ...CLIENT_CONF,
+  frameNumber: 0
 };
 
 const middleware = [
@@ -66,42 +77,58 @@ const scheduleThingRecursive = (thing, rateCap) => {
   };
 };
 
+const socketErrors = {};
+
+const initSocketPromise = (serverConfigs, serverID, host, port) => {
+  const client = new net.Socket();
+
+  client.on('data', data => {
+    console.error(chalk`{cyan 📡 ${serverID} recieved} ${data.toString('hex')}`);
+    client.destroy(); // kill client after server's response
+  });
+
+  client.on('close', hadError => {
+    console.error(
+      chalk`{cyan 📡 ${serverID} closed, hadError: }{white ${JSON.stringify(hadError)}}`
+    );
+  });
+
+  serverConfigs[serverID].client = client;
+
+  return new Promise((resolve, reject) => {
+    client.on('error', err => {
+      console.error(
+        chalk`{cyan 📡 ${serverID} error} connecting to {white ${host}} on port {white ${port}} : {white ${err}}`
+      );
+      socketErrors[serverID] = err;
+      reject(err);
+    });
+
+    client.connect(
+      port,
+      host,
+      () => {
+        console.log(
+          chalk`{cyan 📡${serverID} connected} to {white ${host}} on port {white ${port}}`
+        );
+        resolve();
+      }
+    );
+  });
+  // .catch(err => {
+  //   err;
+  // });
+};
+
 /**
  * Given a mapping of serverIDs to serverConfig , create sockets and initiate client
  */
 const startClients = async serverConfigs => {
-  await async.map(Object.entries(serverConfigs), ([serverID, { host, opc_port }]) => {
-    const client = new net.Socket();
-
-    client.on('data', data => {
-      console.error(chalk`{cyan 📡 ${serverID} recieved} ${data.toString('hex')}`);
-      client.destroy(); // kill client after server's response
-    });
-
-    client.on('close', () => {
-      console.error(chalk`{cyan 📡 ${serverID} closed}`);
-    });
-
-    serverConfigs[serverID].client = client;
-
-    return new Promise((resolve, reject) => {
-      client.on('error', err => {
-        console.error(chalk`{cyan 📡 ${serverID} error} {white ${err}}`);
-        reject(err);
-      });
-
-      client.connect(
-        opc_port,
-        host,
-        () => {
-          console.log(
-            chalk`{cyan 📡${serverID} connected} to {white ${host}} on port: {white ${opc_port}}`
-          );
-          resolve();
-        }
-      );
-    });
-  });
+  const result = await Promise.all(
+    Object.entries(serverConfigs).map(([serverID, { host, opc_port }]) =>
+      initSocketPromise(serverConfigs, serverID, host, opc_port)
+    )
+  ).catch(err => err);
 
   /**
    * The operating context for each client frame callback.
@@ -121,19 +148,25 @@ const startClients = async serverConfigs => {
     ...[...middleware, opcClientDriver].reverse().map(async.asyncify)
   );
 
-  let frameNumber = 0;
-  const img = getSquareCanvas();
-  fillRainbows(img, frameNumber);
-  setupMainWindow(img);
+  // superContext.img = getSquareCanvas();
+  // fillRainbows(superContext.img, superContext.frameNumber);
+  // setupMainWindow(superContext.img);
   const pixelLists = {};
 
   // Awaits a complete frame to be generated and sent to all servers
   const clientsFrameCallback = async () => {
-    // TODO: fill canvas, interpolate pixels off canvas and pass into context
-    frameNumber = frameNumber + 1;
-    fillRainbows(img, frameNumber);
-    pixelLists.smol = interpolatePixelMap(img, MAPS_DOME_SIMPLIFIED.smol);
-    // pixelLists.big = interpolatePixelMap(img, MAPS_DOME_SIMPLIFIED.big);
+    if (Object.values(socketErrors).length) process.exit();
+
+    superContext.frameNumber = superContext.frameNumber + 1;
+
+    // basic interpolation
+    // fillRainbows(superContext.img, superContext.frameNumber);
+    // pixelLists.smol = interpolatePixelMap(superContext.img, MAPS_DOME_SIMPLIFIED.smol);
+
+    // Direct Rainbow interpolation;
+    pixelLists.smol = directRainbows(MAPS_DOME_SIMPLIFIED.smol, superContext.frameNumber);
+
+    // pixelLists.big = interpolatePixelMap(superContext.img, MAPS_DOME_SIMPLIFIED.big);
     Object.values(clientContexts).map(context => {
       context.colours = pixelLists.smol;
     });
@@ -144,10 +177,10 @@ const startClients = async serverConfigs => {
     // only call colourRateLogger on the first context
     colourRateLogger(Object.values(clientContexts)[0]);
 
-    showPreview(img, MAPS_DOME_SIMPLIFIED);
+    // showPreview(superContext.img, MAPS_DOME_SIMPLIFIED);
   };
 
-  setTimeout(scheduleThingRecursive(clientsFrameCallback, clientsConfig.frameRateCap), 1000);
+  setTimeout(scheduleThingRecursive(clientsFrameCallback, superContext.frameRateCap), 1000);
 };
 
 startClients(serverConfigs);

@@ -19,13 +19,22 @@ export const RPI_SPIDEVS = {
   }
 };
 
+export const opc_port = 42069;
+
 export const SERVER_CONF = {
   // port used to listen for OPC commands
-  opc_port: 42069,
+  opc_port,
   // SPI Clock Speed
   spiClockSpeed: 10e6,
   // SPI Data Mode
   spiMode: 0
+};
+
+export const CLIENT_CONF = {
+  // port used to listen for OPC commands
+  opc_port,
+  // Maximum frames per second
+  frameRateCap: 40
 };
 
 export const FRESH_CONTEXT = {

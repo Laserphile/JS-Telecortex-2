@@ -9,7 +9,8 @@ const spi = {
     //     writebuf
     //   )} : Read count: ${readcount} ${cb ? 'Callback supplied' : 'Call not supplied'}}`
     // );
-  }
+  },
+  dataMode: () => {}
 };
 
 const SPI = {
