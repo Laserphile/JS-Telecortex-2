@@ -97,6 +97,15 @@ export const fillColour = (image, colour = cvBlackPixel) => {
   return image;
 };
 
+export const directRainbows = (pixMap, angle = 0.0) => {
+  return pixMap.reduce((pixelList, [x, y]) => {
+    const magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    const hue = (magnitude * MAX_HUE + (angle * MAX_HUE) / MAX_ANGLE) % MAX_HUE;
+    pixelList.push(hslToRgb({ h: hue, l: 50, s: 100 }));
+    return pixelList;
+  }, []);
+};
+
 export const getSquareCanvas = (size = IMG_SIZE) => {
   return new cv.Mat(size, size, cv.CV_8UC3);
 };
