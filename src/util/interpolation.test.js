@@ -23,14 +23,24 @@ describe('denormalizeCoordinate', () => {
     expect(denormalizeCoordinate(img.sizes, [0.5, 0.5])).toMatchObject([300, 300]);
   });
   it('handles portrait image', () => {
-    expect(denormalizeCoordinate([300, 400], [0.5, 0.5])).toMatchObject([150, 200]);
-    expect(denormalizeCoordinate([300, 400], [0, 0.5])).toMatchObject([0, 200]);
-    expect(denormalizeCoordinate([300, 400], [0.5, 0])).toMatchObject([150, 50]);
+    const imgShape = [300, 400];
+    [
+      { in_: [0.5, 0.5], out: [150, 200] },
+      { in_: [0, 0.5], out: [0, 200] },
+      { in_: [0.5, 0], out: [150, 50] }
+    ].forEach(({ in_, out }) => {
+      expect(denormalizeCoordinate(imgShape, in_)).toEqual(out);
+    });
   });
   it('handles landscape image', () => {
-    expect(denormalizeCoordinate([400, 300], [0.5, 0.5])).toMatchObject([200, 150]);
-    expect(denormalizeCoordinate([400, 300], [0, 0.5])).toMatchObject([50, 150]);
-    expect(denormalizeCoordinate([400, 300], [0.5, 0])).toMatchObject([200, 0]);
+    const imgShape = [400, 300];
+    [
+      { in_: [0.5, 0.5], out: [200, 150] },
+      { in_: [0, 0.5], out: [50, 150] },
+      { in_: [0.5, 0], out: [200, 0] }
+    ].forEach(({ in_, out }) => {
+      expect(denormalizeCoordinate(imgShape, in_)).toEqual(out);
+    });
   });
 });
 describe('interpolatePixelMap', () => {
