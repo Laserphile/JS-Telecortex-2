@@ -11,7 +11,8 @@ import {
   fillColour,
   cvGreyPixel,
   cvBlackPixel,
-  cvWhitePixel
+  cvWhitePixel,
+  directRainbows
 } from './graphics';
 import { now } from '.';
 const cv = require('opencv4nodejs');
@@ -87,6 +88,13 @@ describe('fillRainbows', () => {
     expect(img.atRaw(size / 2, size / 2)).toEqual([255, 0, 24]);
     // setupMainWindow(img);
     // cv.waitKey();
+  });
+});
+
+describe('directRainbows', () => {
+  it('works', () => {
+    const pixMap = [[0.5, 0.5], [1, 1]];
+    expect(directRainbows(pixMap)).toEqual([{ b: 255, g: 0, r: 62 }, { b: 124, g: 255, r: 0 }]);
   });
 });
 
