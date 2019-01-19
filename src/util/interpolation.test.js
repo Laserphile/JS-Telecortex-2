@@ -19,27 +19,35 @@ describe('interpolatePixel', () => {
   });
 });
 describe('denormalizeCoordinate', () => {
-  it('handles square image', () => {
-    expect(denormalizeCoordinate(img.sizes, [0.5, 0.5])).toMatchObject([300, 300]);
-  });
-  it('handles portrait image', () => {
-    const imgShape = [300, 400];
-    [
-      { in_: [0.5, 0.5], out: [150, 200] },
-      { in_: [0, 0.5], out: [0, 200] },
-      { in_: [0.5, 0], out: [150, 50] }
-    ].forEach(({ in_, out }) => {
-      expect(denormalizeCoordinate(imgShape, in_)).toEqual(out);
-    });
-  });
-  it('handles landscape image', () => {
-    const imgShape = [400, 300];
-    [
-      { in_: [0.5, 0.5], out: [200, 150] },
-      { in_: [0, 0.5], out: [50, 150] },
-      { in_: [0.5, 0], out: [200, 0] }
-    ].forEach(({ in_, out }) => {
-      expect(denormalizeCoordinate(imgShape, in_)).toEqual(out);
+  [
+    {
+      name: 'handles square image',
+      shape: img.sizes,
+      tests: [{ in_: [0.5, 0.5], out: [300, 300] }]
+    },
+    {
+      name: 'handles portrait image',
+      shape: [300, 400],
+      tests: [
+        { in_: [0.5, 0.5], out: [150, 200] },
+        { in_: [0, 0.5], out: [0, 200] },
+        { in_: [0.5, 0], out: [150, 50] }
+      ]
+    },
+    {
+      name: 'handles landscape image',
+      shape: [400, 300],
+      tests: [
+        { in_: [0.5, 0], out: [200, 0] },
+        { in_: [0, 0.5], out: [50, 150] },
+        { in_: [0.5, 0.5], out: [200, 150] }
+      ]
+    }
+  ].forEach(({ name, shape, tests }) => {
+    it(name, () => {
+      tests.forEach(({ in_, out }) => {
+        expect(denormalizeCoordinate(shape, in_)).toEqual(out);
+      });
     });
   });
 });
