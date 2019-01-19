@@ -132,7 +132,7 @@ const startClients = async serverConfigs => {
     // TODO: fill canvas, interpolate pixels off canvas and pass into context
     frameNumber = frameNumber + 1;
     fillRainbows(img, frameNumber);
-    pixelLists.smol = interpolatePixelMap(img, MAPS_DOME_SIMPLIFIED.smol.slice(100));
+    pixelLists.smol = interpolatePixelMap(img, MAPS_DOME_SIMPLIFIED.smol);
     // pixelLists.big = interpolatePixelMap(img, MAPS_DOME_SIMPLIFIED.big);
     Object.values(clientContexts).map(context => {
       context.colours = pixelLists.smol;
