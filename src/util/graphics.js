@@ -79,6 +79,10 @@ export const cvPixelToRgb = cvPixel => {
   );
 };
 
+export const cvBlackPixel = rgbTocvPixel({ r: 0, g: 0, b: 0 });
+export const cvGreyPixel = rgbTocvPixel({ r: 128, g: 128, b: 128 });
+export const cvWhitePixel = rgbTocvPixel({ r: 255, g: 255, b: 255 });
+
 /**
  * Given an OpenCV Matrix of any dimensions, fill with ranbows.
  * @param {cv.Matrix} image A canvas on which to draw rainbows
@@ -95,12 +99,17 @@ export const fillRainbows = (image, angle = 0.0) => {
   return image;
 };
 
+export const fillColour = (image, colour = cvBlackPixel) => {
+  const size = image.sizes[0];
+  times(size, col => {
+    image.drawLine(new cv.Point(col, 0), new cv.Point(col, size), colour, 2);
+  });
+  return image;
+};
+
 export const getSquareCanvas = (size = IMG_SIZE) => {
   return new cv.Mat(size, size, cv.CV_8UC3);
 };
-
-const cvBlackPixel = rgbTocvPixel({ r: 0, g: 0, b: 0 });
-const cvWhitePixel = rgbTocvPixel({ r: 255, g: 255, b: 255 });
 
 /**
  * Given an image and a normalized pixel map, draw the map on the image.
@@ -132,7 +141,7 @@ export const setupMainWindow = img => {
   // window_flags |= cv.WINDOW_KEEPRATIO
 
   // cv.namedWindow(MAIN_WINDOW, window_flags);
-  cv.moveWindow(MAIN_WINDOW, 900, 0);
+  // cv.moveWindow(MAIN_WINDOW, 900, 0);
   // cv.resizeWindow(MAIN_WINDOW, 700, 700);
   cv.imshow(MAIN_WINDOW, img);
 };
