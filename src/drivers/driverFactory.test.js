@@ -38,11 +38,16 @@ export const multiChannels = {
   }
 };
 
-afterEach(() => {
-  mockSpi0.transfer.mockClear();
-  mockSpi1.transfer.mockClear();
-  mockSpi2.transfer.mockClear();
-  mockSpi3.transfer.mockClear();
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+const oldError = console.error;
+console.error = jest.fn();
+
+afterAll(() => {
+  jest.resetAllMocks();
+  console.error = oldError;
 });
 
 const channelColours = { 0: [{ r: 1, g: 2, b: 3 }] };
@@ -106,7 +111,6 @@ describe('ledDriver', () => {
   });
 
   it('logs spi transfer errors', () => {
-    console.error = jest.fn();
     const singleErroringChannel = JSON.parse(JSON.stringify(singleChannels));
     singleErroringChannel[0].spi.transfer = (_, __, callback) => {
       const err = new Error('test');
@@ -122,7 +126,6 @@ describe('ledDriver', () => {
   });
 
   it('ignores spi loopback', () => {
-    console.error = jest.fn();
     const singleLoopingChannel = JSON.parse(JSON.stringify(singleChannels));
     singleLoopingChannel[0].spi.transfer = (data, length, callback) => {
       callback(undefined, data.slice(0, length));

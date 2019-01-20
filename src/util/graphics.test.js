@@ -37,6 +37,10 @@ beforeEach(() => {
   cv.imshow.mockClear();
 });
 
+afterAll(() => {
+  jest.resetAllMocks();
+});
+
 describe('coloursToString', () => {
   it('works', () => {
     expect(coloursToString(someColours)).toBeTruthy();
