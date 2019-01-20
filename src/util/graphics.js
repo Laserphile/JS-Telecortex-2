@@ -120,7 +120,7 @@ export const getSquareCanvas = (size = IMG_SIZE) => {
 const drawMap = (img, pixMapNormalized, radius = DOT_RADIUS, outline = cvBlackPixel) => {
   pixMapNormalized.forEach(coordinate => {
     img.drawCircle(
-      new cv.Point(...denormalizeCoordinate(img.sizes, coordinate)),
+      new cv.Point(...denormalizeCoordinate(img.sizes, coordinate).reverse()),
       radius,
       outline,
       1
