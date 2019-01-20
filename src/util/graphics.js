@@ -158,7 +158,7 @@ export const showPreview = (img, maps = {}) => {
   });
   cv.imshow(MAIN_WINDOW, img);
   if (Math.round((now() * TARGET_FRAMERATE) / 2) % 2 === 0) {
-    const key = cv.waitKey(2) & 0xff;
+    const key = cv.waitKey(1) & 0xff;
     if (key == 27) {
       cv.destroyAllWindows();
       return true;
