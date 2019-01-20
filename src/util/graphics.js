@@ -1,7 +1,6 @@
 import chalk from 'chalk';
-import { sprintf } from 'sprintf-js';
 import { rgbToHsv, hslToRgb, rgbToHex } from 'colorsys';
-import { now } from './index';
+import { now, msNow } from './index';
 import { times } from 'lodash';
 import { denormalizeCoordinate } from './interpolation';
 const cv = require('opencv4nodejs');
@@ -13,8 +12,8 @@ export const IMG_SIZE = 512;
 export const MAX_HUE = 360.0;
 export const MAX_ANGLE = 360.0;
 export const MAIN_WINDOW = 'Telecortex';
-const DOT_RADIUS = 3;
-const TARGET_FRAMERATE = 20;
+const DOT_RADIUS = 2;
+const PREVIEW_FRAMERATE = 1;
 export const defaultHSV = { h: 360, s: 100, v: 10 };
 
 /**
@@ -135,7 +134,7 @@ const drawMap = (img, pixMapNormalized, radius = DOT_RADIUS, outline = cvBlackPi
  * Create the main window using the background image provided.
  * @param {cv.Mat} img background image
  */
-export const setupMainWindow = img => {
+export const setupMainWindow = (img) => {
   // const window_flags = 0;
   // window_flags |= cv.WINDOW_NORMAL
   // # window_flags |= cv.WINDOW_AUTOSIZE
@@ -143,10 +142,12 @@ export const setupMainWindow = img => {
   // window_flags |= cv.WINDOW_KEEPRATIO
 
   // cv.namedWindow(MAIN_WINDOW, window_flags);
-  // cv.moveWindow(MAIN_WINDOW, 900, 0);
+  // cv.moveWindow(MAIN_WINDOW, 900, 900);
   // cv.resizeWindow(MAIN_WINDOW, 700, 700);
   cv.imshow(MAIN_WINDOW, img);
 };
+
+export var lastWaitKey = 0;
 
 /**
  * Draw the maps on img, wait to detect keypresses.
@@ -154,14 +155,21 @@ export const setupMainWindow = img => {
  * @param {Object} maps a collection of named pixel mappings
  * @return {Boolean} if a key was pressed
  */
-export const showPreview = (img, maps = {}) => {
+export const showPreview = (img, maps = {}, dotRadius = DOT_RADIUS, rescale = true) => {
+  if (rescale) {
+    const maxSize = Math.max(...img.sizes);
+    if (IMG_SIZE != maxSize) {
+      img = img.rescale(IMG_SIZE / maxSize);
+    }
+  }
   Object.values(maps).forEach(panelMap => {
-    drawMap(img, panelMap, DOT_RADIUS + 1, cvWhitePixel);
-    drawMap(img, panelMap, DOT_RADIUS);
+    drawMap(img, panelMap, dotRadius + 1, cvWhitePixel);
+    drawMap(img, panelMap, dotRadius);
   });
   cv.imshow(MAIN_WINDOW, img);
-  if (Math.round((now() * TARGET_FRAMERATE) / 2) % 2 === 0) {
-    const key = cv.waitKey(1) & 0xff;
+  if (msNow() - lastWaitKey > 1000 / PREVIEW_FRAMERATE) {
+    lastWaitKey = msNow();
+    const key = cv.waitKey(2) & 0xff;
     if (key == 27) {
       cv.destroyAllWindows();
       return true;
