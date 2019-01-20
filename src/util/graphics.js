@@ -5,10 +5,11 @@ import { now } from './index';
 import { times } from 'lodash';
 import { denormalizeCoordinate } from './interpolation';
 const cv = require('opencv4nodejs');
+import { norm } from 'mathjs';
 
 export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
 const opencvChannelFields = ['b', 'g', 'r'];
-export const IMG_SIZE = 128;
+export const IMG_SIZE = 512;
 export const MAX_HUE = 360.0;
 export const MAX_ANGLE = 360.0;
 export const MAIN_WINDOW = 'Telecortex';
@@ -98,9 +99,8 @@ export const fillColour = (image, colour = cvBlackPixel) => {
 };
 
 export const directRainbows = (pixMap, angle = 0.0) => {
-  return pixMap.reduce((pixelList, [x, y]) => {
-    const magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-    const hue = (magnitude * MAX_HUE + (angle * MAX_HUE) / MAX_ANGLE) % MAX_HUE;
+  return pixMap.reduce((pixelList, vector) => {
+    const hue = (norm(vector) * MAX_HUE + (angle * MAX_HUE) / MAX_ANGLE) % MAX_HUE;
     pixelList.push(hslToRgb({ h: hue, l: 50, s: 100 }));
     return pixelList;
   }, []);
