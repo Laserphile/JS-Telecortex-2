@@ -23,10 +23,16 @@ import {
   CLIENT_CONF,
   opc_port
 } from '.';
+// import { size } from 'mathjs';
 import net from 'net';
 import async from 'async';
-import { interpolatePixelMap } from './util/interpolation';
-// const cv = require('opencv4nodejs');
+import {
+  // identity,
+  flow
+} from 'lodash';
+const cv = require('opencv4nodejs');
+import { basicRainbows, interpolateImg, maybeShowPreview } from './drivers/superMiddleware';
+import { canvasInit, previewInit } from './drivers/initializers';
 
 // TODO: read this from a JSON file
 
@@ -55,13 +61,32 @@ const serverConfigs = {
  */
 const superContext = {
   ...CLIENT_CONF,
-  frameNumber: 0
+  frameNumber: 0,
+  videoFile: '/Users/derwent/Movies/Telecortex/loops/BOKK (loop).mov',
+  pixMaps: MAPS_DOME_OVERHEAD,
+  panels: PANELS_DOME_OVERHEAD,
+  pixelLists: {}
 };
 
 const middleware = [
   // singleRainbow,
   // rainbowFlow,
   // coloursToAllChannels
+];
+
+// const profiles = {
+//   simpleRainbows: {
+//     initializers: [
+//     ]
+//   }
+// }
+
+const superMiddleware = [
+  basicRainbows,
+  interpolateImg,
+  maybeShowPreview
+
+  // foo
 ];
 
 // TODO: refactor using limiter https://www.npmjs.com/package/limiter
@@ -153,22 +178,28 @@ const startClients = async serverConfigs => {
     {}
   );
 
+  superContext.driver = opcClientDriver;
+  // superContext.driver = identity;
+
   /**
    * async callback which sends the OPC data for a single frame on a single client
    */
   const asyncClientFrameCallback = async.compose(
-    ...[...middleware, opcClientDriver].reverse().map(async.asyncify)
+    ...[...middleware, superContext.driver].reverse().map(async.asyncify)
   );
 
-  superContext.img = getSquareCanvas();
-  fillRainbows(superContext.img, superContext.frameNumber);
-  setupMainWindow(superContext.img);
-  superContext.pixMaps = MAPS_DOME_OVERHEAD;
-  superContext.panels = PANELS_DOME_OVERHEAD;
-  superContext.pixelLists = {};
-  showPreview(superContext.img, superContext.pixMaps);
+  flow(
+    canvasInit,
+    previewInit
+  )(superContext);
+
+  // video capture
+  // superContext.cap = new cv.VideoCapture(superContext.videoFile);
+  // superContext.img = superContext.cap.read();
 
   // cv.waitKey();
+
+  const superMiddlewareFlow = flow(...superMiddleware);
 
   // Awaits a complete frame to be generated and sent to all servers
   const clientsFrameCallback = async () => {
@@ -176,11 +207,19 @@ const startClients = async serverConfigs => {
 
     superContext.frameNumber = superContext.frameNumber + 1;
 
-    // basic interpolation
-    fillRainbows(superContext.img, superContext.frameNumber);
-    Object.entries(superContext.pixMaps).forEach(([name, pixMap]) => {
-      superContext.pixelLists[name] = interpolatePixelMap(superContext.img, pixMap);
-    });
+    superMiddlewareFlow(superContext);
+
+    // // video capture
+    // superContext.img = superContext.cap.read();
+    // const sizes = superContext.img.sizes;
+    // // console.log(`img dimensions ${sizes}, ${typeof sizes}, ${JSON.stringify(sizes)}`);
+    // // console.log(`1: ${superContext.cap.get(1)}`);
+    // if (!sizes.length) {
+    //   // console.error('resetting!');
+    //   superContext.cap.set(1, 1);
+    //   superContext.img = superContext.cap.read();
+    // }
+    // // superContext.img = superContext.img.rescale(0.2);
 
     // Direct Rainbow interpolation;
     // superContext.pixelLists.smol = directRainbows(MAPS_DOME_SIMPLIFIED.smol, superContext.frameNumber);
@@ -188,15 +227,19 @@ const startClients = async serverConfigs => {
     // superContext.pixelLists.big = interpolatePixelMap(superContext.img, MAPS_DOME_SIMPLIFIED.big);
     Object.entries(clientContexts).map(([serverID, context]) => {
       if (!Object.keys(superContext.panels).includes(serverID)) {
-        throw new Error(`panels not mapped for serverID ${serverID}`);
+        const err = new Error(`panels not mapped for serverID ${serverID}`);
+        console.error(err);
+        process.exit();
       }
       Object.entries(superContext.panels[serverID]).map(([channel, mapName]) => {
         if (!Object.keys(superContext.pixelLists).includes(mapName)) {
-          throw new Error(
+          const err = new Error(
             `map name ${mapName} not in superContext.pixelLists ${Object.keys(
               superContext.pixelLists
             )}`
           );
+          console.error(err);
+          // process.exit();
         }
         context.channelColours[channel] = superContext.pixelLists[mapName];
       });
@@ -207,9 +250,6 @@ const startClients = async serverConfigs => {
     });
     // only call colourRateLogger on the first context
     colourRateLogger(Object.values(clientContexts)[0]);
-    if (superContext.enablePreview) {
-      showPreview(superContext.img, superContext.pixMaps);
-    }
   };
 
   setTimeout(scheduleThingRecursive(clientsFrameCallback, superContext.frameRateCap), 1000);
