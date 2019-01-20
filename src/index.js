@@ -34,7 +34,9 @@ export const CLIENT_CONF = {
   // port used to listen for OPC commands
   opc_port,
   // Maximum frames per second
-  frameRateCap: 40
+  frameRateCap: Infinity,
+  // Enable openCV preview
+  enablePreview: true
 };
 
 export const FRESH_CONTEXT = {
@@ -47,5 +49,5 @@ export const FRESH_CONTEXT = {
   // Last time something was printed
   lastPrint: now(),
   // Brightness of all strips on the server
-  brightness: 0.5
+  brightness: 0.1
 };
