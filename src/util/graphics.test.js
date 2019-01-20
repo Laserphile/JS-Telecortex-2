@@ -82,13 +82,13 @@ describe('fillRainbows', () => {
   it('works', () => {
     fillColour(img, cvBlackPixel);
     expect(img.at(size / 2, size / 2)).toEqual(cvBlackPixel);
-    fillRainbows(img);
+    fillRainbows(img, 0, 1);
     expect(img.atRaw(size / 2, size / 2)).toEqual([255, 231, 0]);
   });
   it('works with nonzero angle', () => {
     fillColour(img, cvBlackPixel);
     expect(img.at(size / 2, size / 2)).toEqual(cvBlackPixel);
-    fillRainbows(img, MAX_ANGLE / 6);
+    fillRainbows(img, MAX_ANGLE / 6, 1);
     expect(img.atRaw(size / 2, size / 2)).toEqual([255, 0, 24]);
     // setupMainWindow(img);
     // cv.waitKey();
