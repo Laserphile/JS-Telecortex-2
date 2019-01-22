@@ -72,9 +72,9 @@ uname -m
 ```
 # install node 11
 curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
-apt-get install -y nodejs
+sudo apt-get install -y nodejs
 ```
-sudo apt-get install gcc g++ make
+
 # Install yarn
 #### 3. Install yarn
 ```
