@@ -16,6 +16,10 @@ export const PIXEL_MAP_DOME_OUTER_FLIP = Object.values(
   JSON.parse(fs.readFileSync('test_data/pixel_map_outer_flip.json', 'utf8'))
 );
 
+// export const isCloseTo = (value, target, epsilon = 0.01) => {
+//   return Math.abs(value - target) < epsilon;
+// };
+
 // Return a normalized copy of `pixel map` all x, y between 0, 1.
 export const normalizePixMap = pixMap => {
   if (size(pixMap)[1] != 2) {

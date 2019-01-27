@@ -210,16 +210,6 @@ const startClients = async serverConfigs => {
     superMiddlewareFlow(superContext);
 
     // // video capture
-    // superContext.img = superContext.cap.read();
-    // const sizes = superContext.img.sizes;
-    // // console.log(`img dimensions ${sizes}, ${typeof sizes}, ${JSON.stringify(sizes)}`);
-    // // console.log(`1: ${superContext.cap.get(1)}`);
-    // if (!sizes.length) {
-    //   // console.error('resetting!');
-    //   superContext.cap.set(1, 1);
-    //   superContext.img = superContext.cap.read();
-    // }
-    // // superContext.img = superContext.img.rescale(0.2);
 
     // Direct Rainbow interpolation;
     // superContext.pixelLists.smol = directRainbows(MAPS_DOME_SIMPLIFIED.smol, superContext.frameNumber);

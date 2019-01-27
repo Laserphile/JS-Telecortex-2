@@ -3,6 +3,15 @@ import { consoleErrorHandler } from '../util';
 import { colours2sk9822 } from '../util/sk9822';
 import { composeOPCMessage } from '../opc/compose';
 
+// const transferDataAsync = async (spi, dataBuff) => {
+//   return await Promise((resolve, reject) => {
+//     spi.transfer(dataBuff, dataBuff.length, (err, data) => {
+//       if (err) reject(err);
+//       resolve(data);
+//     });
+//   });
+// };
+
 /**
  * Given a context containing a list of spi device specifications and LED data,
  * Send data to all LEDs
