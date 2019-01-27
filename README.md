@@ -74,8 +74,9 @@ uname -m
 curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
+*If you have an Armv6 Pi: (Model A, B, Zero)*
+May not be possible to install a version of node later than 8 which is required
 
-# Install yarn
 #### 3. Install yarn
 ```
 curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
