@@ -36,7 +36,7 @@ export const CLIENT_CONF = {
   // Maximum frames per second
   frameRateCap: Infinity,
   // Enable openCV preview
-  enablePreview: true
+  enablePreview: false
 };
 
 export const FRESH_CONTEXT = {
