@@ -22,6 +22,19 @@ export const interpolateImg = superContext => {
   return superContext;
 };
 
+export const readCapture = superContext => {
+  superContext.img = superContext.cap.read();
+  const sizes = superContext.img.sizes;
+  // console.log(`img dimensions ${sizes}, ${typeof sizes}, ${JSON.stringify(sizes)}`);
+  // console.log(`1: ${superContext.cap.get(1)}`);
+  if (!sizes.length) {
+    // console.error('resetting!');
+    superContext.cap.set(1, 1);
+    superContext.img = superContext.cap.read();
+  }
+  // superContext.img = superContext.img.rescale(0.2);
+};
+
 export const maybeShowPreview = superContext => {
   if (superContext.enablePreview) {
     showPreview(superContext.img, superContext.pixMaps);
