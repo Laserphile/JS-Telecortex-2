@@ -103,7 +103,11 @@ export const fillColour = (image, colour = cvBlackPixel) => {
 
 export const directRainbows = (pixMap, angle = 0.0) => {
   return pixMap.reduce((pixelList, vector) => {
-    const hue = (norm(vector) * MAX_HUE + (angle * MAX_HUE) / MAX_ANGLE) % MAX_HUE;
+    const position = [
+      vector[0] - 0.5,
+      vector[1] - 0.5
+    ]
+    const hue = (norm(position) * MAX_HUE + (angle * ANIM_SPEED * MAX_HUE) / MAX_ANGLE) % MAX_HUE;
     pixelList.push(hslToRgb({ h: hue, l: 50, s: 100 }));
     return pixelList;
   }, []);
