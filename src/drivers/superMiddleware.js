@@ -33,6 +33,7 @@ export const readCapture = superContext => {
     superContext.img = superContext.cap.read();
   }
   // superContext.img = superContext.img.rescale(0.2);
+  return superContext;
 };
 
 export const maybeShowPreview = superContext => {
