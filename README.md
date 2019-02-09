@@ -61,7 +61,7 @@ sudo vim /etc/hostname
 
 #### 1. Install build tools
 ```
-sudo apt-get install gcc g++ make
+sudo apt-get install gcc g++ make cmake libopencv-dev
 ```
 #### 2. Install Node
 Determine architecture
@@ -83,16 +83,24 @@ curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt-get update && sudo apt-get install yarn
 ```
-Clone this repo
+#### 4. Clone this repo
 ```
 mkdir -p Documents/GitHub
 git clone https://github.com/Laserphile/JS-Telecortex-2 Documents/GitHub/JS-Telecortex-2
+cd ~/Documents/GitHub/JS-Telecortex-2
+```
+
+#### 5. Install JS dependencies
+
+Install the opencv4nodejs npm package manually
+```bash
+npm install --force --save opencv4nodejs
 ```
 Install JS dependencies
-```bash
-cd ~/Documents/GitHub/JS-Telecortex-2
-yarn install
 ```
+OPENCV4NODEJS_DISABLE_AUTOBUILD=1 yarn install
+```
+In order to stop opencv from re-building every time you change your yarn packages, you must add OPENCV4NODEJS_DISABLE_AUTOBUILD=1 to your environment.
 
 ## Install on OSX
 ```bash
