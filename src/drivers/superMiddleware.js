@@ -42,3 +42,11 @@ export const maybeShowPreview = superContext => {
   }
   return superContext;
 };
+
+export const applyDirect = directFn => {
+  return superContext => {
+    Object.entries(superContext.pixMaps).forEach(([name, pixMap]) => {
+      superContext.pixelLists[name] = directFn(pixMap, superContext.frameNumber);
+    });
+  }
+}
