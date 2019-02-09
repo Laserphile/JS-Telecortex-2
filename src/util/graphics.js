@@ -73,7 +73,8 @@ export const cvBlackPixel = rgbTocvPixel({ r: 0, g: 0, b: 0 });
 export const cvGreyPixel = rgbTocvPixel({ r: 128, g: 128, b: 128 });
 export const cvWhitePixel = rgbTocvPixel({ r: 255, g: 255, b: 255 });
 
-const PANEL_SCALE = 5;
+const PANEL_SCALE = 0.5;
+const PANEL_SPEED = 1
 
 /**
  * Given an OpenCV Matrix of any dimensions, fill with ranbows.
@@ -84,7 +85,7 @@ export const fillRainbows = (image, angle = 0.0, panelScale = PANEL_SCALE) => {
   const size = image.sizes[0];
   times(size, col => {
     const hue =
-      ((col * MAX_HUE * panelScale) / size + (angle * MAX_HUE * panelScale) / MAX_ANGLE) % MAX_HUE;
+      ((col * MAX_HUE * panelScale) / size + (angle * PANEL_SPEED * MAX_HUE * panelScale) / MAX_ANGLE) % MAX_HUE;
     const rgb = hslToRgb({ h: hue, l: 50, s: 100 });
     const pixel = rgbTocvPixel(rgb);
     image.drawLine(new cv.Point(col, 0), new cv.Point(col, size), pixel, 2);
