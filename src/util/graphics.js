@@ -1,10 +1,11 @@
 import chalk from 'chalk';
 import { rgbToHsv, hslToRgb, rgbToHex } from 'colorsys';
-import { now, msNow } from './index';
+import { now, msNow, nowFloat } from './index';
 import { times } from 'lodash';
 import { denormalizeCoordinate } from './interpolation';
 const cv = require('opencv4nodejs');
 import { norm } from 'mathjs';
+// import { generatePerlinNoise } from 'perlin-noise';
 
 export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
 const opencvChannelFields = ['b', 'g', 'r'];
@@ -74,7 +75,7 @@ export const cvGreyPixel = rgbTocvPixel({ r: 128, g: 128, b: 128 });
 export const cvWhitePixel = rgbTocvPixel({ r: 255, g: 255, b: 255 });
 
 const PANEL_SCALE = 0.5;
-const PANEL_SPEED = 1
+const ANIM_SPEED = 3;
 
 /**
  * Given an OpenCV Matrix of any dimensions, fill with ranbows.
@@ -85,7 +86,7 @@ export const fillRainbows = (image, angle = 0.0, panelScale = PANEL_SCALE) => {
   const size = image.sizes[0];
   times(size, col => {
     const hue =
-      ((col * MAX_HUE * panelScale) / size + (angle * PANEL_SPEED * MAX_HUE * panelScale) / MAX_ANGLE) % MAX_HUE;
+      ((col * MAX_HUE * panelScale) / size + (angle * ANIM_SPEED * MAX_HUE * panelScale) / MAX_ANGLE) % MAX_HUE;
     const rgb = hslToRgb({ h: hue, l: 50, s: 100 });
     const pixel = rgbTocvPixel(rgb);
     image.drawLine(new cv.Point(col, 0), new cv.Point(col, size), pixel, 2);
@@ -112,6 +113,25 @@ export const directRainbows = (pixMap, angle = 0.0) => {
     return pixelList;
   }, []);
 };
+
+const S = Math.sin;
+const C = Math.cos;
+const start = nowFloat();
+
+
+/**
+ * Replicate https://www.dwitter.net/d/12206
+ */
+export const directPerlinRainbows = (pixMap, angle=0.0) => {
+  const t = nowFloat() - start;
+
+  return pixMap.reduce((pixelList, vector) => {
+    const i = Math.round(50 + 40 * vector[0]) + Math.round(20 + 21 * vector[1]);
+    const hue = (i * S(S(t) * S(t * 2 + i * .157)) * C(i / 520) + i * 9) / (.05 * C(t) + 1)
+    pixelList.push(hslToRgb({ h: hue, l: 50, s: 100 }));
+    return pixelList;
+  }, []);
+}
 
 export const getSquareCanvas = (size = IMG_SIZE) => {
   return new cv.Mat(size, size, cv.CV_8UC3);

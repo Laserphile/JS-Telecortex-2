@@ -12,9 +12,9 @@ import {
   getSquareCanvas,
   setupMainWindow,
   showPreview,
-  fillRainbows
-  // directRainbows,
-  // MAX_ANGLE
+  fillRainbows,
+  directRainbows,
+  directPerlinRainbows
 } from './util/graphics';
 import { MAPS_DOME_OVERHEAD, PANELS_DOME_OVERHEAD } from './util/mapping';
 import {
@@ -30,9 +30,14 @@ import {
   // identity,
   flow
 } from 'lodash';
-const cv = require('opencv4nodejs');
-import { basicRainbows, interpolateImg, maybeShowPreview } from './drivers/superMiddleware';
-import { canvasInit, previewInit } from './drivers/initializers';
+import {
+  basicRainbows,
+  interpolateImg,
+  maybeShowPreview,
+  readCapture,
+  applyDirect
+} from './drivers/superMiddleware';
+import { canvasInit, previewInit, videoInit } from './drivers/initializers';
 
 // TODO: read this from a JSON file
 
@@ -82,11 +87,12 @@ const middleware = [
 // }
 
 const superMiddleware = [
-  basicRainbows,
-  interpolateImg,
-  maybeShowPreview
-
-  // foo
+  // applyDirect(directRainbows)
+  applyDirect(directPerlinRainbows)
+  // basicRainbows,
+  // readCapture,
+  // interpolateImg,
+  // maybeShowPreview
 ];
 
 // TODO: refactor using limiter https://www.npmjs.com/package/limiter
@@ -188,14 +194,10 @@ const startClients = async serverConfigs => {
     ...[...middleware, superContext.driver].reverse().map(async.asyncify)
   );
 
-  flow(
-    canvasInit,
-    previewInit
-  )(superContext);
-
-  // video capture
-  // superContext.cap = new cv.VideoCapture(superContext.videoFile);
-  // superContext.img = superContext.cap.read();
+  flow()(superContext);
+  // canvasInit,
+  // previewInit,
+  // videoInit
 
   // cv.waitKey();
 
@@ -209,12 +211,6 @@ const startClients = async serverConfigs => {
 
     superMiddlewareFlow(superContext);
 
-    // // video capture
-
-    // Direct Rainbow interpolation;
-    // superContext.pixelLists.smol = directRainbows(MAPS_DOME_SIMPLIFIED.smol, superContext.frameNumber);
-
-    // superContext.pixelLists.big = interpolatePixelMap(superContext.img, MAPS_DOME_SIMPLIFIED.big);
     Object.entries(clientContexts).map(([serverID, context]) => {
       if (!Object.keys(superContext.panels).includes(serverID)) {
         const err = new Error(`panels not mapped for serverID ${serverID}`);
