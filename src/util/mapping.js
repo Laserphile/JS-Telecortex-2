@@ -15,6 +15,9 @@ export const PIXEL_MAP_DOME_OUTER = Object.values(
 export const PIXEL_MAP_DOME_OUTER_FLIP = Object.values(
   JSON.parse(fs.readFileSync('test_data/pixel_map_outer_flip.json', 'utf8'))
 );
+export const PIXEL_MAP_SQUARE_SERP_12 = Object.values(
+  JSON.parse(fs.readFileSync('test_data/pixel_map_square_serp_12.json', 'utf8'))
+);
 
 // export const isCloseTo = (value, target, epsilon = 0.01) => {
 //   return Math.abs(value - target) < epsilon;
@@ -67,6 +70,14 @@ export const MAPS_DOME = {
   outer: normalizePixMap(PIXEL_MAP_DOME_OUTER),
   outer_flip: normalizePixMap(PIXEL_MAP_DOME_OUTER_FLIP)
 };
+
+export const MAPS_SQUARE_SERP_12 = {
+  'square': normalizePixMap(PIXEL_MAP_SQUARE_SERP_12)
+}
+
+export const PANELS_SQUARE_SERP_12 = {
+  4: { 0: 'square' }
+}
 
 /**
  * Convert from radians to degrees
