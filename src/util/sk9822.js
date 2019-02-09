@@ -1,3 +1,5 @@
+import { createGammaTable } from './graphics'
+
 // 8bit unsigned integer must be less than this value
 const uint8Max = 0x100;
 // Constant prefix in first byte of sk9822 frame
@@ -15,6 +17,7 @@ const colourOrder = ['b', 'g', 'r'];
  */
 export const rgb2sk9822 = (colour, brightness = 0.5) => {
   // first byte is a constant 0xE0 + 5 bit brightness value
+  colour = sk9822GammaCorrect(colour)
   return colourOrder.reduce(
     (accumulator, key) => (accumulator.push(colour[key] % uint8Max), accumulator),
     [prefix + Math.round(brightness * brightnessMask)]
@@ -31,3 +34,12 @@ export const colours2sk9822 = (colours, brightness) => {
     Array.from(resetFrame)
   );
 };
+
+export const SK9822_GAMMA = createGammaTable(uint8Max, 2.8)
+
+export const sk9822GammaCorrect = (colour) => {
+  colourOrder.forEach(key => {
+    colour[key] = SK9822_GAMMA[Math.round(colour[key])];
+  })
+  return colour
+}
