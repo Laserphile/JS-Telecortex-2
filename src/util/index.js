@@ -1,11 +1,19 @@
 import { promisify } from 'util';
 
+export const msNowFloat = () => {
+  return new Date().getTime();
+};
+
 export const msNow = () => {
-  return Math.round(new Date().getTime());
+  return Math.round(msNowFloat());
+};
+
+export const nowFloat = () => {
+  return msNowFloat() / 1000.0;
 };
 
 export const now = () => {
-  return Math.round(msNow() / 1000);
+  return Math.round(nowFloat());
 };
 
 /**
