@@ -5,7 +5,7 @@ import { times } from 'lodash';
 import { denormalizeCoordinate } from './interpolation';
 const cv = require('opencv4nodejs');
 import { norm } from 'mathjs';
-// import { generatePerlinNoise } from 'perlin-noise';
+import SimplexNoise from 'simplex-noise';
 
 export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
 const opencvChannelFields = ['b', 'g', 'r'];
@@ -122,12 +122,24 @@ const start = nowFloat();
 /**
  * Replicate https://www.dwitter.net/d/12206
  */
-export const directPerlinRainbows = (pixMap, angle=0.0) => {
+export const directBlobbyRainbows = (pixMap, angle=0.0) => {
   const t = nowFloat() - start;
 
   return pixMap.reduce((pixelList, vector) => {
     const i = Math.round(50 + 40 * vector[0]) + Math.round(20 + 21 * vector[1]);
     const hue = (i * S(S(t) * S(t * 2 + i * .157)) * C(i / 520) + i * 9) / (.05 * C(t) + 1)
+    pixelList.push(hslToRgb({ h: hue, l: 50, s: 100 }));
+    return pixelList;
+  }, []);
+}
+
+
+export const directSimplexRainbows = (pixMap, angle = 0.0) => {
+  const d = nowFloat() - start;
+  const t = 1 * Math.sin(d / 100) + 0.5 * d;
+  const simplex = new SimplexNoise('seed')
+  return pixMap.reduce((pixelList, vector) => {
+    const hue = MAX_HUE * simplex.noise3D(vector[0] + d / 5, vector[1], t)
     pixelList.push(hslToRgb({ h: hue, l: 50, s: 100 }));
     return pixelList;
   }, []);
