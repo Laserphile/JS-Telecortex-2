@@ -15,6 +15,7 @@
     "mathjs": "^5.4.1",
     "opencv4nodejs": "^4.14.0",
     "pi-spi": "^1.0.3",
+    "simplex-noise": "^2.4.0",
     "sprintf-js": "^1.1.2"
   },
   "devDependencies": {
