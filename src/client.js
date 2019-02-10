@@ -14,7 +14,7 @@ import {
   showPreview,
   fillRainbows,
   directRainbows,
-  directPerlinRainbows
+  directSimplexRainbows
 } from './util/graphics';
 import { MAPS_DOME_OVERHEAD, PANELS_DOME_OVERHEAD } from './util/mapping';
 import { MAPS_SQUARE_SERP_9, PANELS_SQUARE_SERP_9 } from './util/mapping';
@@ -74,16 +74,6 @@ const serverConfigs = {
 //   panels: PANELS_DOME_OVERHEAD,
 //   pixelLists: {}
 // };
-// const superContext = {
-//   ...CLIENT_CONF,
-//   frameNumber: 0,
-//   // videoFile: '/Users/derwent/Movies/Telecortex/loops/BOKK (loop).mov',
-//   // videoFile: '/Users/derwent/Movies/Telecortex/loops/Steamed Hams.mp4',
-//   videoFile: '/Users/derwent/Movies/Telecortex/loops/wobble_noise.mp4',
-//   pixMaps: MAPS_SQUARE_SERP_12,
-//   panels: PANELS_SQUARE_SERP_12,
-//   pixelLists: {}
-// };
 const superContext = {
   ...CLIENT_CONF,
   frameNumber: 0,
@@ -109,8 +99,8 @@ const middleware = [
 // }
 
 const superMiddleware = [
-  applyDirect(directRainbows)
-  // applyDirect(directPerlinRainbows)
+  // applyDirect(directRainbows)
+  applyDirect(directSimplexRainbows)
   // basicRainbows,
   // readCapture,
   // interpolateImg,
