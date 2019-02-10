@@ -75,7 +75,7 @@ export const cvGreyPixel = rgbTocvPixel({ r: 128, g: 128, b: 128 });
 export const cvWhitePixel = rgbTocvPixel({ r: 255, g: 255, b: 255 });
 
 const PANEL_SCALE = 0.5;
-const ANIM_SPEED = 3;
+const ANIM_SPEED = 1;
 
 /**
  * Given an OpenCV Matrix of any dimensions, fill with ranbows.
@@ -102,21 +102,26 @@ export const fillColour = (image, colour = cvBlackPixel) => {
   return image;
 };
 
+const S = Math.sin;
+const C = Math.cos;
+const start = nowFloat();
+
 export const directRainbows = (pixMap, angle = 0.0) => {
+  const t = nowFloat() - start;
+  const center = [
+    0.5 + 0.5 * S(t),
+    0.5 + 0.5 * C(t)
+  ]
   return pixMap.reduce((pixelList, vector) => {
     const position = [
-      vector[0] - 0.5,
-      vector[1] - 0.5
+      vector[0] - center[0],
+      vector[1] - center[1]
     ]
     const hue = (norm(position) * MAX_HUE + (angle * ANIM_SPEED * MAX_HUE) / MAX_ANGLE) % MAX_HUE;
     pixelList.push(hslToRgb({ h: hue, l: 50, s: 100 }));
     return pixelList;
   }, []);
 };
-
-const S = Math.sin;
-const C = Math.cos;
-const start = nowFloat();
 
 
 /**
