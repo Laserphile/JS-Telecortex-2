@@ -15,6 +15,13 @@ export const singleRainbow = context => {
   return context;
 };
 
+export const justBlack = context => {
+  const { numLeds = 360 } = context;
+  const rgb = hsvToRgb({h: 0, s: 0, v:0});
+  context.colours = Array.from({ length: numLeds }, () => rgb);
+  return context;
+};
+
 /**
  * Send a flowing rainbow
  * @param {object} context

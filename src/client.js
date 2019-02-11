@@ -4,6 +4,7 @@ import {
   singleRainbow,
   rainbowFlow,
   //   coloursToChannels,
+  justBlack,
   coloursToAllChannels
 } from './drivers/middleware';
 import { msNow } from './util';
@@ -88,6 +89,9 @@ const animationCallbacks = {
   },
   rainbowFlow: {
     middleware: [rainbowFlow, coloursToAllChannels]
+  },
+  justBlack: {
+    middleware: [justBlack, coloursToAllChannels]
   },
   directRainbows: {
     superMiddleware: [applyDirect(directRainbows)],
