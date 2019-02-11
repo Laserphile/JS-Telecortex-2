@@ -90,24 +90,29 @@ const animationCallbacks = {
     middleware: [rainbowFlow, coloursToAllChannels]
   },
   directRainbows: {
-    superMiddleware: [applyDirect(directRainbows)]
+    superMiddleware: [applyDirect(directRainbows)],
+    mapBased: true
   },
   directSimplexRainbows: {
-    superMiddleware: [applyDirect(directSimplexRainbows)]
+    superMiddleware: [applyDirect(directSimplexRainbows)],
+    mapBased: true
   },
   basicRainbows: {
     initware: [canvasInit],
-    superMiddleware: [basicRainbows, interpolateImg, maybeShowPreview]
+    superMiddleware: [basicRainbows, interpolateImg, maybeShowPreview],
+    mapBased: true
   },
   video: {
     initware: [canvasInit, previewInit, videoInit],
-    superMiddleware: [readCapture, interpolateImg, maybeShowPreview]
+    superMiddleware: [readCapture, interpolateImg, maybeShowPreview],
+    mapBased: true
   }
 }[superContext.animation];
 
 const middleware = _.get(animationCallbacks, 'middleware', []);
 const superMiddleware = _.get(animationCallbacks, 'superMiddleware', []);
 const initware = _.get(animationCallbacks, 'initware', []);
+const mapBased = _.get(animationCallbacks, 'mapBased', false);
 console.log(`initware ${JSON.stringify(initware)}`);
 
 // TODO: refactor using limiter https://www.npmjs.com/package/limiter
@@ -171,6 +176,28 @@ const initSocketPromise = (serverConfigs, serverID, host, port) => {
   // });
 };
 
+export const pixelListsToChannelColours = (clientContexts, superContext) => {
+  Object.entries(clientContexts).map(([serverID, context]) => {
+    if (!Object.keys(superContext.panels).includes(serverID)) {
+      const err = new Error(`panels not mapped for serverID ${serverID}`);
+      console.error(err);
+      process.exit();
+    }
+    Object.entries(superContext.panels[serverID]).map(([channel, mapName]) => {
+      if (!Object.keys(superContext.pixelLists).includes(mapName)) {
+        const err = new Error(
+          `map name ${mapName} not in superContext.pixelLists ${Object.keys(
+            superContext.pixelLists
+          )}`
+        );
+        console.error(err);
+        // process.exit();
+      }
+      context.channelColours[channel] = superContext.pixelLists[mapName];
+    });
+  });
+};
+
 /**
  * Given a mapping of serverIDs to serverConfig , create sockets and initiate client
  */
@@ -218,25 +245,9 @@ const startClients = async serverConfigs => {
 
     superMiddlewareFlow(superContext);
 
-    Object.entries(clientContexts).map(([serverID, context]) => {
-      if (!Object.keys(superContext.panels).includes(serverID)) {
-        const err = new Error(`panels not mapped for serverID ${serverID}`);
-        console.error(err);
-        process.exit();
-      }
-      Object.entries(superContext.panels[serverID]).map(([channel, mapName]) => {
-        if (!Object.keys(superContext.pixelLists).includes(mapName)) {
-          const err = new Error(
-            `map name ${mapName} not in superContext.pixelLists ${Object.keys(
-              superContext.pixelLists
-            )}`
-          );
-          console.error(err);
-          // process.exit();
-        }
-        context.channelColours[channel] = superContext.pixelLists[mapName];
-      });
-    });
+    if (mapBased) {
+      pixelListsToChannelColours(clientContexts, superContext);
+    }
 
     await async.each(Object.values(clientContexts), context => {
       asyncClientFrameCallback(context);
