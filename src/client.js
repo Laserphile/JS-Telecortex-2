@@ -1,12 +1,13 @@
 import chalk from 'chalk';
 import { opcClientDriver } from './drivers/driverFactory';
-// import {
-//   singleRainbow,
-//   rainbowFlow,
-//   coloursToChannels,
-//   coloursToAllChannels
-// } from './drivers/middleware';
+import {
+  singleRainbow,
+  rainbowFlow,
+  //   coloursToChannels,
+  coloursToAllChannels
+} from './drivers/middleware';
 import { msNow } from './util';
+import _ from 'lodash';
 import {
   colourRateLogger,
   getSquareCanvas,
@@ -66,46 +67,48 @@ const serverConfigs = {
 /**
  * Context shared across all clients
  */
-// const superContext = {
-//   ...CLIENT_CONF,
-//   frameNumber: 0,
-//   videoFile: '/Users/derwent/Movies/Telecortex/loops/BOKK (loop).mov',
-//   pixMaps: MAPS_DOME_OVERHEAD,
-//   panels: PANELS_DOME_OVERHEAD,
-//   pixelLists: {}
-// };
 const superContext = {
   ...CLIENT_CONF,
   frameNumber: 0,
-  // videoFile: '/Users/derwent/Movies/Telecortex/loops/BOKK (loop).mov',
+  videoFile: '/Users/derwent/Movies/Telecortex/loops/BOKK (loop).mov',
   // videoFile: '/Users/derwent/Movies/Telecortex/loops/Steamed Hams.mp4',
-  videoFile: '/Users/derwent/Movies/Telecortex/loops/wobble_noise.mp4',
   pixMaps: MAPS_SQUARE_SERP_9,
   panels: PANELS_SQUARE_SERP_9,
+  animation: 'directSimplexRainbows',
+  // pixMaps: MAPS_DOME_OVERHEAD,
+  // panels: PANELS_DOME_OVERHEAD,
+  driver: opcClientDriver,
+  // driver: identity
   pixelLists: {}
 };
 
-const middleware = [
-  // singleRainbow,
-  // rainbowFlow,
-  // coloursToAllChannels
-];
+const animationCallbacks = {
+  singleRainbow: {
+    middleware: [singleRainbow, coloursToAllChannels]
+  },
+  rainbowFlow: {
+    middleware: [rainbowFlow, coloursToAllChannels]
+  },
+  directRainbows: {
+    superMiddleware: [applyDirect(directRainbows)]
+  },
+  directSimplexRainbows: {
+    superMiddleware: [applyDirect(directSimplexRainbows)]
+  },
+  basicRainbows: {
+    initware: [canvasInit],
+    superMiddleware: [basicRainbows, interpolateImg, maybeShowPreview]
+  },
+  video: {
+    initware: [canvasInit, previewInit, videoInit],
+    superMiddleware: [readCapture, interpolateImg, maybeShowPreview]
+  }
+}[superContext.animation];
 
-// const profiles = {
-//   simpleRainbows: {
-//     initializers: [
-//     ]
-//   }
-// }
-
-const superMiddleware = [
-  // applyDirect(directRainbows)
-  applyDirect(directSimplexRainbows)
-  // basicRainbows,
-  // readCapture,
-  // interpolateImg,
-  // maybeShowPreview
-];
+const middleware = _.get(animationCallbacks, 'middleware', []);
+const superMiddleware = _.get(animationCallbacks, 'superMiddleware', []);
+const initware = _.get(animationCallbacks, 'initware', []);
+console.log(`initware ${JSON.stringify(initware)}`);
 
 // TODO: refactor using limiter https://www.npmjs.com/package/limiter
 // Alternatively, accept an idle() function which can ask the controller what its' queue status is like
@@ -196,9 +199,6 @@ const startClients = async serverConfigs => {
     {}
   );
 
-  superContext.driver = opcClientDriver;
-  // superContext.driver = identity;
-
   /**
    * async callback which sends the OPC data for a single frame on a single client
    */
@@ -206,12 +206,7 @@ const startClients = async serverConfigs => {
     ...[...middleware, superContext.driver].reverse().map(async.asyncify)
   );
 
-  flow()(superContext);
-  // canvasInit,
-  // previewInit,
-  // videoInit
-
-  // cv.waitKey();
+  flow(...initware)(superContext);
 
   const superMiddlewareFlow = flow(...superMiddleware);
 
