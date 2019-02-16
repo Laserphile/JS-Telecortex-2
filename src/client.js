@@ -49,20 +49,11 @@ import { canvasInit, previewInit, videoInit } from './drivers/initializers';
  * A mapping of serverID to server metadata
  */
 const serverConfigs = {
-  4: {
-    // host: 'localhost',
-    host: 'raspberrypi.local',
-    opc_port,
-    channels: {
-      0: 'big',
-      1: 'smol',
-      2: 'smol',
-      3: 'smol'
-    }
-  }
-  // 2: {
-  //   host: 'localhost'
-  // }
+  0: { host: 'telecortex-00.local', opc_port },
+  1: { host: 'telecortex-01.local', opc_port },
+  2: { host: 'telecortex-02.local', opc_port },
+  3: { host: 'telecortex-03.local', opc_port },
+  4: { host: 'telecortex-04.local', opc_port }
 };
 
 /**
@@ -73,11 +64,13 @@ const superContext = {
   frameNumber: 0,
   videoFile: '/Users/derwent/Movies/Telecortex/loops/BOKK (loop).mov',
   // videoFile: '/Users/derwent/Movies/Telecortex/loops/Steamed Hams.mp4',
-  pixMaps: MAPS_SQUARE_SERP_9,
-  panels: PANELS_SQUARE_SERP_9,
   animation: 'directSimplexRainbows',
-  // pixMaps: MAPS_DOME_OVERHEAD,
-  // panels: PANELS_DOME_OVERHEAD,
+  // pixMaps: MAPS_SQUARE_SERP_12,
+  // panels: PANELS_SQUARE_SERP_12,
+  // pixMaps: MAPS_SQUARE_SERP_9,
+  // panels: PANELS_SQUARE_SERP_9,
+  pixMaps: MAPS_DOME_OVERHEAD,
+  panels: PANELS_DOME_OVERHEAD,
   driver: opcClientDriver,
   // driver: identity
   pixelLists: {}
