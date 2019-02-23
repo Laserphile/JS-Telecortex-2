@@ -46,17 +46,6 @@ import { canvasInit, previewInit, videoInit } from './drivers/initializers';
 // TODO: read this from a JSON file
 
 /**
- * A mapping of serverID to server metadata
- */
-const serverConfigs = {
-  0: { host: 'telecortex-00.local', opc_port },
-  1: { host: 'telecortex-01.local', opc_port },
-  2: { host: 'telecortex-02.local', opc_port },
-  3: { host: 'telecortex-03.local', opc_port },
-  4: { host: 'telecortex-04.local', opc_port }
-};
-
-/**
  * Context shared across all clients
  */
 const superContext = {
@@ -73,8 +62,29 @@ const superContext = {
   panels: PANELS_DOME_OVERHEAD,
   driver: opcClientDriver,
   // driver: identity
-  pixelLists: {}
+  pixelLists: {},
+  // servers: "one-raspberrypi"
+  servers: 'five'
 };
+
+/**
+ * A mapping of serverID to server metadata
+ */
+const serverConfigs = {
+  five: {
+    0: { host: 'telecortex-00.local', opc_port },
+    1: { host: 'telecortex-01.local', opc_port },
+    2: { host: 'telecortex-02.local', opc_port },
+    3: { host: 'telecortex-03.local', opc_port },
+    4: { host: 'telecortex-04.local', opc_port }
+  },
+  'one-raspberrypi': {
+    4: { host: 'raspberrypi.local', opc_port }
+  },
+  'one-localhost': {
+    4: { host: 'localhost', opc_port }
+  }
+}[superContext['servers']];
 
 const animationCallbacks = {
   singleRainbow: {
