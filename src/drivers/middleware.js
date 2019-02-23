@@ -42,7 +42,12 @@ export const rainbowFlow = context => {
  * @param {object} context
  */
 export const coloursToAllChannels = context => {
-  const { channels, colours } = context;
+  const { channels = {
+    0: 'big',
+    1: 'smol',
+    2: 'smol',
+    3: 'smol'
+  }, colours } = context;
   context.channelColours = Object.keys(channels).reduce(
     (channelColours, channel) => ((channelColours[channel] = colours), channelColours),
     {}
