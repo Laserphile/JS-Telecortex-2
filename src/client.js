@@ -54,12 +54,9 @@ const superContext = {
   videoFile: '/Users/derwent/Movies/Telecortex/loops/BOKK (loop).mov',
   // videoFile: '/Users/derwent/Movies/Telecortex/loops/Steamed Hams.mp4',
   animation: 'directSimplexRainbows',
-  // pixMaps: MAPS_SQUARE_SERP_12,
-  // panels: PANELS_SQUARE_SERP_12,
-  // pixMaps: MAPS_SQUARE_SERP_9,
-  // panels: PANELS_SQUARE_SERP_9,
-  pixMaps: MAPS_DOME_OVERHEAD,
-  panels: PANELS_DOME_OVERHEAD,
+  mapping: 'square_serp_9',
+  // mapping: 'dome_overhead',
+  // mapping: 'square_serp_12',
   driver: opcClientDriver,
   // driver: identity
   pixelLists: {},
@@ -85,6 +82,24 @@ const serverConfigs = {
     4: { host: 'localhost', opc_port }
   }
 }[superContext['servers']];
+
+Object.assign(
+  superContext,
+  {
+    square_serp_12: {
+      pixMaps: MAPS_SQUARE_SERP_12,
+      panels: PANELS_SQUARE_SERP_12
+    },
+    square_serp_9: {
+      pixMaps: MAPS_SQUARE_SERP_9,
+      panels: PANELS_SQUARE_SERP_9
+    },
+    dome_overhead: {
+      pixMaps: MAPS_DOME_OVERHEAD,
+      panels: PANELS_DOME_OVERHEAD
+    }
+  }[superContext['mapping']]
+);
 
 const animationCallbacks = {
   singleRainbow: {
@@ -120,7 +135,6 @@ const middleware = _.get(animationCallbacks, 'middleware', []);
 const superMiddleware = _.get(animationCallbacks, 'superMiddleware', []);
 const initware = _.get(animationCallbacks, 'initware', []);
 const mapBased = _.get(animationCallbacks, 'mapBased', false);
-console.log(`initware ${JSON.stringify(initware)}`);
 
 // TODO: refactor using limiter https://www.npmjs.com/package/limiter
 // Alternatively, accept an idle() function which can ask the controller what its' queue status is like
