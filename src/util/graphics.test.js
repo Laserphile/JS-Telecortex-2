@@ -98,7 +98,8 @@ describe('fillRainbows', () => {
 describe('directRainbows', () => {
   it('works', () => {
     const pixMap = [[0.5, 0.5], [1, 1]];
-    expect(directRainbows(pixMap)).toEqual([{ b: 255, g: 0, r: 62 }, { b: 124, g: 255, r: 0 }]);
+    // expect(directRainbows(pixMap)).toEqual([{ b: 255, g: 0, r: 62 }, { b: 124, g: 255, r: 0 }]);
+    expect(directRainbows(pixMap)).toMatchSnapshot();
   });
 });
 

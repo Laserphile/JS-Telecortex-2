@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`directRainbows works 1`] = `
+Array [
+  Object {
+    "b": 0,
+    "g": 0,
+    "r": 255,
+  },
+  Object {
+    "b": 255,
+    "g": 0,
+    "r": 62,
+  },
+]
+`;

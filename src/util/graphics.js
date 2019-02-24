@@ -108,10 +108,11 @@ const start = nowFloat();
 
 export const directRainbows = (pixMap, angle = 0.0) => {
   const t = nowFloat() - start;
-  const center = [
-    0.5 + 0.5 * S(t),
-    0.5 + 0.5 * C(t)
-  ]
+  // const center = [
+  //   0.5 + 0.5 * S(t),
+  //   0.5 + 0.5 * C(t)
+  // ]
+  const center = [ 0.5, 0.5 ];
   return pixMap.reduce((pixelList, vector) => {
     const position = [
       vector[0] - center[0],
