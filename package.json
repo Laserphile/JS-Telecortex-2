@@ -16,7 +16,8 @@
     "opencv4nodejs": "^4.14.0",
     "pi-spi": "^1.0.3",
     "simplex-noise": "^2.4.0",
-    "sprintf-js": "^1.1.2"
+    "sprintf-js": "^1.1.2",
+    "yargs": "^13.2.1"
   },
   "devDependencies": {
     "@babel/cli": "7.2.3",
