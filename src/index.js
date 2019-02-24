@@ -30,14 +30,7 @@ export const SERVER_CONF = {
   spiMode: 0
 };
 
-export const CLIENT_CONF = {
-  // port used to listen for OPC commands
-  opc_port,
-  // Maximum frames per second
-  frameRateCap: Infinity,
-  // Enable openCV preview
-  enablePreview: true
-};
+export const CLIENT_CONF = {};
 
 export const FRESH_CONTEXT = {
   // Frame counter for FPS calculation

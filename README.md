@@ -121,3 +121,16 @@ yarn dev
 ```
 yarn dev-client
 ```
+client options
+```
+Options:
+  --help           Show help                                           [boolean]
+  --version        Show version number                                 [boolean]
+  --animation, -a  Pick which animation is displayed
+        [choices: "singleRainbow", "rainbowFlow", "justBlack", "directRainbows",
+                              "directSimplexRainbows", "basicRainbows", "video"]
+  --servers        Pick which servers are used
+                           [choices: "five", "one-raspberrypi", "one-localhost"]
+  --mapping, -m    Pick which mapping is used
+                   [choices: "square_serp_12", "square_serp_9", "dome_overhead"]
+```
