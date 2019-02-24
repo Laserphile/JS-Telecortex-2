@@ -56,6 +56,12 @@ export const serverOptions = {
     3: { host: 'telecortex-03.local', opc_port },
     4: { host: 'telecortex-04.local', opc_port }
   },
+  four: {
+    0: { host: 'telecortex-00.local', opc_port },
+    1: { host: 'telecortex-01.local', opc_port },
+    2: { host: 'telecortex-02.local', opc_port },
+    4: { host: 'telecortex-04.local', opc_port }
+  },
   'one-raspberrypi': {
     4: { host: 'raspberrypi.local', opc_port }
   },
