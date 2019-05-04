@@ -44,7 +44,7 @@ export const handleOPCMessage = (context, msg) => {
   //   ].join('\n')
   // );
   context.channelColours = { [header.channel]: colours };
-  if (header.channel == 0) {
+  if (header.channel >= 0) {
     colourRateLogger(context);
   }
   // TODO: perhaps put message on an async queue
