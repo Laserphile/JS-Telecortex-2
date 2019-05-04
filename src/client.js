@@ -159,15 +159,13 @@ const startClients = async serverConfigs => {
 
   flow(...initware)(superContext);
 
-  const superMiddlewareFlow = flow(...superMiddleware);
-
   // Awaits a complete frame to be generated and sent to all servers
   const clientsFrameCallback = async () => {
     if (Object.values(socketErrors).length) process.exit();
 
     superContext.frameNumber = superContext.frameNumber + 1;
 
-    superMiddlewareFlow(superContext);
+    flow(...superMiddleware)(superContext);
 
     if (mapBased) {
       pixelListsToChannelColours(clientContexts, superContext);
