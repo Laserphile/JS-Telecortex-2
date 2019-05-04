@@ -12,3 +12,5 @@ spidev.log
 \.python-version
 
 coverage/
+
+\.vscode/settings\.json
