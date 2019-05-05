@@ -1,10 +1,23 @@
-import { showPreview, fillRainbows } from '../util/graphics';
+import { showPreview, fillRainbows, addText, fillColour } from '../util/graphics';
 import { interpolatePixelMap } from '../util/interpolation';
 
 export const basicRainbows = superContext => {
   fillRainbows(superContext.img, superContext.frameNumber);
   return superContext;
 };
+
+export const basicText = (textColour = { r: 128, g: 128, b: 128 }, clear = false) => {
+  return superContext => {
+    if (clear) fillColour(superContext.img);
+    addText(
+      superContext.img,
+      superContext.text,
+      [superContext.img.sizes[0] - Math.round(superContext.frameNumber % 360 / 3), (superContext.img.sizes[1] - 3)],
+      textColour
+    );
+    return superContext;
+  };
+}
 
 /**
  * Use the image provided by superContext to interpolate a pixelList

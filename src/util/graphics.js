@@ -102,6 +102,11 @@ export const fillColour = (image, colour = cvBlackPixel) => {
   return image;
 };
 
+export const addText = (image, text, origin = [1, 10], colour = { r: 128, g: 128, b: 128 }) => {
+  image.putText(text, new cv.Point(...origin), 2, 0.40, rgbTocvPixel(colour), 0, 1, 1);
+  return image;
+}
+
 const S = Math.sin;
 const C = Math.cos;
 const start = nowFloat();

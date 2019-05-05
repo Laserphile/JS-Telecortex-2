@@ -42,5 +42,7 @@ export const FRESH_CONTEXT = {
   // Last time something was printed
   lastPrint: now(),
   // Brightness of all strips on the server
-  brightness: 0.1
+  brightness: 0.1,
+  // Size of canvas (if used)
+  canvasSize: 512
 };

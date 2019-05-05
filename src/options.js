@@ -4,7 +4,8 @@ import {
   interpolateImg,
   maybeShowPreview,
   readCapture,
-  applyDirect
+  applyDirect,
+  basicText
 } from './drivers/superMiddleware';
 import { directRainbows, directSimplexRainbows } from './util/graphics';
 import { canvasInit, previewInit, videoInit } from './drivers/initializers';
@@ -34,6 +35,25 @@ export const animationOptions = {
   },
   directSimplexRainbows: {
     superMiddleware: [applyDirect(directSimplexRainbows)],
+    mapBased: true
+  },
+  basicText: {
+    initware: [canvasInit],
+    superMiddleware: [
+      basicText({ r: 128, g: 128, b: 128 }, true),
+      interpolateImg,
+      maybeShowPreview
+    ],
+    mapBased: true
+  },
+  rainbowText: {
+    initware: [canvasInit],
+    superMiddleware: [
+      basicRainbows,
+      basicText({ r: 0, g: 0, b: 0 }),
+      interpolateImg,
+      maybeShowPreview
+    ],
     mapBased: true
   },
   basicRainbows: {
@@ -120,5 +140,10 @@ export const clientArgParser = require('yargs').options({
     alias: 'c',
     type: 'number',
     default: 512
+  },
+  text: {
+    alias: 't',
+    type: 'string',
+    default: 'MOONBASE'
   }
 });
