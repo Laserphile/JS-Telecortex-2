@@ -6,6 +6,25 @@ import { denormalizeCoordinate } from './interpolation';
 const cv = require('opencv4nodejs');
 import { norm } from 'mathjs';
 import SimplexNoise from 'simplex-noise';
+import { transformPanelMap } from './mapping'
+
+// returns a window with a document and an svg root node
+const window = require('svgdom')
+  .setFontDir('/Library/Fonts/')
+  .setFontFamilyMappings({
+    'Arial': 'Arial.ttf',
+    'Arial Black': 'Arial Black.ttf',
+  })
+  .preloadFonts()
+const document = window.document
+const { SVG, registerWindow } = require('@svgdotjs/svg.js')
+registerWindow(window, window.document)
+
+require('@svgdotjs/svg.topoly.js');
+
+// create svg.js instance
+const canvas = SVG(document.documentElement).size(1,1);
+var opentype = require('opentype.js');
 
 export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
 const opencvChannelFields = ['b', 'g', 'r'];
@@ -129,6 +148,39 @@ export const directRainbows = (pixMap, angle = 0.0) => {
   }, []);
 };
 
+export const directSVGMask = (normalizedSVGMask) => {
+  return (pixMap, angle = 0.0) => {
+    // console.log(`angle: ${angle}`);
+    // const t = nowFloat() - start;
+
+    return transformPanelMap(pixMap, { angle }).reduce((pixelList, vector) => {
+      const l = 50 * (normalizedSVGMask.inside(...vector) ? 1 : 0);
+      pixelList.push(hslToRgb({ h: 0, s: 0, l }));
+      return pixelList;
+    }, []);
+  }
+}
+
+/**
+ * This doesn't work
+ */
+
+export const directText = (text) => {
+  const font = opentype.loadSync('/Library/Fonts/Arial Black.ttf');
+  const path = font.getPath('A', 0, 1, 1).toPathData(5);
+  console.log(`path ${path}`);
+  const svgMask = canvas.path(path).fill('#00f');
+  // const svgMask = canvas.text(text).font({
+  //   family: 'Arial Black',
+  //   size: '1.0',
+  //   fill: '#00f',
+  //   leading: '1.0'
+  // });
+  console.log(`mask SVG: ${svgMask.svg()}`);
+  const polygon = svgMask.toPoly();
+  console.log(`polygon ${polygon}`);
+  return directSVGMask(svgMask);
+}
 
 /**
  * Replicate https://www.dwitter.net/d/12206
