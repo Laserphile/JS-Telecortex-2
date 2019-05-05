@@ -115,5 +115,10 @@ export const clientArgParser = require('yargs').options({
     alias: 'f',
     type: 'number',
     default: Infinity
+  },
+  canvasSize: {
+    alias: 'c',
+    type: 'number',
+    default: 512
   }
 });

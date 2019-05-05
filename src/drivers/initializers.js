@@ -6,7 +6,7 @@ const cv = require('opencv4nodejs');
  * @param {Object} superContext
  */
 export const canvasInit = superContext => {
-  superContext.img = getSquareCanvas();
+  superContext.img = getSquareCanvas(superContext.canvasSize);
   return superContext;
 };
 
