@@ -13,6 +13,7 @@
     "dgram": "^1.0.1",
     "lodash": "4.17.11",
     "mathjs": "^5.4.1",
+    "opencv4nodejs": "4.14.0",
     "pi-spi": "^1.0.3",
     "simplex-noise": "^2.4.0",
     "sprintf-js": "^1.1.2",
@@ -37,9 +38,6 @@
     "lint-staged": "^8.1.7",
     "nodemon": "^1.19.0",
     "prettier": "^1.17.1"
-  },
-  "optionalDependencies": {
-    "opencv4nodejs": "4.16.0"
   },
   "husky": {
     "hooks": {
