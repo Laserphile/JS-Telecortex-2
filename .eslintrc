@@ -1,7 +1,7 @@
 {
-  "extends": "eslint:recommended",
+  "extends": ["airbnb-base", "prettier"],
   "parserOptions": {
-    "ecmaVersion": 2017,
+    "ecmaVersion": 9,
     "sourceType": "module",
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true
@@ -16,6 +16,9 @@
   "rules": {
     "prettier/prettier": "error",
     "no-console": 0,
-    "no-unused-vars": 1
+    "no-unused-vars": 1,
+    "react/jsx-filename-extension": 0,
+    "react/prop-types": 0,
+    "import/prefer-default-export": 0
   }
 }
