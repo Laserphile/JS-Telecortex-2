@@ -1,5 +1,5 @@
-import { parseOPCHeader, parseOPCBody, OPC_HEADER_LEN } from './parser';
 import chalk from 'chalk';
+import { parseOPCHeader, parseOPCBody, OPC_HEADER_LEN } from './parser';
 import { consoleErrorHandler } from '../util';
 import { colourRateLogger } from '../util/graphics';
 import { colours2sk9822 } from '../util/sk9822';
@@ -10,8 +10,10 @@ export const OPC_BODY_FIELDS = ['r', 'g', 'b'];
  * Thrown when an incomplete OPC Message is detected
  */
 export class PartialOPCMsgError extends Error {
-  constructor() {
-    super(...arguments);
+  constructor(msg) {
+    // noinspection JSCheckFunctionSignatures
+    super(msg);
+    Error.captureStackTrace(this, PartialOPCMsgError);
   }
 }
 

@@ -1,17 +1,16 @@
 import chalk from 'chalk';
+import _, {
+  // identity,
+  flow
+} from 'lodash';
+import net from 'net';
+import async from 'async';
 import { opcClientDriver } from './drivers/driverFactory';
 import { msNow } from './util';
-import _ from 'lodash';
 import { colourRateLogger } from './util/graphics';
 import { animationOptions, serverOptions, mappingOptions, clientArgParser } from './options';
 import { FRESH_CONTEXT, CLIENT_CONF } from '.';
 // import { size } from 'mathjs';
-import net from 'net';
-import async from 'async';
-import {
-  // identity,
-  flow
-} from 'lodash';
 
 // TODO: read this from a JSON file
 
@@ -31,8 +30,8 @@ Object.assign(superContext, clientArgParser.argv);
 /**
  * A mapping of serverID to server metadata
  */
-const serverConfigs = serverOptions[superContext['servers']];
-Object.assign(superContext, mappingOptions[superContext['mapping']]);
+const serverConfigs = serverOptions[superContext.servers];
+Object.assign(superContext, mappingOptions[superContext.mapping]);
 const animationCallbacks = animationOptions[superContext.animation];
 const middleware = _.get(animationCallbacks, 'middleware', []);
 const superMiddleware = _.get(animationCallbacks, 'superMiddleware', []);
@@ -59,7 +58,7 @@ const scheduleThingRecursive = (thing, rateCap) => {
 
 const socketErrors = {};
 
-const initSocketPromise = (serverConfigs, serverID, host, port) => {
+const initSocketPromise = (serverID, host, port) => {
   const client = new net.Socket();
 
   client.on('data', data => {
@@ -84,51 +83,23 @@ const initSocketPromise = (serverConfigs, serverID, host, port) => {
       reject(err);
     });
 
-    client.connect(
-      port,
-      host,
-      () => {
-        console.log(
-          chalk`{cyan 📡${serverID} connected} to {white ${host}} on port {white ${port}}`
-        );
-        resolve();
-      }
-    );
+    client.connect(port, host, () => {
+      console.log(chalk`{cyan 📡${serverID} connected} to {white ${host}} on port {white ${port}}`);
+      resolve();
+    });
   });
   // .catch(err => {
   //   err;
   // });
 };
 
-export const pixelListsToChannelColours = (clientContexts, superContext) => {
-  Object.entries(clientContexts).map(([serverID, context]) => {
-    if (!Object.keys(superContext.panels).includes(serverID)) {
-      const err = new Error(`panels not mapped for serverID ${serverID}`);
-      console.error(err);
-      process.exit();
-    }
-    Object.entries(superContext.panels[serverID]).map(([channel, mapName]) => {
-      if (!Object.keys(superContext.pixelLists).includes(mapName)) {
-        const err = new Error(
-          `map name ${mapName} not in superContext.pixelLists ${Object.keys(
-            superContext.pixelLists
-          )}`
-        );
-        console.error(err);
-        // process.exit();
-      }
-      context.channelColours[channel] = superContext.pixelLists[mapName];
-    });
-  });
-};
-
 /**
  * Given a mapping of serverIDs to serverConfig , create sockets and initiate client
  */
-const startClients = async serverConfigs => {
+const startClients = async serverConfigsObj => {
   await Promise.all(
-    Object.entries(serverConfigs).map(([serverID, { host, opc_port }]) =>
-      initSocketPromise(serverConfigs, serverID, host, opc_port)
+    Object.entries(serverConfigsObj).map(([serverID, { host, opc_port: opcPort }]) =>
+      initSocketPromise(serverID, host, opcPort)
     )
   ).catch(err => err);
 
@@ -136,19 +107,39 @@ const startClients = async serverConfigs => {
    * The operating context for each client frame callback.
    * Modified by client frame callbacks
    */
-  const clientContexts = Object.entries(serverConfigs).reduce(
-    (accumulator, [serverID, { client, channels }]) => (
-      (accumulator[serverID] = {
+  const clientContexts = Object.entries(serverConfigsObj).reduce(
+    (accumulator, [serverID, { client, channels }]) =>
+      Object.assign(accumulator, {
         ...FRESH_CONTEXT,
         serverID,
         channels,
         client,
         channelColours: {}
       }),
-      accumulator
-    ),
     {}
   );
+
+  const pixelListsToChannelColours = () => {
+    Object.keys(clientContexts).forEach(serverID => {
+      if (!Object.keys(superContext.panels).includes(serverID)) {
+        const err = new Error(`panels not mapped for serverID ${serverID}`);
+        console.error(err);
+        process.exit();
+      }
+      Object.entries(superContext.panels[serverID]).forEach(([channel, mapName]) => {
+        if (!Object.keys(superContext.pixelLists).includes(mapName)) {
+          const err = new Error(
+            `map name ${mapName} not in superContext.pixelLists ${Object.keys(
+              superContext.pixelLists
+            )}`
+          );
+          console.error(err);
+          // process.exit();
+        }
+        clientContexts[serverID].channelColours[channel] = superContext.pixelLists[mapName];
+      });
+    });
+  };
 
   /**
    * async callback which sends the OPC data for a single frame on a single client
@@ -163,7 +154,7 @@ const startClients = async serverConfigs => {
   const clientsFrameCallback = async () => {
     if (Object.values(socketErrors).length) process.exit();
 
-    superContext.frameNumber = superContext.frameNumber + 1;
+    superContext.frameNumber += 1;
 
     flow(...superMiddleware)(superContext);
 

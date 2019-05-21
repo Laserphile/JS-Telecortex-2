@@ -47,17 +47,17 @@ export const opcClientDriver = context => {
  *    middleware and driver functions.
  * @param { array } middleware is a list of functions to call before the driver
  *    function is called
+ * @param driver the drive to use
  * @returns { function } callback, called repeatedly to drive the SPI.
  */
 export const driverFactory = (driverConfig, middleware = [], driver = ledDriver) => {
   const context = { ...driverConfig };
 
-  return () => {
-    return flow(
+  return () =>
+    flow(
       ...middleware,
       driver
     )(context);
-  };
 };
 
 export default driverFactory;

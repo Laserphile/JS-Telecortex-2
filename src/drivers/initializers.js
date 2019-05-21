@@ -18,6 +18,6 @@ export const previewInit = superContext => {
 
 export const videoInit = superContext => {
   superContext.cap = new cv.VideoCapture(superContext.videoFile);
-  superContext.img = superContext.cap.read() ;
+  superContext.img = superContext.cap.read();
   return superContext;
-}
+};

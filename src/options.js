@@ -18,6 +18,7 @@ import {
   MAPS_SQUARE_SERP_12,
   PANELS_SQUARE_SERP_12
 } from './util/mapping';
+import { options } from 'yargs';
 
 export const animationOptions = {
   singleRainbow: {
@@ -105,7 +106,7 @@ export const mappingOptions = {
   }
 };
 
-export const clientArgParser = require('yargs').options({
+export const clientArgParser = options({
   animation: {
     alias: 'a',
     describe: 'Pick which animation is displayed',

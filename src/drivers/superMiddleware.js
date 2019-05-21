@@ -12,12 +12,15 @@ export const basicText = (textColour = { r: 128, g: 128, b: 128 }, clear = false
     addText(
       superContext.img,
       superContext.text,
-      [superContext.img.sizes[0] - Math.round(superContext.frameNumber % 360 / 3), (superContext.img.sizes[1] - 3)],
+      [
+        superContext.img.sizes[0] - Math.round((superContext.frameNumber % 360) / 3),
+        superContext.img.sizes[1] - 3
+      ],
       textColour
     );
     return superContext;
   };
-}
+};
 
 /**
  * Use the image provided by superContext to interpolate a pixelList
@@ -61,5 +64,5 @@ export const applyDirect = directFn => {
     Object.entries(superContext.pixMaps).forEach(([name, pixMap]) => {
       superContext.pixelLists[name] = directFn(pixMap, superContext.frameNumber);
     });
-  }
-}
+  };
+};

@@ -1,27 +1,27 @@
 import { clamp } from 'lodash';
 import { cvPixelToRgb } from './graphics';
+
+const validInterpolationTypes = [
+  'nearest'
+  // 'bilinear'
+];
 /**
  * Get the colour of a pixel from its coordinates within an image.
  * @param {Matrix} image
  * @param {Array} coordinates the coordinates of the pixel as [x, y]
- * @param {String} interp_type on of 'nearest', 'biliniear'
+ * @param {String} interpType on of 'nearest', 'biliniear'
  */
 export const interpolatePixel = (image, coordinates, interpType = 'nearest') => {
   // TODO: support bilinear later
-  const validInterpolationTypes = [
-    'nearest'
-    // 'bilinear'
-  ];
-  if (validInterpolationTypes.indexOf(interpType) < 0) {
+  if (!validInterpolationTypes.includes(interpType)) {
     throw new Error(`unsupported interpolation type: ${interpType}`);
   }
-  if (interpType == 'nearest') {
-    return cvPixelToRgb(image.atRaw(Math.round(coordinates[0]), Math.round(coordinates[1])));
-  }
+  if (interpType !== 'nearest') throw Error('Other interpolations not yet supported');
+  return cvPixelToRgb(image.atRaw(Math.round(coordinates[0]), Math.round(coordinates[1])));
 };
 
 /**
- * Calculate the position of a normalized coordnate from a given image shape
+ * Calculate the position of a normalized coordinate from a given image shape
  * @param {Array} shape The shape of the image which this coordinate is being mapped on to
  * @param {Array} coordinate The coordinate, [x, y] where x, y in [0, 1]
  */
@@ -34,13 +34,13 @@ export const denormalizeCoordinate = (shape, coordinate) => {
       clamp(minDimension * coordinate[0], 0, shape[0] - 1),
       clamp(minDimension * coordinate[1] + deltaDimension / 2, 0, shape[1] - 1)
     ];
-  } else {
-    return [
-      clamp(minDimension * coordinate[0] + deltaDimension / 2, 0, shape[0] - 1),
-      clamp(minDimension * coordinate[1], 0, shape[1] - 1)
-    ];
   }
+  return [
+    clamp(minDimension * coordinate[0] + deltaDimension / 2, 0, shape[0] - 1),
+    clamp(minDimension * coordinate[1], 0, shape[1] - 1)
+  ];
 };
+
 /**
  * Generate a pixel list from an image and a pixel map.
  * Given a cv.Matrix image and a pixel map showing the normalized position of each pixel,
@@ -52,8 +52,7 @@ export const denormalizeCoordinate = (shape, coordinate) => {
  * @param {String} interpType The interpolation type used, in ['nearest']
  * @return {Array} a list of colorsys colours
  */
-export const interpolatePixelMap = (image, pixMapNormalized, interpType = 'nearest') => {
-  return pixMapNormalized.map(coordinate =>
+export const interpolatePixelMap = (image, pixMapNormalized, interpType = 'nearest') =>
+  pixMapNormalized.map(coordinate =>
     interpolatePixel(image, denormalizeCoordinate(image.sizes, coordinate), interpType)
   );
-};

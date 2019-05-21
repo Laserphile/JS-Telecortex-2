@@ -57,7 +57,7 @@ describe('colourRateLogger', () => {
     colourRateLogger(context);
     expect(console.log.mock.calls.length).toBe(0);
   });
-  it('prints after a more than a second', () => {
+  it('prints after more than a second', () => {
     console.log = jest.fn();
     const context = { lastPrint: now() - 2, start: now() - 2, channelColours: { 0: someColours } };
     colourRateLogger(context);

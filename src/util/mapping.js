@@ -1,26 +1,26 @@
-const fs = require('fs');
+// const fs = require('fs');
 // const cv = require('opencv4nodejs');
 import { head, tail } from 'lodash';
-import { dot, add, multiply, size } from 'mathjs';
+import { add, dot, multiply, size } from 'mathjs';
+import PIXEL_MAP_DOME_SMOL from '../../test_data/pixel_map_smol.json';
+import PIXEL_MAP_DOME_BIG from '../../test_data/pixel_map_big.json';
+import PIXEL_MAP_DOME_OUTER from '../../test_data/pixel_map_outer.json';
+import PIXEL_MAP_DOME_OUTER_FLIP from '../../test_data/pixel_map_outer_flip.json';
+import PIXEL_MAP_SQUARE_SERP_12 from '../../test_data/pixel_map_square_serp_12.json';
+import PIXEL_MAP_SQUARE_SERP_9 from '../../test_data/pixel_map_square_serp_9.json';
 
-export const PIXEL_MAP_DOME_SMOL = Object.values(
-  JSON.parse(fs.readFileSync('test_data/pixel_map_smol.json', 'utf8'))
-);
-export const PIXEL_MAP_DOME_BIG = Object.values(
-  JSON.parse(fs.readFileSync('test_data/pixel_map_big.json', 'utf8'))
-);
-export const PIXEL_MAP_DOME_OUTER = Object.values(
-  JSON.parse(fs.readFileSync('test_data/pixel_map_outer.json', 'utf8'))
-);
-export const PIXEL_MAP_DOME_OUTER_FLIP = Object.values(
-  JSON.parse(fs.readFileSync('test_data/pixel_map_outer_flip.json', 'utf8'))
-);
-export const PIXEL_MAP_SQUARE_SERP_12 = Object.values(
-  JSON.parse(fs.readFileSync('test_data/pixel_map_square_serp_12.json', 'utf8'))
-);
-export const PIXEL_MAP_SQUARE_SERP_9 = Object.values(
-  JSON.parse(fs.readFileSync('test_data/pixel_map_square_serp_9.json', 'utf8'))
-);
+// export const PIXEL_MAP_DOME_SMOL = Object.values(
+//   JSON.parse(fs.readFileSync('test_data/pixel_map_smol.json', 'utf8'))
+// );
+
+export {
+  PIXEL_MAP_DOME_SMOL,
+  PIXEL_MAP_DOME_BIG,
+  PIXEL_MAP_DOME_OUTER,
+  PIXEL_MAP_DOME_OUTER_FLIP,
+  PIXEL_MAP_SQUARE_SERP_12,
+  PIXEL_MAP_SQUARE_SERP_9
+};
 
 // export const isCloseTo = (value, target, epsilon = 0.01) => {
 //   return Math.abs(value - target) < epsilon;
@@ -28,7 +28,7 @@ export const PIXEL_MAP_SQUARE_SERP_9 = Object.values(
 
 // Return a normalized copy of `pixel map` all x, y between 0, 1.
 export const normalizePixMap = pixMap => {
-  if (size(pixMap)[1] != 2) {
+  if (size(pixMap)[1] !== 2) {
     throw new Error(
       `pixMap should be an array of 2d vectors, instead it has size ${JSON.stringify(size(pixMap))}`
     );
@@ -49,9 +49,7 @@ export const normalizePixMap = pixMap => {
   //   `mins: (${pixMinX}, ${pixMinY}), maxs: (${pixMaxX}, ${pixMaxY}), breadth ${pixBreadthMax}`
   // );
 
-  return pixMap.map(([x, y]) => {
-    return [(x - pixMinX) / pixBreadthMax, (y - pixMinY) / pixBreadthMax];
-  });
+  return pixMap.map(([x, y]) => [(x - pixMinX) / pixBreadthMax, (y - pixMinY) / pixBreadthMax]);
 };
 
 export const MAPS_DOME_SIMPLIFIED = {
@@ -75,28 +73,26 @@ export const MAPS_DOME = {
 };
 
 export const MAPS_SQUARE_SERP_12 = {
-  'square': normalizePixMap(PIXEL_MAP_SQUARE_SERP_12)
-}
+  square: normalizePixMap(PIXEL_MAP_SQUARE_SERP_12)
+};
 
 export const PANELS_SQUARE_SERP_12 = {
   4: { 0: 'square' }
-}
+};
 
 export const MAPS_SQUARE_SERP_9 = {
-  'square': normalizePixMap(PIXEL_MAP_SQUARE_SERP_9)
-}
+  square: normalizePixMap(PIXEL_MAP_SQUARE_SERP_9)
+};
 
 export const PANELS_SQUARE_SERP_9 = {
   4: { 0: 'square' }
-}
+};
 
 /**
  * Convert from radians to degrees
  * @param {Number} angle Angle in radians
  */
-export const degreesToRadians = angle => {
-  return (angle * Math.PI) / 180;
-};
+export const degreesToRadians = angle => (angle * Math.PI) / 180;
 
 /**
  * Generate a rotation matrix from the angle in degrees.
@@ -104,39 +100,34 @@ export const degreesToRadians = angle => {
  */
 export const matRotation2D = angle => {
   const theta = degreesToRadians(angle);
-  const [val_cos, val_sin] = [Math.cos(theta), Math.sin(theta)];
-  return [[val_cos, -val_sin], [val_sin, val_cos]];
+  const [valCos, valSin] = [Math.cos(theta), Math.sin(theta)];
+  return [[valCos, -valSin], [valSin, valCos]];
 };
 
 /**
  * Generate a scale matrix from the scalar.
  * @param {Number} scalar The scale amount.
  */
-export const matScale2D = scalar => {
-  return [[scalar, 0], [0, scalar]];
-};
+export const matScale2D = scalar => [[scalar, 0], [0, scalar]];
 
 /**
  * Generate a scale matrix in the y direction from the scalar
  * @param {Number} scalar
  */
-export const matScale2DY = scalar => {
-  return [[1, 0], [0, scalar]];
-};
+export const matScale2DY = scalar => [[1, 0], [0, scalar]];
 
-export const matMult = (...matrices) => {
-  return tail(matrices).reduce((result, matrix) => multiply(result, matrix), head(matrices));
-};
+export const matMult = (...matrices) =>
+  tail(matrices).reduce((result, matrix) => multiply(result, matrix), head(matrices));
 
 /**
  * Transform a vector using a transformation matrix
  * @param {Array} vector
  * @param {Array} matrix transformation matrix
  */
-export const vectorTransform = function(vector, matrix) {
+export const vectorTransform = (vector, matrix) =>
   // console.log(`vector ${JSON.stringify(vector)}`);
   // console.log(`matrix ${JSON.stringify(matrix)}`);
-  return matrix.map(row => {
+  matrix.map(row => {
     try {
       return dot(row, vector);
     } catch (err) {
@@ -145,40 +136,36 @@ export const vectorTransform = function(vector, matrix) {
       );
     }
   });
-};
 
 /**
  * Rotate a 2D vector by a given angle
  * @param {Array} vector
  * @param {Number} angle in degrees
  */
-export const rotateVector = (vector, angle) => {
+export const rotateVector = (vector, angle) =>
   // console.log(`vector ${vector}`);
   // console.log(`angle ${angle}`);
-  return vectorTransform(vector, matRotation2D(angle));
-};
+  vectorTransform(vector, matRotation2D(angle));
 
 /**
  * Transform each coordinate in a mapping by a matrix
  * @param {Array} mapping
  * @param {Array} mat the transformation matrix
  */
-export const transformMapping = (mapping, mat) => {
+export const transformMapping = (mapping, mat) =>
   // console.log(`mat ${mat}`);
-  return mapping.map(coordinate => vectorTransform(coordinate, mat));
-};
+  mapping.map(coordinate => vectorTransform(coordinate, mat));
 
 /**
  * Scale each coordinate in a mapping by a scalar, or a matrix
  * @param {Array} mapping
- * @param {Array} offset
+ * @param {Array} scale
  */
 export const scaleMapping = (mapping, scale) => {
-  if (typeof scale == 'number') {
+  if (typeof scale === 'number') {
     return mapping.map(([coordinateX, coordinateY]) => [coordinateX * scale, coordinateY * scale]);
-  } else {
-    return transformMapping(mapping, scale);
   }
+  return transformMapping(mapping, scale);
 };
 
 /**
@@ -186,9 +173,7 @@ export const scaleMapping = (mapping, scale) => {
  * @param {Array} mapping
  * @param {Array} offset
  */
-export const transposeMapping = (mapping, offset) => {
-  return mapping.map(vector => add(vector, offset));
-};
+export const transposeMapping = (mapping, offset) => mapping.map(vector => add(vector, offset));
 
 export const rotateMapping = (mapping, angle) => {
   // console.log(`angle ${JSON.stringify(angle)}`);
@@ -224,8 +209,7 @@ export const generatePanelMaps = (generator, sourceMaps = MAPS_DOME) => {
         );
       }
       const mapName = `${panelInfo.map}-${serverID}-${channel}`;
-      const panelMap = transformPanelMap(sourceMaps[panelInfo.map], panelInfo);
-      maps[mapName] = panelMap;
+      maps[mapName] = transformPanelMap(sourceMaps[panelInfo.map], panelInfo);
       panels[serverID][channel] = mapName;
     });
   });
@@ -245,10 +229,12 @@ export const PANEL_2_SKEW = [[1.1 * GLOBAL_SCALE, 0], [0, 1.1 * GLOBAL_SCALE]];
 export const PANEL_2_OFFSET = [0.09 * GLOBAL_SCALE, 0.11 * GLOBAL_SCALE];
 export const PANEL_3_SKEW = [[0.4 * GLOBAL_SCALE, 0], [0, 0.4 * GLOBAL_SCALE]];
 export const PANEL_3_OFFSET = [0.25 * GLOBAL_SCALE, 0.65 * GLOBAL_SCALE];
+// noinspection PointlessArithmeticExpressionJS
 export const CTRL_1_ROT = (1 * 360) / 5;
 export const CTRL_2_ROT = (2 * 360) / 5;
 export const CTRL_3_ROT = (3 * 360) / 5;
 export const CTRL_4_ROT = (4 * 360) / 5;
+// noinspection PointlessArithmeticExpressionJS
 export const CTRL_5_ROT = (0 * 360) / 5;
 export const GENERATOR_DOME_OVERHEAD = {
   0: {

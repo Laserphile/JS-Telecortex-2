@@ -17,7 +17,7 @@ export const singleRainbow = context => {
 
 export const justBlack = context => {
   const { numLeds = 360 } = context;
-  const rgb = hsvToRgb({h: 0, s: 0, v:0});
+  const rgb = hsvToRgb({ h: 0, s: 0, v: 0 });
   context.colours = Array.from({ length: numLeds }, () => rgb);
   return context;
 };
@@ -31,9 +31,9 @@ export const rainbowFlow = context => {
   const { h } = hsv;
   hsv.h = (h + 3) % 360;
   context.hsv = hsv;
-  context.colours = Array.from({ length: numLeds }, (_, pixel) => {
-    return hsvToRgb({ ...hsv, h: (hsv.h + pixel * 3) % 360 });
-  });
+  context.colours = Array.from({ length: numLeds }, (_, pixel) =>
+    hsvToRgb({ ...hsv, h: (hsv.h + pixel * 3) % 360 })
+  );
   return context;
 };
 
@@ -42,14 +42,17 @@ export const rainbowFlow = context => {
  * @param {object} context
  */
 export const coloursToAllChannels = context => {
-  const { channels = {
-    0: 'big',
-    1: 'smol',
-    2: 'smol',
-    3: 'smol'
-  }, colours } = context;
+  const {
+    channels = {
+      0: 'big',
+      1: 'smol',
+      2: 'smol',
+      3: 'smol'
+    },
+    colours
+  } = context;
   context.channelColours = Object.keys(channels).reduce(
-    (channelColours, channel) => ((channelColours[channel] = colours), channelColours),
+    (channelColours, channel) => Object.assign(channelColours, { [channel]: colours }),
     {}
   );
   return context;
@@ -60,13 +63,13 @@ export const coloursToAllChannels = context => {
  * copied to all `channels`
  * @param {Array} channels
  */
-export const coloursToChannels = channels => {
-  return context => {
-    const { colours } = context;
-    context.channelColours = Object.keys(channels).reduce(
-      (channelColours, channel) => ((channelColours[channel] = colours), channelColours),
+export const coloursToChannels = channels => context => {
+  const { colours } = context;
+  return {
+    ...context,
+    channelColours: Object.keys(channels).reduce(
+      (channelColours, channel) => Object.assign(channelColours, { [channel]: colours }),
       {}
-    );
-    return context;
+    )
   };
 };
