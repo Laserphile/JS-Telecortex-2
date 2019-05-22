@@ -52,6 +52,8 @@ sudo apt-get update && sudo apt-get upgrade
 sudo apt-get install vim
 # Install git
 sudo apt-get install git
+# Install zip
+sudo apt-get install zip
 # fix locale
 sudo vim /etc/locale.gen
 # uncomment the line corresponding to your locale, e.g. en_AU.UTF-8
@@ -100,7 +102,7 @@ cd ~/Documents/GitHub/JS-Telecortex-2
 
 Install the opencv4nodejs npm package manually. This will take a long time.
 ```bash
-npm install --force --save opencv4nodejs@4.16.0
+npm install --force --save opencv4nodejs@4.14.0
 ```
 Install JS dependencies
 In order to stop opencv from re-building every time you change your yarn packages, you must add OPENCV4NODEJS_DISABLE_AUTOBUILD=1 to your environment.
@@ -134,9 +136,7 @@ OPENCV4NODEJS_DISABLE_AUTOBUILD=1 yarn install
 ```
 If this doesn't work follow the steps below
 ```bash
-rm -rdf node_modules/opencv4nodejs
-rm -rdf node_modules/opencv-build
-cp -R essential-build-artifacts/ node_modules/
+./download-binary.sh
 ```
 
 # Usage
