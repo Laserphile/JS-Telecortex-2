@@ -109,9 +109,34 @@ OPENCV4NODEJS_DISABLE_AUTOBUILD=1 yarn install
 ```
 
 ## Install on OSX
+Install yarn
 ```bash
 brew install yarn
-yarn --ignore-optional install
+```
+Build opencv from source, it takes longer but it means things built in gyp are built with the same c compile that opencv is
+```bash
+brew install opencv@3 -s
+brew unlink opencv
+brew link --overwrite opencv@3
+```
+Smash this in your bashrc/zshrc file:
+```bash
+export PATH="/usr/local/opt/opencv@3/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/opencv@3/lib"
+export CPPFLAGS="-I/usr/local/opt/opencv@3/include"
+export PKG_CONFIG_PATH="/usr/local/opt/opencv@3/lib/pkgconfig"
+``` 
+Make sure your node version is no greater than 11.10.xx
+Make sure node-gyp is using the correct node version (errors displayed below will have the node-gyp directory)
+Now and try and install...
+```
+OPENCV4NODEJS_DISABLE_AUTOBUILD=1 yarn install
+```
+If this doesn't work follow the steps below
+```bash
+rm -rdf node_modules/opencv4nodejs
+rm -rdf node_modules/opencv-build
+cp -R essential-build-artifacts node_modules/
 ```
 
 # Usage
