@@ -26,7 +26,13 @@ const superContext = {
   pixelLists: {},
   servers: 'one-raspberrypi'
 };
-Object.assign(superContext, clientArgParser.argv);
+
+try {
+  const domeConfig = require('../.domerc.json');
+  Object.assign(superContext, clientArgParser.argv, domeConfig);
+} catch (e) {
+  Object.assign(superContext, clientArgParser.argv);
+}
 
 /**
  * A mapping of serverID to server metadata

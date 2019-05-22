@@ -1,0 +1,7 @@
+{
+  "servers": "one-raspberrypi",
+  "animation": "directRainbows",
+  "mapping": "square_serp_9",
+  "canvasSize": 9,
+  "frameRateCap":  120
+}
