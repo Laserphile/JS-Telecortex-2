@@ -19,6 +19,7 @@ export const RPI_SPIDEVS = {
   }
 };
 
+// eslint-disable-next-line camelcase
 export const opc_port = 42069;
 
 export const SERVER_CONF = {

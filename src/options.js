@@ -1,3 +1,5 @@
+import { options } from 'yargs';
+import { mapValues } from 'lodash';
 import { singleRainbow, rainbowFlow, justBlack, coloursToAllChannels } from './drivers/middleware';
 import {
   basicRainbows,
@@ -9,6 +11,7 @@ import {
 } from './drivers/superMiddleware';
 import { directRainbows, directSimplexRainbows } from './util/graphics';
 import { canvasInit, previewInit, videoInit } from './drivers/initializers';
+// eslint-disable-next-line camelcase
 import { opc_port } from '.';
 import {
   MAPS_DOME_OVERHEAD,
@@ -105,45 +108,60 @@ export const mappingOptions = {
   }
 };
 
-export const clientArgParser = require('yargs').options({
-  animation: {
-    alias: 'a',
-    describe: 'Pick which animation is displayed',
-    choices: Object.keys(animationOptions),
-    default: 'directSimplexRainbows'
-  },
-  servers: {
-    alias: 's',
-    describe: 'Pick which servers are used',
-    choices: Object.keys(serverOptions),
-    default: 'five'
-  },
-  mapping: {
-    alias: 'm',
-    describe: 'Pick which mapping is used',
-    choices: Object.keys(mappingOptions),
-    default: 'dome_overhead'
-  },
-  videoFile: {
-    describe: 'Pick the video used in the video animation'
-  },
-  enablePreview: {
-    alias: 'p',
-    type: 'boolean'
-  },
-  frameRateCap: {
-    alias: 'f',
-    type: 'number',
-    default: Infinity
-  },
-  canvasSize: {
-    alias: 'c',
-    type: 'number',
-    default: 512
-  },
-  text: {
-    alias: 't',
-    type: 'string',
-    default: 'MOONBASE'
-  }
-});
+export const defaultConfig = {
+  animation: 'directSimplexRainbows',
+  servers: 'five',
+  mapping: 'dome_overhead',
+  frameRateCap: Infinity,
+  canvasSize: 512,
+  text: 'MOONBASE'
+};
+
+export const clientArgs = defaults =>
+  options(
+    Object.assign(
+      {
+        animation: {
+          alias: 'a',
+          describe: 'Pick which animation is displayed',
+          choices: Object.keys(animationOptions),
+          default: 'directSimplexRainbows'
+        },
+        servers: {
+          alias: 's',
+          describe: 'Pick which servers are used',
+          choices: Object.keys(serverOptions),
+          default: 'five'
+        },
+        mapping: {
+          alias: 'm',
+          describe: 'Pick which mapping is used',
+          choices: Object.keys(mappingOptions),
+          default: 'dome_overhead'
+        },
+        videoFile: {
+          describe: 'Pick the video used in the video animation'
+        },
+        enablePreview: {
+          alias: 'p',
+          type: 'boolean'
+        },
+        frameRateCap: {
+          alias: 'f',
+          type: 'number',
+          default: Infinity
+        },
+        canvasSize: {
+          alias: 'c',
+          type: 'number',
+          default: 512
+        },
+        text: {
+          alias: 't',
+          type: 'string',
+          default: 'MOONBASE'
+        }
+      },
+      mapValues(defaults, val => ({ default: val }))
+    )
+  ).argv;

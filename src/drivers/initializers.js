@@ -1,14 +1,15 @@
 import { getSquareCanvas, setupMainWindow, showPreview } from '../util/graphics';
+
 const cv = require('opencv4nodejs');
 
 /**
  * Initializer used for animations which involve canvases
  * @param {Object} superContext
  */
-export const canvasInit = superContext => {
-  superContext.img = getSquareCanvas(superContext.canvasSize);
-  return superContext;
-};
+export const canvasInit = superContext => ({
+  ...superContext,
+  img: getSquareCanvas(superContext.canvasSize)
+});
 
 export const previewInit = superContext => {
   setupMainWindow(superContext.img);
@@ -16,8 +17,8 @@ export const previewInit = superContext => {
   return superContext;
 };
 
-export const videoInit = superContext => {
-  superContext.cap = new cv.VideoCapture(superContext.videoFile);
-  superContext.img = superContext.cap.read() ;
-  return superContext;
-}
+export const videoInit = superContext => ({
+  ...superContext,
+  cap: new cv.VideoCapture(superContext.videoFile),
+  img: superContext.cap.read()
+});
