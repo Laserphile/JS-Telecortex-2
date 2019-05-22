@@ -4801,7 +4801,7 @@ opencv-build@^0.0.16:
   dependencies:
     npmlog "^4.1.2"
 
-opencv4nodejs@^4.14.0:
+opencv4nodejs@4.14.0:
   version "4.14.0"
   resolved "https://registry.yarnpkg.com/opencv4nodejs/-/opencv4nodejs-4.14.0.tgz#4895a67d5097713f0a1d39d3fe861802aca78a42"
   integrity sha512-cGzwpegeOLVH495zV/ys++k11hWbkoFcndD0MTFmrofXVCHD4Cf1nMtMXnO6bpC2taBIn7S6syhdPjpCAuHpyg==

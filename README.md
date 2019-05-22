@@ -136,7 +136,7 @@ If this doesn't work follow the steps below
 ```bash
 rm -rdf node_modules/opencv4nodejs
 rm -rdf node_modules/opencv-build
-cp -R essential-build-artifacts node_modules/
+cp -R essential-build-artifacts/ node_modules/
 ```
 
 # Usage
