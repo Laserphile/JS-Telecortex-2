@@ -134,7 +134,7 @@ Now and try and install...
 ```
 OPENCV4NODEJS_DISABLE_AUTOBUILD=1 yarn install
 ```
-If this doesn't work follow the steps below
+If this doesn't work run this
 ```bash
 ./download-binary.sh
 ```
