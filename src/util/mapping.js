@@ -120,8 +120,6 @@ export const matMult = (...matrices) =>
  * @param {Array} matrix transformation matrix
  */
 export const vectorTransform = (vector, matrix) =>
-  // console.log(`vector ${JSON.stringify(vector)}`);
-  // console.log(`matrix ${JSON.stringify(matrix)}`);
   matrix.map(row => {
     try {
       return dot(row, vector);
@@ -137,59 +135,48 @@ export const vectorTransform = (vector, matrix) =>
  * @param {Array} vector
  * @param {Number} angle in degrees
  */
-export const rotateVector = (vector, angle) =>
-  // console.log(`vector ${vector}`);
-  // console.log(`angle ${angle}`);
-  vectorTransform(vector, matRotation2D(angle));
+export const rotateVector = (vector, angle) => vectorTransform(vector, matRotation2D(angle));
 
 /**
  * Transform each coordinate in a mapping by a matrix
- * @param {Array} mapping
  * @param {Array} mat the transformation matrix
  */
-export const transformMapping = (mapping, mat) =>
-  // console.log(`mat ${mat}`);
-  mapping.map(coordinate => vectorTransform(coordinate, mat));
+export const transformMapper = mat => vector => vectorTransform(vector, mat);
 
 /**
- * Scale each coordinate in a mapping by a scalar, or a matrix
- * @param {Array} mapping
+ * Scale each coordinate in a mapping by a scalar
  * @param {Number} scale
  */
-export const scaleMapping = (mapping, scale) => {
-  if (typeof scale === 'number') {
-    return mapping.map(([coordinateX, coordinateY]) => [coordinateX * scale, coordinateY * scale]);
-  }
-  return transformMapping(mapping, scale);
-};
+export const scaleMapper = scale => ([xCoordinate, yCoordinate]) => [
+  xCoordinate * scale,
+  yCoordinate * scale
+];
+
+/**
+ * Select which mapper to use based off scale
+ * @param {Number | Array} scale
+ */
+export const scaleOrTransformSelector = scale =>
+  typeof scale === 'number' ? scaleMapper(scale) : transformMapper(scale);
 
 /**
  * transpose each coordinate in a mapping by an offset.
- * @param {Array} mapping
  * @param {Array} offset
  */
-export const transposeMapping = (mapping, offset) => mapping.map(vector => add(vector, offset));
+export const transposeMapper = offset => vector => add(vector, offset);
 
-export const rotateMapping = (mapping, angle) => {
-  // console.log(`angle ${JSON.stringify(angle)}`);
-  const mat = matRotation2D(angle);
-  // console.log(`mat ${JSON.stringify(mat)}`);
-  return mapping.map(vector => vectorTransform(vector, mat));
-};
+export const rotateMapper = angle => vector => vectorTransform(vector, matRotation2D(angle));
 
-export const transformPanelMap = (panelMap, { scale = 1, angle = 0, offset = [0, 0] }) => {
-  // console.log(`panelMap ${JSON.stringify(panelMap)}`);
-  // console.log(`scale ${JSON.stringify(scale)}`);
-  // console.log(`angle ${JSON.stringify(angle)}`);
-  // console.log(`offset ${JSON.stringify(offset)}`);
-  // TODO: compose and map instead
-  panelMap = transposeMapping(panelMap, [-0.5, -0.5]);
-  panelMap = scaleMapping(panelMap, scale);
-  panelMap = rotateMapping(panelMap, angle);
-  panelMap = transposeMapping(panelMap, [+0.5, +0.5]);
-  panelMap = transposeMapping(panelMap, offset);
-  return panelMap;
-};
+export const transformPanelMap = (panelMap, { scale = 1, angle = 0, offset = [0, 0] }) =>
+  panelMap.map(
+    flow(
+      transposeMapper([-0.5, -0.5]),
+      scaleOrTransformSelector(scale),
+      rotateMapper(angle),
+      transposeMapper([+0.5, +0.5]),
+      transposeMapper(offset)
+    )
+  );
 
 export const generatePanelMaps = (generator, sourceMaps = MAPS_DOME) => {
   // console.log(`generator ${JSON.stringify(generator)}`);

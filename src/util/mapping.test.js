@@ -1,9 +1,6 @@
 import {
   normalizePixMap,
   transformPanelMap,
-  transposeMapping,
-  scaleMapping,
-  rotateMapping,
   generatePanelMaps,
   GENERATOR_DOME_OVERHEAD,
   PIXEL_MAP_DOME_OUTER,
@@ -19,7 +16,10 @@ import {
   matRotation2D,
   GLOBAL_SCALE,
   matMult,
-  matScale2D
+  matScale2D,
+  transposeMapper,
+  scaleOrTransformSelector,
+  rotateMapper
 } from './mapping';
 
 const testPixMap = [[100, 100], [100, 300], [200, 100], [200, 300], [150, 200]];
@@ -30,7 +30,7 @@ const normPixMap = [[0.3, 0.4], [0.4, 0.3]];
 expect.extend({
   toBeCloseToMatrix(received, argument) {
     // console.log(received);
-    const pass = received.length == argument.length;
+    const pass = received.length === argument.length;
     if (!pass) {
       return {
         message: () =>
@@ -47,9 +47,8 @@ expect.extend({
       });
     });
     return {
-      message: () => {
-        `expected ${JSON.stringify(received)} to be close to matrix ${JSON.stringify(argument)}`;
-      },
+      message: () =>
+        `expected ${JSON.stringify(received)} to be close to matrix ${JSON.stringify(argument)}`,
       pass
     };
   }
@@ -88,7 +87,7 @@ describe('normalizePixMap', () => {
   });
 });
 
-describe('transposeMapping', () => {
+describe('transposeMapper', () => {
   [
     {
       name: 'works',
@@ -97,12 +96,12 @@ describe('transposeMapping', () => {
     }
   ].forEach(({ name, offset, expected }) => {
     it(name, () => {
-      expect(transposeMapping(normPixMap, offset)).toBeCloseToMatrix(expected);
+      expect(normPixMap.map(transposeMapper(offset))).toBeCloseToMatrix(expected);
     });
   });
 });
 
-describe('scaleMapping', () => {
+describe('scaleOrTransformSelector', () => {
   [
     {
       name: 'works with scalar',
@@ -111,12 +110,12 @@ describe('scaleMapping', () => {
     }
   ].forEach(({ name, scale, expected }) => {
     it(name, () => {
-      expect(scaleMapping(normPixMap, scale)).toBeCloseToMatrix(expected);
+      expect(normPixMap.map(scaleOrTransformSelector(scale))).toBeCloseToMatrix(expected);
     });
   });
 });
 
-describe('rotateMapping', () => {
+describe('rotateMapper', () => {
   [
     {
       name: 'rotates 90 degrees',
@@ -125,7 +124,7 @@ describe('rotateMapping', () => {
     }
   ].forEach(({ name, rotation, expected }) => {
     it(name, () => {
-      expect(rotateMapping(normPixMap, rotation)).toBeCloseToMatrix(expected);
+      expect(normPixMap.map(rotateMapper(rotation))).toBeCloseToMatrix(expected);
     });
   });
 });
@@ -184,7 +183,7 @@ describe('transformPanelMap', () => {
     },
     {
       name: 'transforms big-0-0',
-      source: MAPS_DOME['big'],
+      source: MAPS_DOME.big,
       transformations: {
         scale: PANEL_0_SKEW,
         angle: CTRL_1_ROT,
@@ -194,7 +193,7 @@ describe('transformPanelMap', () => {
     },
     {
       name: 'transforms outer-0-2',
-      source: MAPS_DOME['outer'],
+      source: MAPS_DOME.outer,
       transformations: {
         scale: PANEL_2_SKEW,
         angle: CTRL_1_ROT,
