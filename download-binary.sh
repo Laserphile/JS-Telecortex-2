@@ -1,9 +1,4 @@
 #!/bin/bash
-#
-# You can fetch some binary directly from release on github
-#
-# We encourage to build your own version from source.
-#
 
 BASE_URL=https://github.com/Laserphile/JS-Telecortex-2/releases/download
 RELEASE=v0.1.0-alpha
