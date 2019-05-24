@@ -1,3 +1,4 @@
+// TODO remove this eslint disable
 /* eslint-disable no-param-reassign */
 import { hsvToRgb } from 'colorsys';
 import { defaultHSV } from '../../util/graphics';

@@ -1,3 +1,4 @@
+// TODO remove this eslint disable
 /* eslint-disable no-param-reassign */
 import chalk from 'chalk';
 import { OPC_HEADER_LEN, parseOPCBody, parseOPCHeader } from './parser';

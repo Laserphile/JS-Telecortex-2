@@ -1,3 +1,4 @@
+// TODO remove this eslint disable
 /* eslint-disable no-param-reassign */
 import { createSocket } from 'dgram';
 import { handleOPCMessage } from './index';

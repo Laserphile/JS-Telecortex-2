@@ -1,3 +1,4 @@
+// TODO remove this eslint disable
 /* eslint-disable no-param-reassign */
 import { showPreview, fillRainbows, addText, fillColour } from '../../util/graphics';
 import { interpolatePixelMap } from '../../util/interpolation';
