@@ -1,6 +1,7 @@
-const cv = require('opencv4nodejs');
-const fs = require('fs');
-import { interpolatePixel, denormalizeCoordinate, interpolatePixelMap } from './interpolation';
+import cv from 'opencv4nodejs';
+import fs from 'fs';
+import { interpolatePixel, interpolatePixelMap } from './interpolation';
+import { denormalizeCoordinate } from './index';
 
 const testFilename = 'test_data/rainbow.png';
 

@@ -1,5 +1,6 @@
+/* eslint-disable no-param-reassign */
 import { createSocket } from 'dgram';
-import { handleOPCMessage } from '.';
+import { handleOPCMessage } from './index';
 
 /**
  * Open Pixel Control server implementation of the driverFactory.driver interface.
@@ -8,8 +9,8 @@ import { handleOPCMessage } from '.';
  * @param {object} context The context under which the driver operates
  */
 export const opcUDPServer = context => {
-  const { opc_port } = context;
-  console.log(`About to create OPC UDP server on port ${opc_port}`);
+  const { opcPort } = context;
+  console.log(`About to create OPC UDP server on port ${opcPort}`);
 
   context.server = createSocket('udp4', () => {
     console.log('socket create callback');
@@ -30,7 +31,7 @@ export const opcUDPServer = context => {
     console.log(`server listening ${address.address}:${address.port}`);
   });
 
-  context.server.bind(opc_port, '127.0.0.1', () => {
+  context.server.bind(opcPort, '127.0.0.1', () => {
     console.log('socket bind callback');
   });
 

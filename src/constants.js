@@ -19,12 +19,11 @@ export const RPI_SPIDEVS = {
   }
 };
 
-// eslint-disable-next-line camelcase
-export const opc_port = 42069;
+export const opcPort = 42069;
 
 export const SERVER_CONF = {
   // port used to listen for OPC commands
-  opc_port,
+  opcPort,
   // SPI Clock Speed
   spiClockSpeed: 10e6,
   // SPI Data Mode

@@ -1,5 +1,5 @@
 import { parseOPCHeader, parseOPCBody } from './parser';
-import { PartialOPCMsgError } from '.';
+import { PartialOPCMsgError } from './errors';
 
 describe('parseOPCHeader', () => {
   it('handles blank message', () => {

@@ -1,6 +1,7 @@
+/* eslint-disable no-param-reassign */
 import { createServer } from 'net';
 import chalk from 'chalk';
-import { handleAllOPCMessages } from '.';
+import { handleAllOPCMessages } from './index';
 
 /**
  * Open Pixel Control server implementation of the driverFactory.driver interface.
@@ -9,11 +10,11 @@ import { handleAllOPCMessages } from '.';
  * @param {object} context The context under which the driver operates
  */
 export const opcTCPServer = context => {
-  const { opc_port } = context;
+  const { opcPort } = context;
 
   context.server = createServer(socket => {
     // Handle incoming messages from clients.
-    let partialOPCMsg = undefined;
+    let partialOPCMsg;
     socket.on('data', data => {
       // console.log(
       //   chalk`{cyan 🛰  got: ${data.toString('hex')} from ${socket.remoteAddress}:${
@@ -42,7 +43,7 @@ export const opcTCPServer = context => {
     });
   });
 
-  context.server.listen(opc_port, () => {
-    console.log(chalk`{cyan 🛰  Server} listening on port: {white ${opc_port}}`);
+  context.server.listen(opcPort, () => {
+    console.log(chalk`{cyan 🛰  Server} listening on port: {white ${opcPort}}`);
   });
 };

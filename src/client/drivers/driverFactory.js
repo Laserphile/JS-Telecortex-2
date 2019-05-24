@@ -1,7 +1,7 @@
 import { flow } from 'lodash/util';
-import { consoleErrorHandler } from '../util';
-import { colours2sk9822 } from '../util/sk9822';
-import { composeOPCMessage } from '../opc/compose';
+import { consoleErrorHandler } from '../../util';
+import { colours2sk9822 } from '../../util/sk9822';
+import { composeOPCMessage } from '../../server/opc/compose';
 
 // const transferDataAsync = async (spi, dataBuff) => {
 //   return await Promise((resolve, reject) => {
@@ -17,7 +17,7 @@ import { composeOPCMessage } from '../opc/compose';
  * Send data to all LEDs
  * @param {object} context The context under which the ledDriver operates
  */
-const ledDriver = context => {
+export const ledDriver = context => {
   const { channels, channelColours, brightness } = context;
   Object.keys(channelColours).forEach(channel => {
     const dataBuff = Buffer.from(colours2sk9822(channelColours[channel], brightness));
@@ -47,17 +47,17 @@ export const opcClientDriver = context => {
  *    middleware and driver functions.
  * @param { array } middleware is a list of functions to call before the driver
  *    function is called
+ * @param driver the driver to create
  * @returns { function } callback, called repeatedly to drive the SPI.
  */
 export const driverFactory = (driverConfig, middleware = [], driver = ledDriver) => {
   const context = { ...driverConfig };
 
-  return () => {
-    return flow(
+  return () =>
+    flow(
       ...middleware,
       driver
     )(context);
-  };
 };
 
 export default driverFactory;

@@ -1,7 +1,7 @@
 {
   "name": "js-telecortext-2",
   "version": "1.0.0",
-  "main": "src/main.js",
+  "main": "src/server/main.js",
   "repository": "https://github.com/Laserphile/JS-Telecortext-2.git",
   "author": "Moonbase-Labs",
   "license": "MIT",
@@ -49,8 +49,8 @@
   },
   "scripts": {
     "build": "babel src -s -D -d dist",
-    "dev": "nodemon --exec yarn run babel-node -- src/main.js",
-    "dev-client": "nodemon --exec yarn run babel-node -- src/client.js",
+    "dev": "nodemon --exec yarn run babel-node -- src/server/main.js",
+    "dev-client": "nodemon --exec yarn run babel-node -- src/client/client.js",
     "dev-opencv": "nodemon --exec yarn run babel-node -- src/opencv.js",
     "start": "node dist/main.js",
     "test": "jest --watch --coverage",

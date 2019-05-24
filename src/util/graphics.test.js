@@ -1,3 +1,4 @@
+import cv from 'opencv4nodejs';
 import {
   coloursToString,
   colourRateLogger,
@@ -15,7 +16,6 @@ import {
   directRainbows
 } from './graphics';
 import { now } from '.';
-const cv = require('opencv4nodejs');
 
 const someColours = [
   { r: 0xff, g: 0x00, b: 0x00 },
@@ -26,7 +26,7 @@ const someColours = [
 const size = 64;
 const img = getSquareCanvas(size);
 
-var waitKeyRetval = 0xff;
+let waitKeyRetval = 0xff;
 cv.waitKey = jest.fn(() => waitKeyRetval);
 cv.destroyAllWindows = jest.fn();
 cv.imshow = jest.fn();

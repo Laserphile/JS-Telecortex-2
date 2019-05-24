@@ -1,5 +1,6 @@
 import { parse } from 'binary';
-import { PartialOPCMsgError, OPC_BODY_FIELDS } from '.';
+import { PartialOPCMsgError } from './errors';
+import { OPC_BODY_FIELDS } from './constants';
 
 export const OPC_HEADER_LEN = 4;
 
@@ -24,12 +25,13 @@ export const parseOPCHeader = msg => {
 export const parseOPCBody = (msg, bodyLength = undefined) => {
   // skip over the message header
   if (msg.length < OPC_HEADER_LEN) throw new PartialOPCMsgError('msg too short to have body');
+
   if (bodyLength && msg.length < OPC_HEADER_LEN + bodyLength)
     throw new PartialOPCMsgError(`msg too short for body length ${bodyLength}`);
-  if (bodyLength === undefined) {
-    bodyLength = msg.length - OPC_HEADER_LEN;
-  }
-  const body = msg.slice(OPC_HEADER_LEN, OPC_HEADER_LEN + bodyLength);
+
+  const nullSafeBodyLength = bodyLength || msg.length - OPC_HEADER_LEN;
+
+  const body = msg.slice(OPC_HEADER_LEN, OPC_HEADER_LEN + nullSafeBodyLength);
   // console.log(chalk`body: (${bodyLength}) ${body.toString('hex')}`);
 
   return Array.from(
@@ -38,9 +40,8 @@ export const parseOPCBody = (msg, bodyLength = undefined) => {
     },
     (_, index) =>
       OPC_BODY_FIELDS.reduce(
-        (accumulator, key, offset, source) => (
-          (accumulator[key] = body[index * source.length + offset]), accumulator
-        ),
+        (accumulator, key, offset, source) =>
+          Object.assign(accumulator, { [key]: body[index * source.length + offset] }),
         {}
       )
   );

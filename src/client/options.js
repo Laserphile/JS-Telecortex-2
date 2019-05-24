@@ -9,10 +9,9 @@ import {
   applyDirect,
   basicText
 } from './drivers/superMiddleware';
-import { directRainbows, directSimplexRainbows } from './util/graphics';
+import { directRainbows, directSimplexRainbows } from '../util/graphics';
 import { canvasInit, previewInit, videoInit } from './drivers/initializers';
-// eslint-disable-next-line camelcase
-import { opc_port } from '.';
+import { opcPort } from '../constants';
 import {
   MAPS_DOME_OVERHEAD,
   PANELS_DOME_OVERHEAD,
@@ -20,7 +19,7 @@ import {
   PANELS_SQUARE_SERP_9,
   MAPS_SQUARE_SERP_12,
   PANELS_SQUARE_SERP_12
-} from './util/mapping';
+} from '../util/mapping';
 
 export const animationOptions = {
   singleRainbow: {
@@ -73,23 +72,23 @@ export const animationOptions = {
 
 export const serverOptions = {
   five: {
-    0: { host: 'telecortex-00.local', opc_port },
-    1: { host: 'telecortex-01.local', opc_port },
-    2: { host: 'telecortex-02.local', opc_port },
-    3: { host: 'telecortex-03.local', opc_port },
-    4: { host: 'telecortex-04.local', opc_port }
+    0: { host: 'telecortex-00.local', opcPort },
+    1: { host: 'telecortex-01.local', opcPort },
+    2: { host: 'telecortex-02.local', opcPort },
+    3: { host: 'telecortex-03.local', opcPort },
+    4: { host: 'telecortex-04.local', opcPort }
   },
   four: {
-    0: { host: 'telecortex-00.local', opc_port },
-    1: { host: 'telecortex-01.local', opc_port },
-    2: { host: 'telecortex-02.local', opc_port },
-    4: { host: 'telecortex-04.local', opc_port }
+    0: { host: 'telecortex-00.local', opcPort },
+    1: { host: 'telecortex-01.local', opcPort },
+    2: { host: 'telecortex-02.local', opcPort },
+    4: { host: 'telecortex-04.local', opcPort }
   },
   'one-raspberrypi': {
-    4: { host: 'raspberrypi.local', opc_port }
+    4: { host: 'raspberrypi.local', opcPort }
   },
   'one-localhost': {
-    4: { host: 'localhost', opc_port }
+    4: { host: 'localhost', opcPort }
   }
 };
 

@@ -1,19 +1,10 @@
-import { parseOPCHeader, parseOPCBody, OPC_HEADER_LEN } from './parser';
+/* eslint-disable no-param-reassign */
 import chalk from 'chalk';
-import { consoleErrorHandler } from '../util';
-import { colourRateLogger } from '../util/graphics';
-import { colours2sk9822 } from '../util/sk9822';
-
-export const OPC_BODY_FIELDS = ['r', 'g', 'b'];
-
-/**
- * Thrown when an incomplete OPC Message is detected
- */
-export class PartialOPCMsgError extends Error {
-  constructor() {
-    super(...arguments);
-  }
-}
+import { OPC_HEADER_LEN, parseOPCBody, parseOPCHeader } from './parser';
+import { consoleErrorHandler } from '../../util';
+import { colourRateLogger } from '../../util/graphics';
+import { colours2sk9822 } from '../../util/sk9822';
+import { PartialOPCMsgError } from './errors';
 
 /**
  * Limit number of colours to display in a body dump
@@ -70,4 +61,5 @@ export const handleAllOPCMessages = (context, data) => {
     data = data.slice(bytesRead);
     // console.log(chalk`{cyan 🛰  read: ${bytesRead}, remaining: ${data.length} bytes}`);
   }
+  return undefined;
 };

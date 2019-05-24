@@ -8,8 +8,8 @@ import net from 'net';
 import async from 'async';
 import { readFileSync } from 'fs';
 import { opcClientDriver } from './drivers/driverFactory';
-import { msNow } from './util';
-import { colourRateLogger } from './util/graphics';
+import { msNow } from '../util';
+import { colourRateLogger } from '../util/graphics';
 import {
   animationOptions,
   serverOptions,
@@ -17,7 +17,7 @@ import {
   defaultConfig,
   clientArgs
 } from './options';
-import { FRESH_CONTEXT, CLIENT_CONF } from '.';
+import { FRESH_CONTEXT, CLIENT_CONF } from '../constants';
 
 /**
  * Context shared across all clients
@@ -73,7 +73,7 @@ const initSocketPromise = (serverID, host, port) => {
   const client = new net.Socket();
 
   client.on('data', data => {
-    console.error(chalk`{cyan 📡 ${serverID} recieved} ${data.toString('hex')}`);
+    console.error(chalk`{cyan 📡 ${serverID} received} ${data.toString('hex')}`);
     client.destroy(); // kill client after server's response
   });
 
@@ -109,7 +109,7 @@ const initSocketPromise = (serverID, host, port) => {
  */
 const startClients = async () => {
   await Promise.all(
-    Object.entries(serverConfigs).map(([serverID, { host, opc_port: opcPort }]) =>
+    Object.entries(serverConfigs).map(([serverID, { host, opcPort }]) =>
       initSocketPromise(serverID, host, opcPort)
     )
   ).catch(err => err);
