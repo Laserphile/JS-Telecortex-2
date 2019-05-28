@@ -7,13 +7,11 @@ script:
   docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0 /bin/bash -c "\
       echo $CODECOV_TOKEN; \
       cd /app; \
-      npm install -g codecov; \
-      export PATH=\"$HOME/.yarn/bin:$PATH\"; \
-      export NODE_PATH=/usr/lib/node_modules; \
-      export OPENCV4NODEJS_DISABLE_AUTOBUILD=1; \
-      ~/.yarn/bin/yarn; \
-      ~/.yarn/bin/yarn run test-ci; \
-      codecov"
+      echo 'done'"
+#      npm install -g codecov; \
+#      ~/.yarn/bin/yarn; \
+#      ~/.yarn/bin/yarn run test-ci; \
+#      codecov"
 notifications:
   slack:
     rooms:
