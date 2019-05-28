@@ -8,6 +8,7 @@ jobs:
     docker:
       # specify the version you desire here
       - image: vanbujm/moonbase-balena:v0.1.0-circleciv0.2.3
+      - entrypoint: /bin/bash
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
