@@ -2,10 +2,15 @@ language: node
 services:
 - docker
 install:
-- docker pull vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4
+- docker pull vanbujm/moonbase-balena:v0.1.0
 script:
 - |
-  docker run vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4 -c "ls"
+  docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4 -c "echo $CODECOV_TOKEN; \
+      cd /app; \
+      npm install -g codecov; \
+      ~/.yarn/bin/yarn; \
+      ~/.yarn/bin/yarn run test-ci; \
+      codecov"
 notifications:
   slack:
     rooms:
