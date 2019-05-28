@@ -87,6 +87,9 @@ export const serverOptions = {
   'one-raspberrypi': {
     4: { host: 'raspberrypi.local', opcPort }
   },
+  'one-balenapi': {
+    4: { host: '192.168.1.120', opcPort }
+  },
   'one-localhost': {
     4: { host: 'localhost', opcPort }
   }
