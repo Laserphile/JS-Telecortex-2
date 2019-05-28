@@ -1,9 +1,11 @@
+language: node
 services:
 - docker
 install:
 - docker pull vanbujm/moonbase-balena:v0.1.0
 script:
 - |
+  ls
   docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0 /bin/bash -c "\
       echo $CODECOV_TOKEN; \
       cd /app; \
