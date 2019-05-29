@@ -13,8 +13,7 @@ then
   cp -R $UNZIPPED_BINARY/ node_modules/
   exit 0
 else
-  echo "zip file not found"
-  echo ./$BINARY
+  echo "$BINARY file not found"
 fi
 
 if [[ -d $UNZIPPED_BINARY ]]
@@ -24,8 +23,7 @@ then
   cp -R $UNZIPPED_BINARY/ node_modules/
   exit 0
 else
-  echo "folder not found"
-  echo ./$UNZIPPED_BINARY
+  echo "$UNZIPPED_BINARY folder not found"
 fi
 
 URL="$BASE_URL/$RELEASE/$BINARY"
