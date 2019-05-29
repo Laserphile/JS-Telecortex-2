@@ -23,7 +23,7 @@ jobs:
         - cat balenakey >> ~/.ssh/known_hosts
         - git remote add balena $BALENA_REMOTE
         - git commit -am "Travis build $TRAVIS_JOB_ID" --allow-empty
-        - git push --force balena master
+        - git push -f balena master
 
 notifications:
   slack:
