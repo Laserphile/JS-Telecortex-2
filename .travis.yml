@@ -2,10 +2,9 @@ language: node
 services:
 - docker
 install:
-- docker pull vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4
+- docker pull vanbujm/moonbase-balena:v0.1.0-ci-v0.2.10
 script:
-  - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" -it --entrypoint=/usr/bin/qemu-arm-static vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4 /usr/bin/env QEMU_EXECVE=1 \
-    ls
+  - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.10 ls
 #- |
 #  docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4 -c "echo $CODECOV_TOKEN; \
 #      cd /app; \

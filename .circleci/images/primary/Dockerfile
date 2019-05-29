@@ -5,4 +5,5 @@ RUN sudo apt-get install tar
 RUN sudo apt-get install gzip
 RUN sudo apt-get install ca-certificates
 LABEL com.circleci.preserve-entrypoint=true
-ENTRYPOINT ["/usr/bin/qemu-arm-static"]
+ENV QEMU_EXECVE=1
+ENTRYPOINT ["/usr/bin/qemu-arm-static", "/bin/bash", "-c"]
