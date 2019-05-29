@@ -10,12 +10,7 @@ then
   exit 1
 fi
 
-if [[ $(getconf LONG_BIT) == "64" ]]
-then
-    URL="$BASE_URL/$RELEASE/$BINARY"
-else
-    URL="$BASE_URL/$RELEASE/${BINARY}-32bits"
-fi
+URL="$BASE_URL/$RELEASE/$BINARY"
 
 set -e
 echo "Fetching from: $URL"
