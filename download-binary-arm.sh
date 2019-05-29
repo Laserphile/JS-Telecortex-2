@@ -16,6 +16,6 @@ echo "Fetching from: $URL"
 wget -q -O $BINARY "$URL"
 file $BINARY
 chmod a+x $BINARY
-unzip $BINARY
+unzip -q $BINARY
 rm -rdf node_modules/opencv4nodejs node_modules/opencv-build
 cp -R essential-build-artifacts/ node_modules/
