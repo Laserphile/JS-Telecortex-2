@@ -10,7 +10,6 @@ script:
   - chmod 0600 id_rsa
   - ssh-add ./id_rsa
   - cat resinkey >> ~/.ssh/known_hosts
-  - ssh -T $BALENA_REMOTE
   - git remote add balena $BALENA_REMOTE
   - git push balena master
 
@@ -23,7 +22,8 @@ jobs:
         - chmod 0600 id_rsa
         - ssh-add ./id_rsa
         - cat balenakey >> ~/.ssh/known_hosts
-        - ssh -T $BALENA_REMOTE
+        - git remote add origin https://github.com/Laserphile/JS-Telecortex-2.git
+        - git fetch --unshallow origin
         - git remote add balena $BALENA_REMOTE
         - git push -f balena master
 
