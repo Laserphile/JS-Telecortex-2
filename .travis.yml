@@ -23,6 +23,7 @@ jobs:
         - chmod 0600 id_rsa
         - ssh-add ./id_rsa
         - cat balenakey >> ~/.ssh/known_hosts
+        - ssh -T $BALENA_REMOTE
         - git remote add balena $BALENA_REMOTE
         - git commit -am "Travis build $TRAVIS_JOB_ID" --allow-empty
         - git push -f balena master
