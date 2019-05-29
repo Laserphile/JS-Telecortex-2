@@ -1,6 +1,7 @@
 #!/bin/bash
 
-BASE_URL=https://www.dropbox.com/s/svucoqkq6jhmvdz/essential-build-artifacts-arm.zip?dl=1
+BASE_URL=https://github.com/Laserphile/JS-Telecortex-2/releases/download
+RELEASE=v0.1.1-alpha
 BINARY=essential-build-artifacts-arm.zip
 
 if [[ -e $BINARY ]]
@@ -9,7 +10,7 @@ then
   exit 1
 fi
 
-URL="$BASE_URL"
+URL="$BASE_URL/$RELEASE/$BINARY"
 
 set -e
 echo "Fetching from: $URL"
