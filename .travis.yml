@@ -7,7 +7,7 @@ jobs:
       install:
         - docker pull vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14
       script:
-        - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14 -c "echo $CODECOV_TOKEN; cd /app; yarn --ignore-scripts; ./download-binary-arm.sh; yarn test-ci && codecov"
+        - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14 -c "cd /app && yarn --ignore-scripts && ./download-binary-arm.sh && yarn test-ci && codecov"
       cache:
         directories:
           - essential-build-artifacts-arm
