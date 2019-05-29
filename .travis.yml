@@ -8,7 +8,8 @@ jobs:
       install:
         - docker pull vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14
       script:
-        - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14 -c "cd /app && yarn --ignore-scripts && pwd && ls && ./download-binary-arm.sh && yarn test-ci && codecov"
+        - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14 -c "cd /app && ./download-binary-arm.sh"
+#        - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14 -c "cd /app && yarn --ignore-scripts && pwd && ls && ./download-binary-arm.sh && yarn test-ci && codecov"
       cache:
         yarn: true
         directories:
@@ -24,7 +25,10 @@ jobs:
         - git fetch --unshallow origin
         - git remote add balena $BALENA_REMOTE
         - git push -f balena master
-
+stages:
+  - test
+  - name: deploy
+    if: branch = master
 notifications:
   slack:
     rooms:

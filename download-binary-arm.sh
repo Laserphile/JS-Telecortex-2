@@ -5,6 +5,11 @@ RELEASE=v0.1.1-alpha
 BINARY=essential-build-artifacts-arm.zip
 UNZIPPED_BINARY=essential-build-artifacts-arm
 
+echo 'pwd'
+pwd
+echo 'ls'
+ls
+
 if [[ -f ./$BINARY ]]
 then
   echo "zip file found"
