@@ -5,6 +5,7 @@ RUN sudo apt-get install ssh
 RUN sudo apt-get install tar
 RUN sudo apt-get install gzip
 RUN sudo apt-get install ca-certificates
+RUN sudo apt-get install file
 RUN yarn global add codecov
 LABEL com.circleci.preserve-entrypoint=true
 ENV QEMU_EXECVE=1
