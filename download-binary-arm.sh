@@ -19,4 +19,4 @@ file $BINARY
 chmod a+x $BINARY
 unzip -q $BINARY
 rm -rdf node_modules/opencv4nodejs node_modules/opencv-build
-cp -R $BINARY/ node_modules/
+cp -R essential-build-artifacts-arm/ node_modules/
