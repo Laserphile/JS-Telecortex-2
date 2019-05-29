@@ -4,9 +4,7 @@ services:
 install:
 - docker pull vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4
 script:
-  - docker system info --format '{{.Architecture}}'
-  - uname -m
-  - docker run vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4 -c "ls" | cat
+  - docker run -it --entrypoint=/usr/bin/qemu-arm-static vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4 ls
 #- |
 #  docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4 -c "echo $CODECOV_TOKEN; \
 #      cd /app; \
