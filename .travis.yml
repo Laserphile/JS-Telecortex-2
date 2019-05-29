@@ -2,13 +2,10 @@ language: node
 services:
 - docker
 install:
-- docker pull vanbujm/moonbase-balena:v0.1.0-ci-v0.2.11
+- docker pull vanbujm/moonbase-balena:v0.1.0-ci-v0.2.12
 script:
   - echo $CODECOV_TOKEN
-  - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.11 -c "echo $CODECOV_TOKEN; ls /app; cd /app"
-  - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.11 -c pwd
-  - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.11 -c yarn global add codecov
-  - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.11 -c yarn
+  - docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.12 -c "echo $CODECOV_TOKEN; ls /app; cd /app; yarn; yarn test-ci; codecov"
 #- |
 #  docker run -v $(pwd):/app -e CODECOV_TOKEN="$CODECOV_TOKEN" vanbujm/moonbase-balena:v0.1.0-circleciv0.2.4 -c "echo $CODECOV_TOKEN; \
 #      cd /app; \
