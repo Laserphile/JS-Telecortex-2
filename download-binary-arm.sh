@@ -5,16 +5,20 @@ RELEASE=v0.1.1-alpha
 BINARY=essential-build-artifacts-arm.zip
 UNZIPPED_BINARY=essential-build-artifacts-arm
 
-if [[ -e $BINARY ]]
+if [[ -f "$BINARY" ]]
 then
   echo "zip file in the way: '$BINARY' remove it."
   exit 1
+else
+  echo "zip file not found"
 fi
 
 if [[ -d UNZIPPED_BINARY ]]
 then
   echo "folder in the way: '$BINARY' remove it."
   exit 1
+else
+  echo "folder not found"
 fi
 
 URL="$BASE_URL/$RELEASE/$BINARY"
