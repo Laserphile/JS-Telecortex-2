@@ -11,6 +11,19 @@ script:
   - cat resinkey >> ~/.ssh/known_hosts
   - git remote add balena $BALENA_REMOTE
   - git push balena master
+
+jobs:
+  include:
+    - stage: deploy
+      script:
+        - eval "$(ssh-agent -s)" #start the ssh agent
+        - echo -e $BALENA_CLOUD_KEY > id_rsa
+        - chmod 0600 id_rsa
+        - ssh-add ./id_rsa
+        - cat balenakey >> ~/.ssh/known_hosts
+        - git remote add balena $BALENA_REMOTE
+        - git push balena master
+
 notifications:
   slack:
     rooms:
