@@ -5,12 +5,7 @@ RELEASE=v0.1.1-alpha
 BINARY=essential-build-artifacts-arm.zip
 UNZIPPED_BINARY=essential-build-artifacts-arm
 
-echo 'pwd'
-pwd
-echo 'ls'
-ls
-
-if [[ -f ./$BINARY ]]
+if [[ -f $BINARY ]]
 then
   echo "zip file found"
   unzip -q $BINARY
@@ -22,7 +17,7 @@ else
   echo ./$BINARY
 fi
 
-if [[ -d ./UNZIPPED_BINARY ]]
+if [[ -d $UNZIPPED_BINARY ]]
 then
   echo "folder found"
   rm -rdf node_modules/opencv4nodejs node_modules/opencv-build
