@@ -5,20 +5,27 @@ RELEASE=v0.1.1-alpha
 BINARY=essential-build-artifacts-arm.zip
 UNZIPPED_BINARY=essential-build-artifacts-arm
 
-if [[ -f "$BINARY" ]]
+if [[ -f ./$BINARY ]]
 then
-  echo "zip file in the way: '$BINARY' remove it."
-  exit 1
+  echo "zip file found"
+  unzip -q $BINARY
+  rm -rdf node_modules/opencv4nodejs node_modules/opencv-build
+  cp -R $UNZIPPED_BINARY/ node_modules/
+  exit 0
 else
   echo "zip file not found"
+  echo ./$BINARY
 fi
 
-if [[ -d UNZIPPED_BINARY ]]
+if [[ -d ./UNZIPPED_BINARY ]]
 then
-  echo "folder in the way: '$BINARY' remove it."
-  exit 1
+  echo "folder found"
+  rm -rdf node_modules/opencv4nodejs node_modules/opencv-build
+  cp -R $UNZIPPED_BINARY/ node_modules/
+  exit 0
 else
   echo "folder not found"
+  echo ./$UNZIPPED_BINARY
 fi
 
 URL="$BASE_URL/$RELEASE/$BINARY"
