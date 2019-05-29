@@ -8,5 +8,6 @@ RUN sudo apt-get install ca-certificates
 RUN yarn global add codecov
 LABEL com.circleci.preserve-entrypoint=true
 ENV QEMU_EXECVE=1
+ENV OPENCV4NODEJS_DISABLE_AUTOBUILD=1
 RUN [ "cross-build-end" ]
 ENTRYPOINT ["/usr/bin/qemu-arm-static", "/bin/bash"]
