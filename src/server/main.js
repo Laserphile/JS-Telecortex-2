@@ -2,6 +2,7 @@
 import { opcTCPServer } from './opc/tcp-server';
 import { RPI_SPIDEVS, FRESH_CONTEXT, SERVER_CONF } from '../constants';
 
+console.log('test change');
 let SPI;
 // noinspection ES6ModulesDependencies
 if (process.platform === 'linux') {

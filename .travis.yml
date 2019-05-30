@@ -24,8 +24,8 @@ jobs:
         - ssh-add ./id_rsa
         - cat balenakey >> ~/.ssh/known_hosts
         - git fetch --unshallow origin
+        - git add --all
         - git remote add balena ${BALENA_REMOTE}
-        - ls
         - git push -f balena master
       cache:
         yarn: true
