@@ -1,5 +1,5 @@
 import { mapValues, flatten } from 'lodash';
-import { createGammaTable } from './graphics';
+import { createGammaTable } from './index';
 
 // 8bit unsigned integer must be less than this value
 const uint8Max = 0x100;
