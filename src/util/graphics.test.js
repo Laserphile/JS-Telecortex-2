@@ -1,7 +1,5 @@
 import cv from 'opencv4nodejs';
 import {
-  coloursToString,
-  colourRateLogger,
   rgbTocvPixelRaw,
   cvPixelToRgb,
   fillRainbows,
@@ -15,7 +13,7 @@ import {
   cvWhitePixel,
   directRainbows
 } from './graphics';
-import { now } from '.';
+import { colourRateLogger, coloursToString, now } from '.';
 
 const someColours = [
   { r: 0xff, g: 0x00, b: 0x00 },

@@ -2,8 +2,7 @@
 /* eslint-disable no-param-reassign */
 import chalk from 'chalk';
 import { OPC_HEADER_LEN, parseOPCBody, parseOPCHeader } from './parser';
-import { consoleErrorHandler } from '../../util';
-import { colourRateLogger } from '../../util/graphics';
+import { colourRateLogger, consoleErrorHandler } from '../../util';
 import { colours2sk9822 } from '../../util/sk9822';
 import { PartialOPCMsgError } from './errors';
 

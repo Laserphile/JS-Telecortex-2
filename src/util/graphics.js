@@ -1,14 +1,12 @@
 // TODO remove this eslint disable
 /* eslint-disable no-param-reassign */
-import chalk from 'chalk';
-import { rgbToHsv, hslToRgb, rgbToHex } from 'colorsys';
+import { hslToRgb } from 'colorsys';
 import { times } from 'lodash';
 import cv from 'opencv4nodejs';
 import { norm } from 'mathjs';
 import SimplexNoise from 'simplex-noise';
-import { now, msNow, nowFloat, denormalizeCoordinate } from './index';
+import { denormalizeCoordinate, msNow, nowFloat } from './index';
 
-export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
 const opencvChannelFields = ['b', 'g', 'r'];
 export const IMG_SIZE = 512;
 export const MAX_HUE = 360.0;
@@ -17,42 +15,6 @@ export const MAIN_WINDOW = 'Telecortex';
 const DOT_RADIUS = 2;
 const PREVIEW_FRAMERATE = 1;
 export const defaultHSV = { h: 360, s: 100, v: 50 };
-
-/**
- * Convert a single colorsys object to string
- * @param {colorsys RGB object} colour
- */
-export const colourToString = colour => rgbToHex(colour);
-
-/**
- * Convert a colours specification to string
- * @param {Array of colorsys RGB objects} colours
- */
-export const coloursToString = colours =>
-  colours.reduce(
-    (accumulator, colour) =>
-      accumulator.concat(colourMessage(rgbToHsv(colour).h, colourToString(colour))),
-    ''
-  );
-
-/**
- * Middleware used to log a colour being processed, and the framerate.
- * @param {object} context
- */
-export const colourRateLogger = context => {
-  const { start = 0, lastPrint = now(), frames = 0, channelColours } = context;
-  context.frames += 1;
-  if (now() - lastPrint > 1) {
-    context.rate = frames / (now() - start + 1);
-    console.log(
-      `${coloursToString(Object.values(channelColours)[0].slice(0, 10))} : ${context.rate.toFixed(
-        2
-      )}`
-    );
-    context.lastPrint = now();
-  }
-  return context;
-};
 
 export const rgbTocvPixelRaw = rgb => opencvChannelFields.map(key => rgb[key]);
 

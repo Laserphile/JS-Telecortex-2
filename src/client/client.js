@@ -8,8 +8,7 @@ import net from 'net';
 import async from 'async';
 import { readFileSync } from 'fs';
 import { opcClientDriver } from './drivers/driverFactory';
-import { msNow } from '../util';
-import { colourRateLogger } from '../util/graphics';
+import { colourRateLogger, msNow } from '../util';
 import {
   animationOptions,
   serverOptions,

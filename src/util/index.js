@@ -1,5 +1,9 @@
+// TODO remove this eslint disable
+/* eslint-disable no-param-reassign */
 import { promisify } from 'util';
 import { clamp } from 'lodash';
+import { rgbToHex, rgbToHsv } from 'colorsys';
+import chalk from 'chalk';
 
 export const msNowFloat = () => new Date().getTime();
 
@@ -38,4 +42,40 @@ export const denormalizeCoordinate = (shape, coordinate) => {
     clamp(minDimension * coordinate[0] + deltaDimension / 2, 0, shape[0] - 1),
     clamp(minDimension * coordinate[1], 0, shape[1] - 1)
   ];
+};
+
+/**
+ * Convert a single colorsys object to string
+ * @param {colorsys RGB object} colour
+ */
+export const colourToString = colour => rgbToHex(colour);
+
+export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
+/**
+ * Convert a colours specification to string
+ * @param {Array of colorsys RGB objects} colours
+ */
+export const coloursToString = colours =>
+  colours.reduce(
+    (accumulator, colour) =>
+      accumulator.concat(colourMessage(rgbToHsv(colour).h, colourToString(colour))),
+    ''
+  );
+/**
+ * Middleware used to log a colour being processed, and the framerate.
+ * @param {object} context
+ */
+export const colourRateLogger = context => {
+  const { start = 0, lastPrint = now(), frames = 0, channelColours } = context;
+  context.frames += 1;
+  if (now() - lastPrint > 1) {
+    context.rate = frames / (now() - start + 1);
+    console.log(
+      `${coloursToString(Object.values(channelColours)[0].slice(0, 10))} : ${context.rate.toFixed(
+        2
+      )}`
+    );
+    context.lastPrint = now();
+  }
+  return context;
 };
