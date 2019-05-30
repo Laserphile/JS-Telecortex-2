@@ -23,121 +23,51 @@ A rewrite of the [Telecortex](https://github.com/laserphile/telecortex) project 
 
 ![codecoverage-svg-sunburst]( https://codecov.io/gh/Laserphile/JS-Telecortex-2/branch/master/graphs/sunburst.svg)
 
-## Install on Raspbian from scratch
-Follow [this guide](https://styxit.com/2017/03/14/headless-raspberry-setup.html) for instructions to setup up headless ssh over wifi.
+## RaspberryPi Setup
+Sign up for [BalenaCloud](https://www.balena.io/cloud/) and set up an application. Use its wizard to make an image with 
+your network details. 
 
-### Enable all 4 SPI ports on raspberry pi
-(this can be done by editing the file on the SD card, or while the pi is on)
-As root, add the lines
-```
-dtparam=spi=on
-dtoverlay=spi1-2cs
-```
-to `/boot/config.txt` and reboot.
-For more options (e.g. 5 SPI devices) and pinouts see `/boot/overlays/README`.
+Or you can download and configure your own image as long as it runs docker. Head over to https://www.balena.io/os/#download and get yourself a BalenaOS image.
 
-To test, `ls /dev | grep spidev` should show
-```
-spidev0.0
-spidev0.1
-spidev1.0
-spidev1.1
-```
+Once the Pi(s) is running you can push an image to it by following the instructions [below](#balena-dev-setup)
 
-### Housekeeping
+## OSX setup
+There are many ways to scream in frustration about opencv4nodejs. But this is my favorite way.
+
+Make sure your Node version is shit. My favorite outdated version is `v11.15.0`. Anything newer and you are in the *_\*DANGER ZONE\*_*.
+
+Make sure opencv is *not* installed. Seriously, I spent days on this and only a pristine slate worked for me.
+- `brew uninstall opencv opencv@2 opencv@3`
+- `brew uninstall ffmpeg tesseract`
+
+Install yarn `brew install yarn`
+
+Now you can run `yarn`. It will hide the build output, but be patient and it should work.
+IF you are stuck on this for ages its a good thing:
+```
+[1/4] 🔍  Resolving packages...
+[2/4] 🚚  Fetching packages...
+[3/4] 🔗  Linking dependencies...
+[4/4] 🔨  Building fresh packages...
+[1/10] ⠄ opencv-build
+[-/10] ⠄ waiting...
+[-/10] ⠄ waiting...
+[-/10] ⡀ waiting...
+[-/10] ⡀ waiting...
+```
+### You lied and it still fails to build
+Try this: ¯\\\_(ツ)\_/¯
 ```bash
-# Fresh pi needs update
-sudo apt-get update && sudo apt-get upgrade
-# Install vim
-sudo apt-get install vim
-# Install git
-sudo apt-get install git
-# Install zip
-sudo apt-get install zip
-# fix locale
-sudo vim /etc/locale.gen
-# uncomment the line corresponding to your locale, e.g. en_AU.UTF-8
-sudo locale-gen en_AU.UTF-8
-sudo update-locale en_AU.UTF-8
-# If you have multiple servers, set your hostname to something unique
-sudo vim /etc/hostname
-```
-### Install Node / Yarn
-
-#### 1. Install build tools
-```
-sudo apt-get install gcc g++ make cmake libopencv-dev
-```
-#### 2. Install Node
-Determine architecture
-```
-uname -m
-```
-*If you have an Armv7 or later Pi: (Model 2B, 3\*)*
-
-If you just run `sudo apt-get install nodejs` you will get an old version of node. We want version 11.
-```
-# install node 11
-curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
-sudo apt-get install -y nodejs
-```
-*If you have an Armv6 Pi: (Model A, B, Zero)*
-May not be possible to install a version of node later than 8 which is required
-
-#### 3. Install yarn
-If you just run `sudo apt-get install yarn` you will install [the wrong yarn](http://manpages.ubuntu.com/manpages/xenial/man1/yarn.1.html).
-```
-curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-sudo apt-get update && sudo apt-get install yarn
-```
-#### 4. Clone this repo
-```
-mkdir -p Documents/GitHub
-git clone https://github.com/Laserphile/JS-Telecortex-2 Documents/GitHub/JS-Telecortex-2
-cd ~/Documents/GitHub/JS-Telecortex-2
-```
-
-#### 5. Install JS dependencies
-
-Install the opencv4nodejs npm package manually. This will take a long time.
-```bash
-npm install --force --save opencv4nodejs@4.14.0
-```
-Install JS dependencies
-In order to stop opencv from re-building every time you change your yarn packages, you must add OPENCV4NODEJS_DISABLE_AUTOBUILD=1 to your environment.
-```
-OPENCV4NODEJS_DISABLE_AUTOBUILD=1 yarn install
-```
-
-## Install on OSX
-Install yarn
-```bash
-brew install yarn
-```
-Build opencv from source, it takes longer but it means things built in gyp are built with the same c compile that opencv is
-```bash
-brew install opencv@3 -s
-brew unlink opencv
-brew link --overwrite opencv@3
-```
-Smash this in your bashrc/zshrc file:
-```bash
-export PATH="/usr/local/opt/opencv@3/bin:$PATH"
-export LDFLAGS="-L/usr/local/opt/opencv@3/lib"
-export CPPFLAGS="-I/usr/local/opt/opencv@3/include"
-export PKG_CONFIG_PATH="/usr/local/opt/opencv@3/lib/pkgconfig"
-``` 
-Make sure your node version is no greater than 11.10.xx
-Make sure node-gyp is using the correct node version (errors displayed below will have the node-gyp directory)
-Now and try and install...
-```
-OPENCV4NODEJS_DISABLE_AUTOBUILD=1 yarn install
-```
-If this doesn't work run this
-```bash
+yarn --ignore-scripts
 ./download-binary.sh
 ```
+
+### Balena dev setup
+If you want to push to your pi without going through the pipeline. Make sure you also "enable local mode" on BalenaCloud if its a cloud image.
+- `npm install --global --production --unsafe-perm balena-cli`
+- `sudo balena local scan`
+Get the ip address of the device you want to push to from the output.
+- `sudo balena push 192.168.1.120` or whatever the IP is.
 
 # Usage
 
