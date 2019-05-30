@@ -16,6 +16,7 @@ jobs:
     - stage: build_and_deploy
       script:
         - set -e
+        - grep -v "build" .gitignore > temp && mv temp .gitignore
         - docker run -v $(pwd):/app -v $(yarn cache dir):/yarn-cache -e CODECOV_TOKEN="$CODECOV_TOKEN" -e BALENA_CLOUD_KEY="$BALENA_CLOUD_KEY" -e BALENA_REMOTE="$BALENA_REMOTE" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14 -c "cd /app && ./install-arm.sh && ./download-binary-arm.sh && ./build-server.sh"
         - eval "$(ssh-agent -s)"
         - echo -e ${BALENA_CLOUD_KEY} > id_rsa
@@ -23,11 +24,6 @@ jobs:
         - ssh-add ./id_rsa
         - cat balenakey >> ~/.ssh/known_hosts
         - git fetch --unshallow origin
-        - grep -v "build" .gitignore > temp && mv temp .gitignore
-        - find node_modules -type d -not -name 'pi-spi' -maxdepth 1 | rm -rdf
-        - git add -fA
-        - git commit -m "build"
-        - git status
         - git remote add balena ${BALENA_REMOTE}
         - git push -f balena master
       cache:
