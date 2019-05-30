@@ -2,7 +2,8 @@
 
 echo "Building..."
 ls essential-build-artifacts-arm
-ls node_modules/pi-spi || cp -R essential-build-artifacts-arm/pi-spi node_modules/
+cp -R essential-build-artifacts-arm/pi-spi node_modules/
+ls node_modules/pi-spi
 cat pi-spi-build-patch.js > node_modules/pi-spi/index.js
 npm run build-server
 #echo "Build complete cleaning up..."
