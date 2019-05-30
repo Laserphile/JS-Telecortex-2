@@ -21,6 +21,7 @@ jobs:
         - chmod 0600 id_rsa
         - ssh-add ./id_rsa
         - cat balenakey >> ~/.ssh/known_hosts
+        - git fetch --unshallow origin
         - docker run -v $(pwd):/app -v $(yarn cache dir):/yarn-cache -e CODECOV_TOKEN="$CODECOV_TOKEN" -e BALENA_CLOUD_KEY="$BALENA_CLOUD_KEY" -e BALENA_REMOTE="$BALENA_REMOTE" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14 -c "cd /app && ./install-arm.sh && ./download-binary-arm.sh && ./build-server.sh && ./deploy.sh"
       cache:
         yarn: true
