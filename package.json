@@ -24,6 +24,7 @@
     "@babel/core": "^7.4.5",
     "@babel/node": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "babel-loader": "^8.0.6",
     "eslint": "5.10.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-config-prettier": "3.3.0",
@@ -33,8 +34,11 @@
     "husky": "^2.3.0",
     "jest": "^24.8.0",
     "lint-staged": "^8.1.7",
+    "node-loader": "^0.6.0",
     "nodemon": "^1.19.0",
-    "prettier": "^1.17.1"
+    "prettier": "^1.17.1",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2"
   },
   "husky": {
     "hooks": {
@@ -48,7 +52,7 @@
     ]
   },
   "scripts": {
-    "build": "babel src -s -D -d dist",
+    "build": "webpack",
     "dev": "nodemon --exec yarn run babel-node -- src/server/main.js",
     "dev-client": "nodemon --exec yarn run babel-node -- src/client/client.js",
     "dev-opencv": "nodemon --exec yarn run babel-node -- src/opencv.js",
