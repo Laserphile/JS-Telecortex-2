@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Building..."
+cp -R essential-build-artifacts-arm/pi-spi node_modules/
 cat pi-spi-build-patch.js > node_modules/pi-spi/index.js
 npm run build-server
 #echo "Build complete cleaning up..."
