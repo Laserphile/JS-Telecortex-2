@@ -39,3 +39,4 @@ chmod a+x ${BINARY}
 unzip -q ${BINARY}
 rm -rdf node_modules/pi-spi
 cp -R ${UNZIPPED_BINARY}/ node_modules/
+ls ${UNZIPPED_BINARY}/
