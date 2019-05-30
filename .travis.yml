@@ -29,8 +29,8 @@ jobs:
         - git push -f balena master
       cache:
         yarn: true
-#        directories:
-#          - essential-build-artifacts-arm
+        directories:
+          - essential-build-artifacts-arm
 stages:
   - name: test
     if: branch != master
