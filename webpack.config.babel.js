@@ -2,7 +2,7 @@ import path from 'path';
 
 export default {
   output: {
-    path: path.join(__dirname, 'build'),
+    path: path.join(__dirname, `built-${process.env.BUILD_TYPE}`),
     filename: `${process.env.BUILD_TYPE}.bundle.js`,
     publicPath: '/'
   },
