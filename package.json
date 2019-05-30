@@ -52,7 +52,8 @@
     ]
   },
   "scripts": {
-    "build": "webpack",
+    "build-client": "BUILD_TYPE=client webpack",
+    "build-server": "BUILD_TYPE=server webpack",
     "dev": "nodemon --exec yarn run babel-node -- src/server/main.js",
     "dev-client": "nodemon --exec yarn run babel-node -- src/client/client.js",
     "dev-opencv": "nodemon --exec yarn run babel-node -- src/opencv.js",

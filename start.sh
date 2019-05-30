@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-node build/bundle.js
+node build/server.bundle.js

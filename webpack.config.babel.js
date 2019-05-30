@@ -3,11 +3,11 @@ import path from 'path';
 export default {
   output: {
     path: path.join(__dirname, 'build'),
-    filename: 'bundle.js',
+    filename: `${process.env.BUILD_TYPE}.bundle.js`,
     publicPath: '/'
   },
   mode: 'production',
-  entry: './src/client/client.js',
+  entry: process.env.BUILD_TYPE === 'client' ? './src/client/client.js' : './src/server/main.js',
   target: 'node',
   module: {
     rules: [
