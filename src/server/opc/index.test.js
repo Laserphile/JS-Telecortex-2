@@ -1,14 +1,28 @@
 import { handleOPCMessage, handleAllOPCMessages } from './index';
 import 'jest/build/jest';
-import { composeOPCHeader } from './compose';
-import { mockSpi0, singleChannels } from '../../client/drivers/driverFactory.test';
+import { composeOPCHeader } from '../../util/compose';
+import { mockSingleChannel, mockSpi } from '../../testing';
+
+const mockSpi0 = mockSpi(jest.fn());
 
 const mockContext = {
-  channels: singleChannels
+  channels: mockSingleChannel(mockSpi0)
 };
 
 const redPixel = [0xff, 0x00, 0x00];
 const incompleteRedPixel = redPixel.slice(0, redPixel.length - 1);
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+const oldError = console.error;
+
+console.error = jest.fn();
+afterAll(() => {
+  jest.resetAllMocks();
+  console.error = oldError;
+});
 
 describe('handleOPCMessage', () => {
   [

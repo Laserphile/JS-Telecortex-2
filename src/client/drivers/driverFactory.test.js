@@ -1,42 +1,12 @@
 import { difference } from 'lodash';
-import { driverFactory, opcClientDriver, ledDriver } from './driverFactory';
-import { singleRainbow, rainbowFlow, coloursToAllChannels, coloursToChannels } from './middleware';
+import { driverFactory, ledDriver, opcClientDriver } from './driverFactory';
+import { coloursToAllChannels, coloursToChannels, rainbowFlow, singleRainbow } from './middleware';
+import { mockMultiChannel, mockSingleChannel, mockSpi } from '../../testing';
 
-export const mockSpi0 = { transfer: jest.fn() };
-export const mockSpi1 = { transfer: jest.fn() };
-export const mockSpi2 = { transfer: jest.fn() };
-export const mockSpi3 = { transfer: jest.fn() };
-
-export const singleChannels = {
-  0: {
-    bus: 0,
-    device: 0,
-    spi: mockSpi0
-  }
-};
-
-export const multiChannels = {
-  0: {
-    bus: 0,
-    device: 0,
-    spi: mockSpi0
-  },
-  1: {
-    bus: 0,
-    device: 1,
-    spi: mockSpi1
-  },
-  2: {
-    bus: 1,
-    device: 0,
-    spi: mockSpi2
-  },
-  3: {
-    bus: 0,
-    device: 1,
-    spi: mockSpi3
-  }
-};
+const mockSpi0 = mockSpi(jest.fn());
+const mockSpi1 = mockSpi(jest.fn());
+const mockSpi2 = mockSpi(jest.fn());
+const mockSpi3 = mockSpi(jest.fn());
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -56,7 +26,7 @@ describe('ledDriver', () => {
   it('transfers data', () => {
     const staticRainbow = driverFactory(
       {
-        channels: multiChannels,
+        channels: mockMultiChannel(mockSpi0, mockSpi1, mockSpi2, mockSpi3),
         channelColours
       },
       [],
@@ -72,8 +42,8 @@ describe('ledDriver', () => {
   it("doesn't send the same value when driving rainbows", () => {
     const staticRainbow = driverFactory(
       {
-        spidevs: singleChannels,
-        channels: multiChannels
+        spidevs: mockSingleChannel(mockSpi0),
+        channels: mockMultiChannel(mockSpi0, mockSpi1, mockSpi2, mockSpi3)
       },
       [singleRainbow, coloursToAllChannels],
       ledDriver
@@ -89,7 +59,7 @@ describe('ledDriver', () => {
   it('sends colours to the right channels', () => {
     const staticRainbow = driverFactory(
       {
-        channels: multiChannels
+        channels: mockMultiChannel(mockSpi0, mockSpi1, mockSpi2, mockSpi3)
       },
       [
         singleRainbow,
@@ -111,7 +81,7 @@ describe('ledDriver', () => {
   });
 
   it('logs spi transfer errors', () => {
-    const singleErroringChannel = JSON.parse(JSON.stringify(singleChannels));
+    const singleErroringChannel = JSON.parse(JSON.stringify(mockSingleChannel(mockSpi0)));
     singleErroringChannel[0].spi.transfer = (_, __, callback) => {
       const err = new Error('test');
       callback(err);
@@ -126,7 +96,7 @@ describe('ledDriver', () => {
   });
 
   it('ignores spi loopback', () => {
-    const singleLoopingChannel = JSON.parse(JSON.stringify(singleChannels));
+    const singleLoopingChannel = JSON.parse(JSON.stringify(mockSingleChannel(mockSpi0)));
     singleLoopingChannel[0].spi.transfer = (data, length, callback) => {
       callback(undefined, data.slice(0, length));
     };
@@ -147,13 +117,13 @@ describe('opcClientDriver', () => {
       {
         client: mockClient,
         channelColours,
-        channels: multiChannels
+        channels: mockMultiChannel(mockSpi0, mockSpi1, mockSpi2, mockSpi3)
       },
       [rainbowFlow, coloursToChannels([2])],
       opcClientDriver
     );
     rainbowFlowLoop();
     expect(mockClient.write.mock.calls.length).toBe(1);
-    expect(mockClient.write.mock.calls.length).toMatchSnapshot();
+    expect(mockClient.write.mock.calls.length).toMatchInlineSnapshot(`1`);
   });
 });
