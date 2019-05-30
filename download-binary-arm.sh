@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BASE_URL=https://github.com/Laserphile/JS-Telecortex-2/releases/download
-RELEASE=v0.1.2-alpha
+RELEASE=v0.1.1-alpha
 BINARY=essential-build-artifacts-arm.zip
 UNZIPPED_BINARY=essential-build-artifacts-arm
 
@@ -9,7 +9,7 @@ if [[ -f $BINARY ]]
 then
   echo "zip file found"
   unzip -q $BINARY
-  rm -rdf node_modules/pi-spi
+  rm -rdf node_modules/opencv4nodejs node_modules/opencv-build
   cp -R $UNZIPPED_BINARY/ node_modules/
   exit 0
 else
@@ -19,7 +19,7 @@ fi
 if [[ -d $UNZIPPED_BINARY ]]
 then
   echo "folder found"
-  rm -rdf node_modules/pi-spi
+  rm -rdf node_modules/opencv4nodejs node_modules/opencv-build
   cp -R $UNZIPPED_BINARY/ node_modules/
   exit 0
 else
@@ -34,5 +34,5 @@ wget -q -O $BINARY "$URL"
 file $BINARY
 chmod a+x $BINARY
 unzip -q $BINARY
-rm -rdf node_modules/pi-spi
+rm -rdf node_modules/opencv4nodejs node_modules/opencv-build
 cp -R $UNZIPPED_BINARY/ node_modules/

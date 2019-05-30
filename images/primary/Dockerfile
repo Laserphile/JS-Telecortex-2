@@ -9,8 +9,6 @@ RUN sudo apt-get install file
 RUN yarn global add codecov
 LABEL com.circleci.preserve-entrypoint=true
 ENV QEMU_EXECVE=1
-RUN git clone https://github.com/Laserphile/JS-Telecortex-2 && cd JS-Telecortex-2
-RUN ./install.sh
-RUN yarn build-server
+ENV OPENCV4NODEJS_DISABLE_AUTOBUILD=1
 RUN [ "cross-build-end" ]
 ENTRYPOINT ["/usr/bin/qemu-arm-static", "/bin/bash"]
