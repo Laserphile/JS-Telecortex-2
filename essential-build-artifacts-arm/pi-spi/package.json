@@ -1,0 +1,55 @@
+{
+  "_from": "pi-spi@^1.0.3",
+  "_id": "pi-spi@1.0.3",
+  "_inBundle": false,
+  "_integrity": "sha512-dMEJTxWKRj9/pIys0w5d/k5rSRrP1NbOEz2oUqCxoliBlcPZPwaPGstTiV4vCda8Kb0ZYzfWVnUjA9M/HpABBA==",
+  "_location": "/pi-spi",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "pi-spi@^1.0.3",
+    "name": "pi-spi",
+    "escapedName": "pi-spi",
+    "rawSpec": "^1.0.3",
+    "saveSpec": null,
+    "fetchSpec": "^1.0.3"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/pi-spi/-/pi-spi-1.0.3.tgz",
+  "_shasum": "63a17629ae3830f08512fd926442ecfbf7fa3a7a",
+  "_spec": "pi-spi@^1.0.3",
+  "_where": "/usr/src/app",
+  "author": {
+    "name": "Nathan Vander Wilt"
+  },
+  "bugs": {
+    "url": "https://github.com/natevw/pi-spi/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "nan": "^2.3.5"
+  },
+  "deprecated": false,
+  "description": "Simple async SPI library for Raspberry Pi",
+  "gypfile": true,
+  "homepage": "https://github.com/natevw/pi-spi#readme",
+  "keywords": [
+    "raspi",
+    "spi"
+  ],
+  "license": "BSD-2-Clause",
+  "main": "index.js",
+  "name": "pi-spi",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/natevw/pi-spi.git"
+  },
+  "scripts": {
+    "install": "node-gyp rebuild",
+    "test": "node test"
+  },
+  "version": "1.0.3"
+}
