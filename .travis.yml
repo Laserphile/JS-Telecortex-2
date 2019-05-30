@@ -17,7 +17,7 @@ jobs:
       script:
         - set -e
         - ls
-        - docker run -v $(pwd):/app -v $(yarn cache dir):/yarn-cache -e CODECOV_TOKEN="$CODECOV_TOKEN" -e BALENA_CLOUD_KEY="$BALENA_CLOUD_KEY" -e BALENA_REMOTE="$BALENA_REMOTE" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14 -c "cd /app && grep -v "opencv4nodejs" package.json > temp && mv temp package.json && yarn --cache-folder /yarn-cache && ./build-server.sh && ./deploy.sh"
+        - docker run -v $(pwd):/app -v $(yarn cache dir):/yarn-cache -e CODECOV_TOKEN="$CODECOV_TOKEN" -e BALENA_CLOUD_KEY="$BALENA_CLOUD_KEY" -e BALENA_REMOTE="$BALENA_REMOTE" vanbujm/moonbase-balena:v0.1.0-ci-v0.2.14 -c "cd /app && yarn --ignore-scripts --cache-folder /yarn-cache && ./download-binary-arm.sh && ./build-server.sh"
 #        - ls
 #        - eval "$(ssh-agent -s)"
 #        - echo -e $BALENA_CLOUD_KEY > id_rsa
