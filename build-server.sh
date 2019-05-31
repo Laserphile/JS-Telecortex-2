@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
-echo "Building..."
-cp -R essential-build-artifacts-arm/pi-spi node_modules/
-cat pi-spi-build-patch.js > node_modules/pi-spi/index.js
-npm run build-server
-#echo "Build complete cleaning up..."
-#mv node_modules node_modules-old
-#mkdir node_modules
-#cp -R node_modules-old/pi-spi node_modules/
-#find . -type f -not -name 'build' -not -name 'node_modules' -delete
+build () {
+  echo "Installing dependencies..."
+  rm -rdf node_modules
+  grep -v "opencv4nodejs" package.json > temp && mv temp package.json
+  yarn
+  cat pi-spi-build-patch.js > node_modules/pi-spi/index.js
+  echo "Building..."
+  npm run build-server
+  echo "Cleaning up..."
+  find node_modules -maxdepth 1  -type d -not -name 'pi-spi' -maxdepth 1 | rm -rdf
+  find . -maxdepth 1  -type d -not -name 'node_modules' -not -name 'built-server' | rm -rdf
+}
+
+build
