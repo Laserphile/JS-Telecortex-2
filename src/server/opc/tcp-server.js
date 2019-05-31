@@ -45,6 +45,7 @@ export const opcTCPServer = context => {
   });
 
   context.server.listen(opcPort, () => {
+    console.log('a change');
     console.log(chalk`{cyan 🛰  Server} listening on port: {white ${opcPort}}`);
   });
 };
