@@ -11,6 +11,8 @@ build () {
   echo "Cleaning up..."
   find node_modules -maxdepth 1  -type d -not -name 'pi-spi' -maxdepth 1 | rm -rdf
   find . -maxdepth 1  -type d -not -name 'node_modules' -not -name 'built-server' | rm -rdf
+  ls
+  ls node_modules
 }
 
 build
