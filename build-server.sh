@@ -9,8 +9,8 @@ build () {
   echo "Building..."
   npm run build-server
   echo "Cleaning up..."
-  find node_modules -maxdepth 1  -type d -not -name 'pi-spi' -maxdepth 1 | rm -rdf
-  find . -maxdepth 1  -type d -not -name 'node_modules' -not -name 'built-server' | rm -rdf
+  sudo find node_modules -maxdepth 1  -type d -not -name 'pi-spi' -maxdepth 1 -delete
+  sudo find . -maxdepth 1  -type d -not -name 'node_modules' -not -name 'built-server' -delete
   ls
   ls node_modules
 }
