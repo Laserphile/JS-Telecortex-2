@@ -1,13 +1,13 @@
 /* eslint-disable global-require,no-param-reassign */
 import { opcTCPServer } from './opc/tcp-server';
-import { RPI_SPIDEVS, FRESH_CONTEXT, SERVER_CONF } from '../constants';
+import { RPI_SPIDEVS, FRESH_CONTEXT, SERVER_CONF } from '../util/constants';
 
 let SPI;
 // noinspection ES6ModulesDependencies
 if (process.platform === 'linux') {
   SPI = require('pi-spi');
 } else {
-  SPI = require('../util/testSpi').default;
+  SPI = require('./testSpi').default;
 }
 
 const server = () => {

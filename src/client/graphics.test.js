@@ -13,7 +13,8 @@ import {
   cvWhitePixel,
   directRainbows
 } from './graphics';
-import { colourRateLogger, coloursToString, now } from '.';
+import { now } from '../util';
+import { colourRateLogger, coloursToString } from '../util/colorManipulation';
 
 const someColours = [
   { r: 0xff, g: 0x00, b: 0x00 },

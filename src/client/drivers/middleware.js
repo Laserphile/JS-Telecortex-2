@@ -1,7 +1,7 @@
 // TODO remove this eslint disable
 /* eslint-disable no-param-reassign */
 import { hsvToRgb } from 'colorsys';
-import { defaultHSV } from '../../util/graphics';
+import { defaultHSV } from '../graphics';
 
 /**
  * Send a single colour to all pixels which changes over time

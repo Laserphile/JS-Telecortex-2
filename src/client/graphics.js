@@ -5,7 +5,7 @@ import { times } from 'lodash';
 import cv from 'opencv4nodejs';
 import { norm } from 'mathjs';
 import SimplexNoise from 'simplex-noise';
-import { denormalizeCoordinate, msNow, nowFloat } from './index';
+import { denormalizeCoordinate, msNow, nowFloat } from '../util';
 
 const opencvChannelFields = ['b', 'g', 'r'];
 export const IMG_SIZE = 512;

@@ -1,6 +1,6 @@
 import { flow } from 'lodash/util';
 import { consoleErrorHandler } from '../../util';
-import { colours2sk9822 } from '../../util/sk9822';
+import { colours2sk9822 } from '../../util/colorManipulation';
 import { composeOPCMessage } from '../../util/compose';
 
 // const transferDataAsync = async (spi, dataBuff) => {

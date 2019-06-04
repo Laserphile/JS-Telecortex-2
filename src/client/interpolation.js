@@ -1,5 +1,5 @@
 import { cvPixelToRgb } from './graphics';
-import { denormalizeCoordinate } from './index';
+import { denormalizeCoordinate } from '../util';
 
 /**
  * Get the colour of a pixel from its coordinates within an image.

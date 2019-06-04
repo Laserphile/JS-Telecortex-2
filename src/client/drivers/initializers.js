@@ -1,5 +1,5 @@
 import cv from 'opencv4nodejs';
-import { getSquareCanvas, setupMainWindow, showPreview } from '../../util/graphics';
+import { getSquareCanvas, setupMainWindow, showPreview } from '../graphics';
 
 /**
  * Initializer used for animations which involve canvases

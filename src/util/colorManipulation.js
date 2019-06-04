@@ -1,5 +1,9 @@
-import { mapValues, flatten } from 'lodash';
-import { createGammaTable } from './index';
+// TODO remove this eslint disable
+/* eslint-disable no-param-reassign */
+import { flatten, mapValues } from 'lodash';
+import { rgbToHex, rgbToHsv } from 'colorsys';
+import chalk from 'chalk';
+import { createGammaTable, now } from './index';
 
 // 8bit unsigned integer must be less than this value
 const uint8Max = 0x100;
@@ -35,3 +39,37 @@ export const rgb2sk9822 = (colour, brightness = 0.5) => {
  */
 export const colours2sk9822 = (colours, brightness) =>
   Array.from(resetFrame).concat(flatten(colours.map(colour => rgb2sk9822(colour, brightness))));
+/**
+ * Convert a single colorsys object to string
+ * @param {colorsys RGB object} colour
+ */
+export const colourToString = colour => rgbToHex(colour);
+export const colourMessage = (hue, msg) => chalk.hsv(hue, 50, 100)(msg);
+/**
+ * Convert a colours specification to string
+ * @param {Array of colorsys RGB objects} colours
+ */
+export const coloursToString = colours =>
+  colours.reduce(
+    (accumulator, colour) =>
+      accumulator.concat(colourMessage(rgbToHsv(colour).h, colourToString(colour))),
+    ''
+  );
+/**
+ * Middleware used to log a colour being processed, and the framerate.
+ * @param {object} context
+ */
+export const colourRateLogger = context => {
+  const { start = 0, lastPrint = now(), frames = 0, channelColours } = context;
+  context.frames += 1;
+  if (now() - lastPrint > 1) {
+    context.rate = frames / (now() - start + 1);
+    console.log(
+      `${coloursToString(Object.values(channelColours)[0].slice(0, 10))} : ${context.rate.toFixed(
+        2
+      )}`
+    );
+    context.lastPrint = now();
+  }
+  return context;
+};

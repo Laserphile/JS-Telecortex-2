@@ -9,9 +9,9 @@ import {
   applyDirect,
   basicText
 } from './drivers/superMiddleware';
-import { directRainbows, directSimplexRainbows } from '../util/graphics';
+import { directRainbows, directSimplexRainbows } from './graphics';
 import { canvasInit, previewInit, videoInit } from './drivers/initializers';
-import { opcPort } from '../constants';
+import { opcPort } from '../util/constants';
 import {
   MAPS_DOME_OVERHEAD,
   PANELS_DOME_OVERHEAD,
@@ -19,7 +19,7 @@ import {
   PANELS_SQUARE_SERP_9,
   MAPS_SQUARE_SERP_12,
   PANELS_SQUARE_SERP_12
-} from '../util/mapping';
+} from './mapping';
 
 export const animationOptions = {
   singleRainbow: {

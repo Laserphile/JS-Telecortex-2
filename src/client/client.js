@@ -8,7 +8,7 @@ import net from 'net';
 import async from 'async';
 import { readFileSync } from 'fs';
 import { opcClientDriver } from './drivers/driverFactory';
-import { colourRateLogger, msNow } from '../util';
+import { msNow } from '../util';
 import {
   animationOptions,
   serverOptions,
@@ -16,7 +16,8 @@ import {
   defaultConfig,
   clientArgs
 } from './options';
-import { FRESH_CONTEXT, CLIENT_CONF } from '../constants';
+import { FRESH_CONTEXT, CLIENT_CONF } from '../util/constants';
+import { colourRateLogger } from '../util/colorManipulation';
 
 /**
  * Context shared across all clients

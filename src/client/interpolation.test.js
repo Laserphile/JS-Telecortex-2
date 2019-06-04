@@ -1,7 +1,7 @@
 import cv from 'opencv4nodejs';
 import fs from 'fs';
 import { interpolatePixel, interpolatePixelMap } from './interpolation';
-import { denormalizeCoordinate } from './index';
+import { denormalizeCoordinate } from '../util';
 
 const testFilename = 'test_data/rainbow.png';
 

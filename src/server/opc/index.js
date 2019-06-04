@@ -2,9 +2,9 @@
 /* eslint-disable no-param-reassign */
 import chalk from 'chalk';
 import { OPC_HEADER_LEN, parseOPCBody, parseOPCHeader } from './parser';
-import { colourRateLogger, consoleErrorHandler } from '../../util';
-import { colours2sk9822 } from '../../util/sk9822';
+import { consoleErrorHandler } from '../../util';
 import { PartialOPCMsgError } from './errors';
+import { colourRateLogger, colours2sk9822 } from '../../util/colorManipulation';
 
 /**
  * Limit number of colours to display in a body dump

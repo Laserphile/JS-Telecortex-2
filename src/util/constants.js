@@ -1,4 +1,4 @@
-import { now } from './util';
+import { now } from './index';
 
 export const RPI_SPIDEVS = {
   0: {
@@ -46,3 +46,5 @@ export const FRESH_CONTEXT = {
   // Size of canvas (if used)
   canvasSize: 512
 };
+
+export const OPC_BODY_FIELDS = ['r', 'g', 'b'];

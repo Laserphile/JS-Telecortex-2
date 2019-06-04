@@ -1,4 +1,4 @@
-import { rgb2sk9822 } from './sk9822';
+import { rgb2sk9822 } from './colorManipulation';
 
 describe('rgb2sk9822', () => {
   it('works', () => {

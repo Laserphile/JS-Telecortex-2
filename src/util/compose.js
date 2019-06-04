@@ -1,4 +1,4 @@
-import { OPC_BODY_FIELDS } from '../server/opc/constants';
+import { OPC_BODY_FIELDS } from './constants';
 
 // eslint-disable-next-line no-bitwise
 export const composeOPCHeader = (channel, bytes) => [channel, 0, bytes >> 8, bytes % 0x100];
