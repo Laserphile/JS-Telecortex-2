@@ -12,7 +12,6 @@ build () {
   sudo find node_modules -maxdepth 1  -type d -not -name 'pi-spi' -maxdepth 1 -exec rm -rdf {} +
   sudo find . -maxdepth 1  -type d -not -name 'node_modules' -not -name 'built-server' -exec rm -rdf {} +
   ls
-  ls node_modules
 }
 
 build
