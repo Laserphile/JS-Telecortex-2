@@ -1,4 +1,5 @@
 import cv from 'opencv4nodejs';
+import { now, colourRateLogger, coloursToString } from '@js-telecortex-2/js-telecortex-2-util';
 import {
   rgbTocvPixelRaw,
   cvPixelToRgb,
@@ -13,8 +14,6 @@ import {
   cvWhitePixel,
   directRainbows
 } from './graphics';
-import { now } from '../util';
-import { colourRateLogger, coloursToString } from '../util/colorManipulation';
 
 const someColours = [
   { r: 0xff, g: 0x00, b: 0x00 },

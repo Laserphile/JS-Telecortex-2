@@ -1,5 +1,6 @@
 import { options } from 'yargs';
 import { mapValues } from 'lodash';
+import { opcPort } from '@js-telecortex-2/js-telecortex-2-util';
 import { singleRainbow, rainbowFlow, justBlack, coloursToAllChannels } from './drivers/middleware';
 import {
   basicRainbows,
@@ -11,7 +12,6 @@ import {
 } from './drivers/superMiddleware';
 import { directRainbows, directSimplexRainbows } from './graphics';
 import { canvasInit, previewInit, videoInit } from './drivers/initializers';
-import { opcPort } from '../util/constants';
 import {
   MAPS_DOME_OVERHEAD,
   PANELS_DOME_OVERHEAD,

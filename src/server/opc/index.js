@@ -2,9 +2,8 @@
 /* eslint-disable no-param-reassign */
 import chalk from 'chalk';
 import { OPC_HEADER_LEN, parseOPCBody, parseOPCHeader } from './parser';
-import { consoleErrorHandler } from '../../util';
+import { consoleErrorHandler, colourRateLogger, colours2sk9822  } from '@js-telecortex-2/js-telecortex-2-util';
 import { PartialOPCMsgError } from './errors';
-import { colourRateLogger, colours2sk9822 } from '../../util/colorManipulation';
 
 /**
  * Limit number of colours to display in a body dump

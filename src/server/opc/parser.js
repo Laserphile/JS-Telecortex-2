@@ -1,6 +1,6 @@
 import { parse } from 'binary';
+import { OPC_BODY_FIELDS } from '@js-telecortex-2/js-telecortex-2-util';
 import { PartialOPCMsgError } from './errors';
-import { OPC_BODY_FIELDS } from '../../util/constants';
 
 export const OPC_HEADER_LEN = 4;
 

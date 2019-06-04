@@ -1,6 +1,6 @@
 /* eslint-disable global-require,no-param-reassign */
+import { RPI_SPIDEVS, FRESH_CONTEXT, SERVER_CONF } from '@js-telecortex-2/js-telecortex-2-util';
 import { opcTCPServer } from './opc/tcp-server';
-import { RPI_SPIDEVS, FRESH_CONTEXT, SERVER_CONF } from '../util/constants';
 
 let SPI;
 // noinspection ES6ModulesDependencies

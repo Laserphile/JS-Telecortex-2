@@ -1,7 +1,9 @@
-import { flow } from 'lodash/util';
-import { consoleErrorHandler } from '../../util';
-import { colours2sk9822 } from '../../util/colorManipulation';
-import { composeOPCMessage } from '../../util/compose';
+import { flow } from 'lodash';
+import {
+  consoleErrorHandler,
+  colours2sk9822,
+  composeOPCMessage
+} from '@js-telecortex-2/js-telecortex-2-util';
 
 // const transferDataAsync = async (spi, dataBuff) => {
 //   return await Promise((resolve, reject) => {

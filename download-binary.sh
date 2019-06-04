@@ -19,7 +19,16 @@ copy-essential-build-artifacts () {
   cp -R essential-build-artifacts/ node_modules/
 }
 
-if [[ -f ${BINARY} ]]
+if [[ -d $UNZIPPED_BINARY ]]
+then
+  echo "folder found"
+  copy-essential-build-artifacts
+  exit 0
+else
+  echo "$UNZIPPED_BINARY folder not found"
+fi
+
+if [[ -f $BINARY ]]
 then
   echo "zip file found"
   set -e
@@ -28,15 +37,6 @@ then
   exit 0
 else
   echo "$BINARY file not found"
-fi
-
-if [[ -d ${UNZIPPED_BINARY} ]]
-then
-  echo "folder found"
-  copy-essential-build-artifacts
-  exit 0
-else
-  echo "$UNZIPPED_BINARY folder not found"
 fi
 
 download-essential-build-artifacts

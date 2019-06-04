@@ -1,5 +1,5 @@
+import { denormalizeCoordinate } from '@js-telecortex-2/js-telecortex-2-util';
 import { cvPixelToRgb } from './graphics';
-import { denormalizeCoordinate } from '../util';
 
 /**
  * Get the colour of a pixel from its coordinates within an image.

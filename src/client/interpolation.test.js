@@ -1,7 +1,7 @@
 import cv from 'opencv4nodejs';
 import fs from 'fs';
+import { denormalizeCoordinate } from '@js-telecortex-2/js-telecortex-2-util';
 import { interpolatePixel, interpolatePixelMap } from './interpolation';
-import { denormalizeCoordinate } from '../util';
 
 const testFilename = 'src/client/test-data/rainbow.png';
 

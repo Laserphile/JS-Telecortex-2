@@ -904,6 +904,15 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^12.0.9"
 
+"@js-telecortex-2/js-telecortex-2-util@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@js-telecortex-2/js-telecortex-2-util/-/js-telecortex-2-util-1.0.0.tgz#9199193b8af5cea50158f5a53d3adfc02e5781f0"
+  integrity sha512-EPFH/QQ1iFY6cGNrA21J9k7nuY6V7xyvC+WEFR1oFSbAbPKj+gz0zGvz1UFUEUrcSi8+uXqJJDYPp58C9WDlBw==
+  dependencies:
+    chalk "^2.4.2"
+    colorsys "^1.0.22"
+    lodash "^4.17.11"
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"

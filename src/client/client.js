@@ -7,8 +7,13 @@ import {
 import net from 'net';
 import async from 'async';
 import { readFileSync } from 'fs';
+import {
+  msNow,
+  FRESH_CONTEXT,
+  CLIENT_CONF,
+  colourRateLogger
+} from '@js-telecortex-2/js-telecortex-2-util';
 import { opcClientDriver } from './drivers/driverFactory';
-import { msNow } from '../util';
 import {
   animationOptions,
   serverOptions,
@@ -16,8 +21,6 @@ import {
   defaultConfig,
   clientArgs
 } from './options';
-import { FRESH_CONTEXT, CLIENT_CONF } from '../util/constants';
-import { colourRateLogger } from '../util/colorManipulation';
 
 /**
  * Context shared across all clients

@@ -5,7 +5,7 @@ import { times } from 'lodash';
 import cv from 'opencv4nodejs';
 import { norm } from 'mathjs';
 import SimplexNoise from 'simplex-noise';
-import { denormalizeCoordinate, msNow, nowFloat } from '../util';
+import { denormalizeCoordinate, msNow, nowFloat } from '@js-telecortex-2/js-telecortex-2-util';
 
 const opencvChannelFields = ['b', 'g', 'r'];
 export const IMG_SIZE = 512;
