@@ -1,7 +1,7 @@
 import { difference } from 'lodash';
 import { driverFactory, ledDriver, opcClientDriver } from './driverFactory';
 import { coloursToAllChannels, coloursToChannels, rainbowFlow, singleRainbow } from './middleware';
-import { mockMultiChannel, mockSingleChannel, mockSpi } from '../../testing';
+import { mockMultiChannel, mockSingleChannel, mockSpi } from '../testing';
 
 const mockSpi0 = mockSpi(jest.fn());
 const mockSpi1 = mockSpi(jest.fn());

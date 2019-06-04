@@ -1,6 +1,6 @@
 import { composeOPCHeader } from '@js-telecortex-2/js-telecortex-2-util';
 import { handleOPCMessage, handleAllOPCMessages } from './index';
-import { mockSingleChannel, mockSpi } from '../../testing';
+import { mockSingleChannel, mockSpi } from '../testing';
 
 const mockSpi0 = mockSpi(jest.fn());
 
