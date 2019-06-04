@@ -1,12 +1,12 @@
 import { head, tail, flow } from 'lodash';
 import { add, dot, multiply, size } from 'mathjs';
 
-import PIXEL_MAP_DOME_SMOL from '../../test_data/pixel_map_smol.json';
-import PIXEL_MAP_DOME_BIG from '../../test_data/pixel_map_big.json';
-import PIXEL_MAP_DOME_OUTER from '../../test_data/pixel_map_outer.json';
-import PIXEL_MAP_DOME_OUTER_FLIP from '../../test_data/pixel_map_outer_flip.json';
-import PIXEL_MAP_SQUARE_SERP_12 from '../../test_data/pixel_map_square_serp_12.json';
-import PIXEL_MAP_SQUARE_SERP_9 from '../../test_data/pixel_map_square_serp_9.json';
+import PIXEL_MAP_DOME_SMOL from './test-data/pixel_map_smol.json';
+import PIXEL_MAP_DOME_BIG from './test-data/pixel_map_big.json';
+import PIXEL_MAP_DOME_OUTER from './test-data/pixel_map_outer.json';
+import PIXEL_MAP_DOME_OUTER_FLIP from './test-data/pixel_map_outer_flip.json';
+import PIXEL_MAP_SQUARE_SERP_12 from './test-data/pixel_map_square_serp_12.json';
+import PIXEL_MAP_SQUARE_SERP_9 from './test-data/pixel_map_square_serp_9.json';
 
 export {
   PIXEL_MAP_DOME_SMOL,

@@ -3,7 +3,7 @@ import fs from 'fs';
 import { interpolatePixel, interpolatePixelMap } from './interpolation';
 import { denormalizeCoordinate } from '../util';
 
-const testFilename = 'test_data/rainbow.png';
+const testFilename = 'src/client/test-data/rainbow.png';
 
 if (!fs.existsSync(testFilename)) {
   throw Error("test file doesn't exist");
