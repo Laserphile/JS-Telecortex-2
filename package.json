@@ -18,7 +18,8 @@
     "pi-spi": "^1.0.3",
     "simplex-noise": "^2.4.0",
     "sprintf-js": "^1.1.2",
-    "yargs": "^13.2.1"
+    "yargs": "^13.2.1",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
@@ -60,6 +61,9 @@
     "dev-opencv": "nodemon --exec yarn run babel-node -- src/opencv.js",
     "start": "node dist/main.js",
     "test": "jest --watch --coverage",
-    "test-ci": "jest --ci --coverage"
-  }
+    "test-ci": "jest --ci --coverage",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
